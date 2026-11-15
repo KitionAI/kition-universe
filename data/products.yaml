@@ -1,0 +1,85 @@
+# Built with Kition — products made on top of the kits (Kition SDK). They live in
+# the Product Galaxy on the star map, on /built-with/ and under each planet page.
+#
+# Rules (README, "Built with Kition"):
+# - Free to submit and free to list. No paid ranking, no featured slots, no ads.
+# - Order: editors_pick first, then newest `added` first. Every product planet is the same size.
+# - Listing needs a public, working product with the "Built with Kition" badge linking back.
+#   Products made by Kition itself are marked `by_kition` and do not need the badge.
+#   First-party prototypes can be listed as preview without a public URL.
+# - Never invent a product, a number, a review or a user count. Leave out fields you cannot source.
+# - Links to someone else's site carry rel="nofollow ugc" until `badge_verified` is true.
+# - Only the maintainer sets `editors_pick`.
+#
+# kits:     ids from data/universe.yaml, in the fixed order note … design
+# delivery: embed | script | headless | mcp
+# collab:   none | cloud | server (leave out when unknown)
+# category: office | design | video | engineering | education | developer-tools | ai-agent | other
+# status:   live | preview | paused (paused stays online but leaves the star map)
+# planet:   how the product's planet looks: { look, color, ring, moons } (CONTRIBUTING.md, "Your planet");
+#           every product planet is the same size
+
+products:
+  - id: kition
+    name: Kition
+    planet: { look: terra, color: '#8b7cf0', moons: 1 }
+    url: https://kition.ai
+    by_kition: true
+    tagline: Desktop AI workspace for connected documents, structured tables, editable designs, whiteboards, visual workflows and reviewable AI agents.
+    tagline_zh: 桌面 AI 工作台：互相关联的文档、结构化表格、可编辑的设计、白板、可视化工作流，以及可审阅的 AI Agent。
+    description: >-
+      Kition is the first product built on the kits. It opens each kit's own editor inside the app, so one
+      workspace edits Markdown notes, tables, whiteboards, PSDs, videos, DOCX, XLSX, PPTX, PDFs, vector art,
+      page layouts, motion graphics DXF drawings, HTML, 3D scenes and interface designs. When no editor is open, its agent drives the same kits
+      headless, and the kit tools are also served to other AI harnesses over MCP.
+    description_zh: >-
+      Kition 是第一个用这些 kit 搭起来的产品。它在应用里直接打开每个 kit 自己的编辑器，一个工作台就能编辑
+      Markdown 笔记、表格、白板、PSD、视频、DOCX、XLSX、PPTX、PDF、矢量图、版式、动态图形、DXF 图纸、HTML、三维场景和界面设计。
+      没有打开编辑器时，Agent 以无界面方式驱动同样的 kit；这些 kit 工具也通过 MCP 提供给其他 AI 工具。
+    kits: [note, table, board, photo, film, doc, sheet, slide, pdf, vector, layout, motion, cad, html, scene, design]
+    delivery: [embed, headless, mcp]
+    category: office
+    author: { name: Kition, url: 'https://kition.ai', github: KitionAI }
+    open_source: https://github.com/KitionAI/kition
+    screenshot: /assets/products/kition.webp
+    badge_verified: false
+    editors_pick: false
+    status: live
+    added: 2026-10-25
+    last_checked: 2026-10-25
+    sources:
+      - https://kition.ai (tagline, 2026-10-25)
+      - KitionAI/kition docs/kits.md (kit editors in the app, headless kits, kition-kits-mcp)
+
+  - id: kition-one
+    name: Kition One
+    planet: { look: city, color: '#4fd8c8', ring: true }
+    by_kition: true
+    tagline: A browser workspace built on the Kition SDK, bringing professional editors, personal and team spaces, and content permissions together.
+    tagline_zh: 基于 Kition SDK 的浏览器工作空间，把专业编辑器、个人与团队空间、文件权限连接在一起。
+    description: >-
+      Kition One is a team workspace prototype built only on the Kition SDK and kit packages.
+      It currently embeds 13 kit editors for documents, spreadsheets, whiteboards, design, media and CAD,
+      and creates files through the same kits' headless engines. Managed mode provides organization
+      accounts, personal and team spaces, folders, content permissions, version history and trash.
+      The explicit local demo also offers real-time co-editing for supported kits through Kition Server,
+      and MCP agents that edit a draft for a person to compare and merge. Demo co-editing and AI are
+      separate from managed mode; managed tenant authorization for co-editing is not yet integrated.
+    description_zh: >-
+      Kition One 是仅使用 Kition SDK 和 kit 包构建的团队工作空间原型。当前嵌入 13 个 kit 的编辑器，
+      覆盖文档、表格、白板、设计、影像和 CAD，并通过同一套 kit 的无界面引擎创建文件。
+      托管模式提供组织账号、个人与团队空间、文件夹、内容权限、版本历史和回收站。
+      显式开启的本地演示模式还可以通过 Kition Server 协同编辑支持的文件，并让 MCP Agent 在草稿中修改，
+      由人比较和合并。演示模式中的实时协同和 AI 与托管模式分开；协同的托管租户授权尚未接入。
+    kits: [note, table, board, photo, film, doc, sheet, slide, pdf, vector, layout, motion, cad]
+    delivery: [embed, headless, mcp]
+    category: office
+    author: { name: Kition, url: 'https://kition.ai', github: KitionAI }
+    badge_verified: false
+    editors_pick: false
+    status: preview
+    added: 2026-10-31
+    last_checked: 2026-10-31
+    sources:
+      - KitionAI/kition-one README.md (prototype status, SDK-only architecture, managed mode, demo collaboration and AI; checked 2026-10-31)
+      - KitionAI/kition-one kinds.json (13 registered kit editors; checked 2026-10-31)

@@ -1,0 +1,699 @@
+# Agent replays: a real kition-showcase sample replayed step by step for a (kit, scenario).
+#
+# `sample` is a folder in the kition-showcase repo (<kit>/<slug>/showcase.yaml). `upto` counts
+# top-level entries of that file's `steps:` list (1-based; the film `prelude:` is not counted),
+# and the last frame's `upto` equals the total number of steps. `lights` are capability ids of
+# the same kit in data/universe.yaml. One sample is used at most once.
+#
+# Galaxy (kit, scenario) pairs from src/lib/scenarioGalaxies.ts that are SKIPPED, because no
+# sample of that kit really does the scenario:
+#   doc / contract-review    - the contract samples only write a contract; none uses review tools,
+#                              password protection or PDF export.
+#   slide / training-deck    - no slide sample inserts audio or video.
+#   pdf / searchable-scans   - no pdf sample runs OCR or converts to PDF/A.
+#   vector / recolor         - no vector sample opens an .ai file or recolours a whole illustration.
+#   html / responsive-page   - no html sample changes the viewport size or colour scheme.
+#
+# Loose matches (kept; the goal says what the sample really does):
+#   note / design-doc        - a formula sheet with LaTeX math, not a design doc; no Mermaid sample exists.
+#   photo / product-retouch  - Hue/Saturation adjustment layers on fabric swatches, not a product photo.
+#   photo / social-set       - one Instagram image; no photo sample has export steps.
+#   film / interview-cut     - a lower third over interview footage; no splitting or trimming.
+#   layout / brochure        - a community garden tri-fold, not a product brochure.
+#
+# html: ten of the eleven html samples are a single `html.setSource` step, so the landing-page
+# entry can only have ONE frame (the schema asks for 3 to 5). The only html sample with more
+# steps is html/help-centre-tabs-accordion (3 steps), which matches no html scenario.
+
+# ── note ─────────────────────────────────────────────────────────────────────
+- kit: note
+  scenario: research-wiki
+  sample: note/sourdough-starter-guide
+  goal:
+    en: Write a sourdough starter guide that links to the neighbouring notes.
+    zh: 写一篇酸面团酵头指南，并链接到相关的笔记。
+  frames:
+    - upto: 1
+      say: { en: Write the guide with wikilinks and callouts, zh: 写下指南，带双链和提示块 }
+      lights: [links]
+    - upto: 4
+      say: { en: Add a link to Hydration Ratios, zh: 补一个指向“含水率”笔记的链接 }
+      lights: [links]
+    - upto: 6
+      say: { en: Give the feeding paragraph a block id, zh: 给喂养那一段加上块 ID }
+      lights: [links]
+    - upto: 7
+      say: { en: List every link in the note, zh: 列出笔记里的所有链接 }
+      lights: [links]
+
+- kit: note
+  scenario: design-doc
+  sample: note/mechanics-revision-formulas
+  goal:
+    en: Write a mechanics formula sheet with the formulas set as LaTeX math.
+    zh: 写一份力学公式复习单，公式用 LaTeX 排版。
+  frames:
+    - upto: 1
+      say: { en: Write the formula sheet in Markdown and LaTeX, zh: 用 Markdown 和 LaTeX 写出公式单 }
+      lights: [diagrams]
+    - upto: 4
+      say: { en: Turn the last formula into a math block, zh: 把最后一条公式改成公式块 }
+      lights: [diagrams]
+    - upto: 5
+      say: { en: Read the source back to check it, zh: 读回源文本做检查 }
+      lights: [diagrams]
+
+- kit: note
+  scenario: meeting-notes
+  sample: note/weekly-team-sync
+  goal:
+    en: Write up the weekly sync, tick off the finished actions and comment on one decision.
+    zh: 整理周会记录，勾掉已完成的行动项，并对一条决定留下评论。
+  frames:
+    - upto: 1
+      say: { en: Write up the meeting notes, zh: 写下会议记录 }
+      lights: [review]
+    - upto: 4
+      say: { en: Tick off two finished action items, zh: 勾掉两条已完成的行动项 }
+      lights: [review]
+    - upto: 5
+      say: { en: Mark the notes as reviewed, zh: 把记录状态改为已审阅 }
+      lights: [review]
+    - upto: 6
+      say: { en: Comment on the offline-data decision, zh: 对离线数据那条决定加评论 }
+      lights: [comments]
+
+# ── table ────────────────────────────────────────────────────────────────────
+- kit: table
+  scenario: task-tracker
+  sample: table/app-launch-task-tracker
+  goal:
+    en: Set up a task tracker for the app launch with milestones and views.
+    zh: 为应用上线建一张任务跟踪表，带里程碑和多个视图。
+  frames:
+    - upto: 3
+      say: { en: Create the task table and add the tasks, zh: 建任务表并填入任务 }
+      lights: [fields]
+    - upto: 9
+      say: { en: Link tasks to milestones and roll up hours, zh: 把任务关联到里程碑并汇总工时 }
+      lights: [fields]
+    - upto: 11
+      say: { en: Add board and calendar views, zh: 添加看板视图和日历视图 }
+      lights: [views]
+    - upto: 15
+      say: { en: Add a filtered, sorted and grouped grid view, zh: 再加一个带筛选、排序和分组的表格视图 }
+      lights: [views]
+    - upto: 17
+      say: { en: Read both tables back, zh: 读回两张表的记录 }
+      lights: [fields]
+
+- kit: table
+  scenario: client-crm
+  sample: table/b2b-sales-pipeline
+  goal:
+    en: Build a sales pipeline of deals linked to client companies, with views and a dashboard.
+    zh: 建一张销售管道表，把商机关联到客户公司，并配好视图和仪表盘。
+  frames:
+    - upto: 3
+      say: { en: Create the deals table and add the deals, zh: 建商机表并填入商机 }
+      lights: [fields]
+    - upto: 9
+      say: { en: Link deals to companies and roll up value, zh: 把商机关联到公司并汇总金额 }
+      lights: [fields]
+    - upto: 17
+      say: { en: 'Add board, open-deals and by-owner views', zh: 添加看板、未成交商机和按负责人分组的视图 }
+      lights: [views]
+    - upto: 18
+      say: { en: Build a sales overview dashboard, zh: 搭一个销售概览仪表盘 }
+      lights: [views]
+    - upto: 20
+      say: { en: Read both tables back, zh: 读回两张表的记录 }
+      lights: [fields]
+
+# ── board ────────────────────────────────────────────────────────────────────
+- kit: board
+  scenario: mind-map
+  sample: board/cafe-launch-mind-map
+  goal:
+    en: Draw a mind map for opening a neighbourhood café.
+    zh: 画一张社区咖啡馆开业筹备的思维导图。
+  frames:
+    - upto: 2
+      say: { en: Create the central topic, zh: 创建中心主题 }
+      lights: [diagrams]
+    - upto: 10
+      say: { en: Add the Menu branch with three ideas, zh: 加上“菜单”分支和三个想法 }
+      lights: [diagrams]
+    - upto: 24
+      say: { en: Add Marketing and Suppliers on the right, zh: 在右侧加上“营销”和“供应商” }
+      lights: [diagrams]
+    - upto: 48
+      say: { en: 'Add Space, Team and Budget on the left', zh: 在左侧加上“空间”“团队”和“预算” }
+      lights: [diagrams]
+    - upto: 49
+      say: { en: Run the mind map layout, zh: 执行思维导图自动布局 }
+      lights: [diagrams, canvas]
+
+- kit: board
+  scenario: retro
+  sample: board/start-stop-continue-retro
+  goal:
+    en: Set up a start, stop, continue retro board for the sprint, with an action list.
+    zh: 为这个迭代搭一块“开始、停止、继续”复盘白板，并列出行动项。
+  frames:
+    - upto: 2
+      say: { en: Add the title and three column frames, zh: 加上标题和三个分栏画框 }
+      lights: [canvas]
+    - upto: 5
+      say: { en: Fill the three columns with sticky notes, zh: 在三栏里贴上便利贴 }
+      lights: [canvas]
+    - upto: 6
+      say: { en: Circle the chosen note by hand, zh: 手绘圈出选中的那张便利贴 }
+      lights: [canvas]
+    - upto: 8
+      say: { en: Add an action list with owners, zh: 加上带负责人的行动清单 }
+      lights: [canvas]
+
+# ── photo ────────────────────────────────────────────────────────────────────
+- kit: photo
+  scenario: product-retouch
+  sample: photo/fabric-colorway-variants
+  goal:
+    en: Show one linen texture in four colourways using Hue/Saturation adjustment layers.
+    zh: 用色相/饱和度调整图层，把同一块亚麻面料做成四种配色。
+  frames:
+    - upto: 8
+      say: { en: Add the title and four swatch shapes, zh: 加上标题和四个色卡形状 }
+      lights: [layers]
+    - upto: 14
+      say: { en: Clip a linen texture to the swatches, zh: 做出亚麻纹理并剪贴到色卡上 }
+      lights: [paint, layers]
+    - upto: 24
+      say: { en: Recolour three swatches with Hue/Saturation layers, zh: 用色相/饱和度图层给三块色卡换色 }
+      lights: [adjust]
+    - upto: 32
+      say: { en: Label each colourway, zh: 给每种配色加上名称和编号 }
+      lights: [paint]
+    - upto: 34
+      say: { en: Sample two swatches to check the colours, zh: 取样两块色卡核对颜色 }
+      lights: [adjust]
+
+- kit: photo
+  scenario: event-poster
+  sample: photo/concert-poster
+  goal:
+    en: Make a retro concert poster with a striped sun, a lens flare and glowing type.
+    zh: 做一张复古演唱会海报，有条纹太阳、镜头光晕和发光的标题字。
+  frames:
+    - upto: 6
+      say: { en: Fill the night sky and add haze, zh: 铺好夜空底色并加上雾气 }
+      lights: [layers, paint]
+    - upto: 12
+      say: { en: 'Draw a striped, glowing sun', zh: 画出带条纹的发光太阳 }
+      lights: [layers]
+    - upto: 26
+      say: { en: Add the horizon and a perspective grid, zh: 加上地平线和透视网格 }
+      lights: [layers]
+    - upto: 31
+      say: { en: Render a lens flare as stage light, zh: 渲染镜头光晕当作舞台灯光 }
+      lights: [paint]
+    - upto: 40
+      say: { en: 'Set the headline, lineup and date', zh: 排好标题、演出阵容和日期 }
+      lights: [paint]
+
+- kit: photo
+  scenario: social-set
+  sample: photo/instagram-quote-post
+  goal:
+    en: Make a square quote card for Instagram.
+    zh: 做一张 Instagram 用的方形语录卡片。
+  frames:
+    - upto: 2
+      say: { en: Fill the square with a soft gradient, zh: 用柔和的渐变铺满方形画布 }
+      lights: [layers]
+    - upto: 12
+      say: { en: Paint three colour blobs and blur them, zh: 画三个色块并模糊 }
+      lights: [paint]
+    - upto: 16
+      say: { en: Set the quote and its quotation mark, zh: 排好语录和大引号 }
+      lights: [paint]
+    - upto: 19
+      say: { en: 'Add the divider, series name and handle', zh: 加上分隔线、栏目名和账号 }
+      lights: [paint]
+
+# ── film ─────────────────────────────────────────────────────────────────────
+- kit: film
+  scenario: interview-cut
+  sample: film/interview-lower-third
+  goal:
+    en: Add a name and role lower third that slides in over the interview footage.
+    zh: 给访谈画面加一条滑入的人名条，写上姓名和身份。
+  frames:
+    - upto: 2
+      say: { en: Start a sequence and place the footage, zh: 新建序列并放入素材 }
+      lights: [timeline]
+    - upto: 6
+      say: { en: Draw the plate and its accent bar, zh: 画出底板和强调色条 }
+      lights: [timeline]
+    - upto: 10
+      say: { en: Add the name and role, zh: 加上姓名和身份 }
+      lights: [timeline]
+    - upto: 19
+      say: { en: Keyframe the slide-in and the fades, zh: 用关键帧做出滑入和淡入淡出 }
+      lights: [timeline]
+
+- kit: film
+  scenario: captioned-clip
+  sample: film/misty-forest-bilingual-subtitles
+  goal:
+    en: Subtitle the forest clip in Chinese with English underneath.
+    zh: 给森林短片配中文字幕，下面再加一行英文。
+  frames:
+    - upto: 2
+      say: { en: Start a sequence and place the forest clip, zh: 新建序列并放入森林素材 }
+      lights: [timeline]
+    - upto: 7
+      say: { en: Add a Chinese caption track with three lines, zh: 加一条中文字幕轨，写入三句字幕 }
+      lights: [captions]
+    - upto: 13
+      say: { en: Add the English lines underneath, zh: 在下方加上对应的英文字幕 }
+      lights: [captions]
+
+# ── doc ──────────────────────────────────────────────────────────────────────
+- kit: doc
+  scenario: report
+  sample: doc/charity-impact-report
+  goal:
+    en: Write a one-page annual impact report with headline figures and a doughnut chart.
+    zh: 写一页年度影响力报告，包含关键数字和一张环形图。
+  frames:
+    - upto: 22
+      say: { en: 'Set styles, then write the title and opening', zh: 设好样式，写下标题和开头段落 }
+      lights: [docx, layout]
+    - upto: 46
+      say: { en: Add three headline figures in a table, zh: 用表格排出三个关键数字 }
+      lights: [docx]
+    - upto: 51
+      say: { en: Insert a doughnut chart of spending, zh: 插入一张支出构成的环形图 }
+      lights: [drawing]
+    - upto: 71
+      say: { en: Add a pull quote and the closing paragraph, zh: 加上引语和结尾段落 }
+      lights: [docx]
+    - upto: 77
+      say: { en: Give the opening a drop cap, zh: 给开头段落加首字下沉 }
+      lights: [docx]
+
+# ── sheet ────────────────────────────────────────────────────────────────────
+- kit: sheet
+  scenario: sales-pivot
+  sample: sheet/orders-pivot-summary
+  goal:
+    en: Summarise the quarter's orders by region and product with a PivotTable.
+    zh: 用数据透视表按区域和产品汇总本季度的订单。
+  frames:
+    - upto: 2
+      say: { en: Fill in the order list, zh: 填入订单明细 }
+      lights: [formulas]
+    - upto: 6
+      say: { en: 'Format dates, amounts and the header row', zh: 设置日期、金额格式和表头 }
+      lights: [formulas]
+    - upto: 7
+      say: { en: Build a PivotTable by region and product, zh: 按区域和产品建立数据透视表 }
+      lights: [pivot]
+    - upto: 11
+      say: { en: Rename the sheet and style the PivotTable, zh: 重命名工作表并套用透视表样式 }
+      lights: [pivot]
+    - upto: 24
+      say: { en: Add a title and tidy the column widths, zh: 加上标题并调整列宽 }
+      lights: [formulas]
+
+- kit: sheet
+  scenario: budget
+  sample: sheet/household-budget
+  goal:
+    en: Build a monthly household budget that compares planned and actual spending.
+    zh: 做一张家庭月度预算表，对比计划支出和实际支出。
+  frames:
+    - upto: 2
+      say: { en: Enter the budget with variance formulas, zh: 填入预算数据和差额公式 }
+      lights: [formulas]
+    - upto: 11
+      say: { en: Format as a table with a total row, zh: 套用表格样式并突出合计行 }
+      lights: [pivot, formulas]
+    - upto: 12
+      say: { en: Turn overspending red, zh: 把超支的项目标红 }
+      lights: [charts]
+    - upto: 16
+      say: { en: Add a planned vs actual column chart, zh: 加一张计划与实际对比的柱形图 }
+      lights: [charts]
+    - upto: 18
+      say: { en: Add data bars and read the totals, zh: 加上数据条并读出合计 }
+      lights: [charts]
+
+# ── slide ────────────────────────────────────────────────────────────────────
+- kit: slide
+  scenario: quarterly-review
+  sample: slide/quarterly-review
+  goal:
+    en: Make a quarterly results slide with three KPI cards and a revenue chart by region.
+    zh: 做一页季度业绩幻灯片，放三张指标卡和一张分区域营收图表。
+  frames:
+    - upto: 3
+      say: { en: Set the fonts and a gradient background, zh: 设好字体和渐变背景 }
+      lights: [stage]
+    - upto: 11
+      say: { en: Add the title and a one-line summary, zh: 加上标题和一句话总结 }
+      lights: [props]
+    - upto: 18
+      say: { en: Add three KPI cards, zh: 加上三张指标卡 }
+      lights: [props]
+    - upto: 20
+      say: { en: Insert a column chart of revenue by region, zh: 插入分区域营收柱形图 }
+      lights: [props]
+
+# ── pdf ──────────────────────────────────────────────────────────────────────
+- kit: pdf
+  scenario: fill-sign
+  sample: pdf/design-services-agreement
+  goal:
+    en: Fill in the design services agreement and sign it for the designer.
+    zh: 填好设计服务协议，并替设计师一方签名。
+  frames:
+    - upto: 22
+      say: { en: Write the clauses and draw the signature boxes, zh: 写入条款并画出签名区 }
+      lights: [pages]
+    - upto: 38
+      say: { en: 'Add signature, name, date and initials fields', zh: 添加签名、姓名、日期和首字母签署栏 }
+      lights: [forms]
+    - upto: 41
+      say: { en: Fill in the names and dates, zh: 填入姓名和日期 }
+      lights: [forms]
+    - upto: 44
+      say: { en: Sign for the designer and add page headers, zh: 替设计师签名并加上页眉页脚 }
+      lights: [forms, pages]
+
+- kit: pdf
+  scenario: redact
+  sample: pdf/redacted-incident-memo
+  goal:
+    en: 'Redact the names, phone numbers, email addresses and the witness paragraph before the memo is released.'
+    zh: 在备忘录公开前，涂黑其中的姓名、电话、邮箱和证人陈述段落。
+  frames:
+    - upto: 16
+      say: { en: Lay out and write the memo, zh: 排版并写入备忘录内容 }
+      lights: [pages]
+    - upto: 20
+      say: { en: 'Mark names, phones, emails and one paragraph', zh: 标记姓名、电话、邮箱和一个段落 }
+      lights: [redact]
+    - upto: 21
+      say: { en: Apply the redactions for good, zh: 执行涂黑，彻底删除内容 }
+      lights: [redact]
+    - upto: 23
+      say: { en: Search to confirm the name is gone, zh: 搜索确认姓名已经搜不到 }
+      lights: [redact]
+
+# ── vector ───────────────────────────────────────────────────────────────────
+- kit: vector
+  scenario: logo
+  sample: vector/logo-mark-explorations
+  goal:
+    en: Build four logo marks with Pathfinder operations and present them on one sheet.
+    zh: 用路径查找器做出四个标志图形，排在一张展示页上。
+  frames:
+    - upto: 15
+      say: { en: Lay out four cards and a title, zh: 排出四张卡片和标题 }
+      lights: [paths]
+    - upto: 26
+      say: { en: Intersect two circles into a three-leaf mark, zh: 用两圆相交做出三叶标志 }
+      lights: [paths]
+    - upto: 50
+      say: { en: Build the ring mark and the mountain mark, zh: 做出圆环标志和山形标志 }
+      lights: [paths]
+    - upto: 65
+      say: { en: Divide three circles and colour each piece, zh: 分割三个圆并给每一块上色 }
+      lights: [paths]
+    - upto: 79
+      say: { en: Add a wordmark under each mark, zh: 在每个标志下面加上字标 }
+      lights: [paths]
+
+- kit: vector
+  scenario: icon-set
+  sample: vector/weather-icon-set
+  goal:
+    en: Draw a set of eight weather icons on a tile grid.
+    zh: 在方格网格上画一套八个天气图标。
+  frames:
+    - upto: 23
+      say: { en: Lay out eight tiles and a title, zh: 排出八个底格和标题 }
+      lights: [paths]
+    - upto: 45
+      say: { en: Draw the sun and unite a cloud, zh: 画出太阳，并把圆形合并成云 }
+      lights: [paths]
+    - upto: 71
+      say: { en: Reuse the cloud for four more icons, zh: 复用这朵云做出另外四个图标 }
+      lights: [paths]
+    - upto: 86
+      say: { en: Cut the moon and draw the wind, zh: 裁出月亮并画出风 }
+      lights: [paths]
+    - upto: 99
+      say: { en: Label the eight icons, zh: 给八个图标加上名称 }
+      lights: [paths]
+
+# ── layout ───────────────────────────────────────────────────────────────────
+- kit: layout
+  scenario: magazine
+  sample: layout/tideline-magazine-feature
+  goal:
+    en: Lay out a magazine cover and a feature spread with a threaded story.
+    zh: 排一本杂志的封面和一个专题跨页，正文在文本框之间串接。
+  frames:
+    - upto: 32
+      say: { en: 'Set up pages, swatches, styles and folios', zh: 设好页面、色板、样式和页码栏 }
+      lights: [pages, swatches]
+    - upto: 45
+      say: { en: Build the cover with masthead and cover lines, zh: 做出封面，放上刊名和封面标题 }
+      lights: [frames]
+    - upto: 72
+      say: { en: 'Add the feature artwork, headline and deck', zh: 加上专题配图、大标题和导语 }
+      lights: [frames, stories]
+    - upto: 94
+      say: { en: Thread the story and wrap a pull quote, zh: 串接正文，并让文字绕排引语 }
+      lights: [stories]
+    - upto: 114
+      say: { en: Add a facts box, zh: 加上一个数据小栏 }
+      lights: [frames, swatches]
+
+- kit: layout
+  scenario: brochure
+  sample: layout/community-garden-trifold
+  goal:
+    en: 'Lay out a tri-fold brochure for a community garden, outside and inside.'
+    zh: 为社区花园排一份三折页，包括外页和内页。
+  frames:
+    - upto: 36
+      say: { en: 'Set up swatches, styles and the cover panel', zh: 设好色板和样式，做出封面折页 }
+      lights: [swatches, frames]
+    - upto: 61
+      say: { en: Fill the inside flap and add flowers, zh: 填好内折页并加上小花 }
+      lights: [frames, stories]
+    - upto: 88
+      say: { en: Add opening hours and a small map, zh: 加上开放时间和一张小地图 }
+      lights: [frames]
+    - upto: 117
+      say: { en: Lay out the story and membership prices, zh: 排好花园故事和会员价格 }
+      lights: [stories]
+    - upto: 152
+      say: { en: Add the season calendar and footer, zh: 加上季节日历和页脚 }
+      lights: [frames, stories]
+
+# ── motion ───────────────────────────────────────────────────────────────────
+- kit: motion
+  scenario: lower-third
+  sample: motion/reef-interview-lower-third
+  goal:
+    en: Animate a lower third with a name plate that slides in and text that rises into place.
+    zh: 做一条人名条动画：底板滑入，文字随后升起到位。
+  frames:
+    - upto: 10
+      say: { en: Build a soft bokeh backdrop, zh: 做出柔和的光斑背景 }
+      lights: [layers]
+    - upto: 13
+      say: { en: Add the plate and accent bar, zh: 加上底板和强调色条 }
+      lights: [layers]
+    - upto: 19
+      say: { en: Keyframe both to slide in, zh: 用关键帧让两者滑入 }
+      lights: [comps]
+    - upto: 23
+      say: { en: 'Add the name and role, rising in', zh: 加上姓名和身份，并让文字升起入场 }
+      lights: [layers]
+
+- kit: motion
+  scenario: title
+  sample: motion/mountain-tea-chinese-title
+  goal:
+    en: Animate a Chinese event title rising over ink mountains.
+    zh: 做一个中文活动标题动画，标题在水墨山峦上逐字升起。
+  frames:
+    - upto: 3
+      say: { en: Fill the sky with a gradient, zh: 用渐变铺出天空 }
+      lights: [layers]
+    - upto: 6
+      say: { en: Add a slowly rising sun, zh: 加上缓缓升起的太阳 }
+      lights: [layers, comps]
+    - upto: 15
+      say: { en: Draw three mountain ranges that drift, zh: 画出三层缓慢移动的山峦 }
+      lights: [layers, comps]
+    - upto: 18
+      say: { en: 'Add the Chinese title, rising by character', zh: 加上中文标题，逐字升起 }
+      lights: [layers]
+    - upto: 20
+      say: { en: Add the subtitle with a tracking animation, zh: 加上副标题，做字距收拢动画 }
+      lights: [layers]
+
+# ── cad ──────────────────────────────────────────────────────────────────────
+- kit: cad
+  scenario: floor-plan
+  sample: cad/two-bedroom-apartment-plan
+  goal:
+    en: 'Draw a 1:50 floor plan of a two-bedroom apartment with furniture and dimensions.'
+    zh: 画一张 1:50 的两居室户型平面图，带家具和尺寸标注。
+  frames:
+    - upto: 42
+      say: { en: Draw the walls and fill them solid, zh: 画出墙体并做实心填充 }
+      lights: [draft, dims]
+    - upto: 72
+      say: { en: Add windows and door swings, zh: 加上窗和门的开启弧线 }
+      lights: [draft]
+    - upto: 93
+      say: { en: Place the furniture, zh: 布置家具 }
+      lights: [draft]
+    - upto: 109
+      say: { en: Label each room with its area, zh: 标出每个房间的名称和面积 }
+      lights: [draft]
+    - upto: 115
+      say: { en: Dimension the outside walls, zh: 给外墙加尺寸标注 }
+      lights: [dims]
+
+- kit: cad
+  scenario: part
+  sample: cad/pipe-flange-dn100
+  goal:
+    en: 'Draw a DN100 pipe flange with a front view, a hatched section and dimensions.'
+    zh: 画一张 DN100 管法兰图，包括主视图、带剖面线的剖视图和尺寸标注。
+  frames:
+    - upto: 22
+      say: { en: Draw the front view with eight bolt holes, zh: 画出主视图和八个螺栓孔 }
+      lights: [draft, dims]
+    - upto: 32
+      say: { en: Add the pitch circle and a hatched section, zh: 加上节圆和带剖面线的剖视图 }
+      lights: [draft]
+    - upto: 49
+      say: { en: Add centre lines and dimensions, zh: 加上中心线和尺寸标注 }
+      lights: [dims]
+    - upto: 64
+      say: { en: 'Add view labels, border and title block', zh: 加上视图标注、图框和标题栏 }
+      lights: [draft]
+
+# ── html ─────────────────────────────────────────────────────────────────────
+# Single frame: the sample is one html.setSource step (see the note at the top of the file).
+- kit: html
+  scenario: landing-page
+  sample: html/coffee-roaster-landing-hero
+  goal:
+    en: Build the first screen of a coffee subscription landing page.
+    zh: 做一个咖啡订阅网站落地页的首屏。
+  frames:
+    - upto: 1
+      say: { en: Write the page's HTML and CSS, zh: 写入页面的 HTML 和 CSS }
+      lights: [source, render]
+
+# ── scene ────────────────────────────────────────────────────────────────────
+- kit: scene
+  scenario: product-model
+  sample: scene/amber-perfume-bottle
+  goal:
+    en: Model a perfume bottle with glass and gold materials and light it for a product shot.
+    zh: 建一个香水瓶模型，用玻璃和金色材质，并布好产品图的灯光。
+  frames:
+    - upto: 8
+      say: { en: Set up the backdrop and stone plinth, zh: 搭好背景幕布和石质底座 }
+      lights: [modeling, materials]
+    - upto: 16
+      say: { en: Model the glass bottle and amber perfume, zh: 做出玻璃瓶身和琥珀色香水 }
+      lights: [modeling, materials]
+    - upto: 22
+      say: { en: Add the neck and gold cap, zh: 加上瓶颈和金色瓶盖 }
+      lights: [modeling, materials]
+    - upto: 32
+      say: { en: 'Light it with key, rim and fill', zh: 布置主光、轮廓光和补光 }
+      lights: [render]
+    - upto: 38
+      say: { en: Frame the shot through the camera, zh: 摆好相机取景 }
+      lights: [render]
+
+- kit: scene
+  scenario: room-scene
+  sample: scene/isometric-study-room
+  goal:
+    en: Build a small study room in 3D and frame it as an isometric view.
+    zh: 用三维搭一间小书房，并用等轴测视角取景。
+  frames:
+    - upto: 12
+      say: { en: 'Build the floor, walls and window', zh: 搭出地板、墙面和窗户 }
+      lights: [modeling, materials]
+    - upto: 34
+      say: { en: 'Add the rug, desk, lamp and chair', zh: 加上地毯、书桌、台灯和椅子 }
+      lights: [modeling, materials]
+    - upto: 50
+      say: { en: 'Add the bookshelf, plant and poster', zh: 加上书架、绿植和海报 }
+      lights: [modeling, materials]
+    - upto: 57
+      say: { en: Bevel the edges and add sunlight, zh: 给边缘倒角并加上日光 }
+      lights: [modeling, render]
+    - upto: 62
+      say: { en: Frame it with an orthographic camera, zh: 用正交相机取景 }
+      lights: [render]
+
+# ── design ───────────────────────────────────────────────────────────────────
+- kit: design
+  scenario: app-interface
+  sample: design/plant-care-login
+  goal:
+    en: Design a mobile sign-in screen with auto layout.
+    zh: 用自动布局设计一个手机登录界面。
+  frames:
+    - upto: 4
+      say: { en: Set the screen background and two glows, zh: 设好界面底色和两团光晕 }
+      lights: [frames]
+    - upto: 10
+      say: { en: Add the logo and welcome text, zh: 加上标志和欢迎文字 }
+      lights: [layout]
+    - upto: 21
+      say: { en: Build the email and password fields, zh: 做出邮箱和密码输入框 }
+      lights: [layout]
+    - upto: 30
+      say: { en: Add the sign-in and passkey buttons, zh: 加上登录按钮和通行密钥按钮 }
+      lights: [layout]
+    - upto: 37
+      say: { en: Add the status bar and home indicator, zh: 加上状态栏和底部横条 }
+      lights: [frames]
+
+- kit: design
+  scenario: connected-prototype
+  sample: design/habit-app-onboarding-flow
+  goal:
+    en: Design a three-screen onboarding flow and link it as a prototype.
+    zh: 设计三屏的新手引导流程，并连成可点击的原型。
+  frames:
+    - upto: 17
+      say: { en: Build the first onboarding screen, zh: 做出第一屏引导页 }
+      lights: [frames, layout]
+    - upto: 39
+      say: { en: Build the second screen with a streak, zh: 做出第二屏，展示连续打卡 }
+      lights: [frames, layout]
+    - upto: 56
+      say: { en: Build the third screen with a reminder, zh: 做出第三屏，展示提醒通知 }
+      lights: [frames, layout]
+    - upto: 64
+      say: { en: Link the buttons into a prototype flow, zh: 把按钮连成原型流程 }
+      lights: [prototype]

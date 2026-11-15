@@ -1,0 +1,365 @@
+# What you can make with each kit: three scenarios per planet, shown as holograms
+# over the planet's city and listed on the planet page.
+#
+# Every scenario only uses what the kit can really do: `uses` lists capability ids
+# from data/universe.yaml (checked by scripts/check-data.mjs). `template` links a
+# real, published Kition template (https://kition.ai/templates, read 2026-10-25);
+# table and board have them, the other kits do not yet, so their scenarios are
+# examples, not templates.
+#
+# `art` picks the drawing on the hologram (src/scripts/scene/scenarioArt.ts).
+
+html:
+  - id: landing-page
+    art: layout-brochure
+    uses: [source, render]
+    title: { en: Landing page preview, zh: 落地页预览 }
+    body: { en: Edit HTML and CSS and inspect a PNG rendered by the kit engine., zh: 编辑 HTML 与 CSS，检查 kit 引擎渲染的 PNG。 }
+  - id: responsive-page
+    art: image-social
+    uses: [source, viewport]
+    title: { en: Responsive layout study, zh: 响应式布局检查 }
+    body: { en: Compare the same page at different viewport sizes and color schemes., zh: 在不同视口尺寸和配色模式下比较同一个页面。 }
+  - id: report-page
+    art: page-report
+    uses: [source, resources, render]
+    title: { en: HTML report, zh: HTML 报告 }
+    body: { en: Build a report with supplied images and fonts, then render a snapshot for review., zh: 用显式提供的图片和字体制作报告，再渲染快照进行审阅。 }
+
+scene:
+  - id: product-model
+    art: cad-part
+    uses: [modeling, materials, render]
+    title: { en: Product model, zh: 产品模型 }
+    body: { en: Model a product, assign materials and light a camera view for a rendered image., zh: 搭建产品模型、赋予材质，为相机画面布光并渲染。 }
+  - id: room-scene
+    art: cad-plan
+    uses: [modeling, materials, exchange]
+    title: { en: Room scene, zh: 房间场景 }
+    body: { en: Arrange a room in 3D and exchange its geometry through glTF or OBJ., zh: 在三维空间中布置房间，通过 glTF 或 OBJ 交换几何数据。 }
+  - id: animated-scene
+    art: timeline-edit
+    uses: [animation, render]
+    title: { en: Animated scene, zh: 场景动画 }
+    body: { en: Set keyframes and animation curves, then render the scene from a camera., zh: 设置关键帧和动画曲线，再从相机渲染场景。 }
+
+design:
+  - id: app-interface
+    art: layout-magazine
+    uses: [frames, layout]
+    title: { en: App interface, zh: 应用界面 }
+    body: { en: Compose screens from frames, text and shapes with auto layout., zh: 用画框、文字、图形和自动布局构建应用界面。 }
+  - id: component-library
+    art: vector-icons
+    uses: [frames, components]
+    title: { en: Reusable UI library, zh: 可复用 UI 库 }
+    body: { en: Build components with shared styles and variables across your screens., zh: 构建组件，通过共享样式和变量在多个界面间复用。 }
+  - id: connected-prototype
+    art: canvas-flow
+    uses: [frames, prototype]
+    title: { en: Connected prototype, zh: 可交互原型 }
+    body: { en: Link screens into a prototype to review the interface journey., zh: 将多个界面连接成原型，检查界面的使用流程。 }
+
+note:
+  - id: research-wiki
+    art: page-wiki
+    uses: [links, search]
+    title: { en: Research wiki, zh: 研究知识库 }
+    body:
+      en: Notes linked with backlinks and tags grow into a map of what you have read, searchable across the whole workspace.
+      zh: 用双向链接和标签把笔记连起来，读过的东西变成一张能在整个工作区搜索的地图。
+  - id: design-doc
+    art: page-diagram
+    uses: [diagrams]
+    title: { en: Design doc with diagrams, zh: 带图的设计文档 }
+    body:
+      en: Mermaid flowcharts and KaTeX formulas render right inside the Markdown, so the doc and its diagrams stay in one file.
+      zh: Mermaid 流程图和 KaTeX 公式直接在 Markdown 里渲染，文档和图放在同一个文件里。
+  - id: meeting-notes
+    art: page-review
+    uses: [review, comments]
+    title: { en: Meeting notes the agent tidies, zh: Agent 整理会议记录 }
+    body:
+      en: The agent turns raw notes into decisions and action items; every addition and deletion is shown for you to accept or reject.
+      zh: Agent 把零散的记录整理成决定和待办，每一处增删都标出来，由你决定接受还是拒绝。
+
+table:
+  - id: task-tracker
+    art: grid-tracker
+    uses: [fields, views]
+    template: https://kition.ai/templates/tables/task-tracker
+    title: { en: Task tracker, zh: 任务跟踪表 }
+    body:
+      en: Track delivery work with owners, progress, dates, priority flags, status updates and notes in one table.
+      zh: 在一张表里跟踪交付工作：负责人、进度、日期、优先级、状态更新和备注。
+  - id: client-crm
+    art: grid-crm
+    uses: [fields, views, workflows]
+    template: https://kition.ai/templates/tables/simple-client-crm
+    title: { en: Simple client CRM, zh: 简易客户 CRM }
+    body:
+      en: Prospects, active clients, deal value, relationship health and follow-up dates, with a workflow that keeps contact details clean.
+      zh: 潜在客户、在合作客户、成交金额、关系健康度和跟进日期，再配一个保持联系方式整洁的工作流。
+  - id: receipt-ocr
+    art: grid-receipts
+    uses: [ai-fields, import]
+    template: https://kition.ai/templates/tables/receipt-ocr-table
+    title: { en: Receipt OCR table, zh: 票据识别表 }
+    body:
+      en: Receipt images sit beside the vendor, address, category and totals an AI field extracted, ready to correct and export.
+      zh: 票据图片旁边就是 AI 字段识别出的商家、地址、类别和金额，可以直接校对和导出。
+
+board:
+  - id: mind-map
+    art: canvas-mindmap
+    uses: [diagrams, canvas]
+    template: https://kition.ai/templates/whiteboards/mind-map
+    title: { en: Research mind map, zh: 研究思维导图 }
+    body:
+      en: An editable central topic with connected branches for research, ideas and questions.
+      zh: 一个可编辑的中心主题，连出研究、想法和问题等分支。
+  - id: flowchart
+    art: canvas-flow
+    uses: [diagrams, connectors]
+    template: https://kition.ai/templates/whiteboards/flowchart
+    title: { en: Approval process flowchart, zh: 审批流程图 }
+    body:
+      en: Start, action, decision, revision and finish nodes joined by straight and elbow connectors that stay attached when you move them.
+      zh: 开始、处理、判断、修改、结束节点，用直线和折线连接，挪动时连线一直贴着。
+  - id: retro
+    art: canvas-stickies
+    uses: [canvas, proposals]
+    title: { en: Team retro board, zh: 团队复盘白板 }
+    body:
+      en: Sticky notes and sketches on a canvas with no edges; the agent proposes how to group them and you approve each change.
+      zh: 在没有边界的画布上贴便签、随手画；Agent 提议怎么分组，每一处改动都由你确认。
+
+photo:
+  - id: product-retouch
+    art: image-retouch
+    uses: [adjust, psd]
+    title: { en: Product photo retouch, zh: 商品图精修 }
+    body:
+      en: Levels, curves and hue/saturation as adjustment layers on a product shot, saved back to the same PSD.
+      zh: 用色阶、曲线、色相/饱和度调整图层修商品图，存回同一个 PSD。
+  - id: event-poster
+    art: image-poster
+    uses: [layers, paint]
+    title: { en: Layered event poster, zh: 分层活动海报 }
+    body:
+      en: Type, layer masks and clipping masks in a poster the agent can open, change and re-export.
+      zh: 文字、图层蒙版和剪贴蒙版组成的海报，Agent 能打开、修改、重新导出。
+  - id: social-set
+    art: image-social
+    uses: [export]
+    title: { en: Social image set, zh: 社交媒体配图 }
+    body:
+      en: One design exported as PNG and JPG for every channel, layer by layer or artboard by artboard.
+      zh: 一份设计按渠道导出 PNG 和 JPG，可以按图层导出，也可以按画板导出。
+
+film:
+  - id: interview-cut
+    art: timeline-edit
+    uses: [timeline]
+    title: { en: Interview cut, zh: 访谈剪辑 }
+    body:
+      en: Split, trim and ripple-delete clips on real tracks, then add titles, transitions and music.
+      zh: 在真正的轨道上分割、修剪、波纹删除片段，再加标题、转场和音乐。
+  - id: captioned-clip
+    art: video-captions
+    uses: [captions, render]
+    title: { en: Captioned short, zh: 带字幕的短片 }
+    body:
+      en: Render the MP4 inside the kit and export the captions as SRT or VTT for every platform.
+      zh: 在 kit 里直接渲染 MP4，字幕导出成 SRT 或 VTT，各个平台都能用。
+  - id: finishing-handoff
+    art: timeline-grade
+    uses: [interchange, safe]
+    title: { en: Hand-off for finishing, zh: 交给调色和精剪 }
+    body:
+      en: Send the cut on as EDL, FCPXML or OTIO and try a CUBE look first; the source clips are never touched.
+      zh: 把剪辑以 EDL、FCPXML 或 OTIO 交出去，先套一个 CUBE 调色预览；素材原片始终不动。
+
+doc:
+  - id: contract-review
+    art: page-contract
+    uses: [export, protect]
+    title: { en: Contract review, zh: 合同审阅 }
+    body:
+      en: Editing passes with review tools on a real DOCX, password protection, and a PDF for signing.
+      zh: 在真正的 DOCX 上用审阅工具逐轮修改，加密码保护，再导出 PDF 去签字。
+  - id: report
+    art: page-report
+    uses: [layout, drawing]
+    title: { en: Report with charts, zh: 带图表的报告 }
+    body:
+      en: Headers and footers, page numbers, references and equations, with charts shared with sheet and slide.
+      zh: 页眉页脚、页码、引用和公式，图表和 sheet、slide 共用一套。
+  - id: resume
+    art: page-resume
+    uses: [protect, docx]
+    title: { en: Resume from a template, zh: 用模板写简历 }
+    body:
+      en: Start from the resume template, keep the styles and fonts, and send a DOCX anyone can open.
+      zh: 从简历模板开始，保留样式和字体，发出一份谁都能打开的 DOCX。
+
+sheet:
+  - id: budget
+    art: grid-budget
+    uses: [formulas, charts]
+    title: { en: Monthly budget, zh: 月度预算 }
+    body:
+      en: Formulas, number formats and conditional formatting that turns overspending red, with a chart that updates with the data.
+      zh: 公式、数字格式和条件格式，超支自动标红，图表随数据一起更新。
+  - id: sales-pivot
+    art: chart-pivot
+    uses: [pivot, charts]
+    title: { en: Sales by region, zh: 分区域销售分析 }
+    body:
+      en: Format the export as a table, then summarise it by region and month with a PivotTable and a chart.
+      zh: 把导出的数据套成表格，再用数据透视表和图表按区域、月份汇总。
+  - id: clean-csv
+    art: grid-clean
+    uses: [fill, io]
+    title: { en: Clean up a CSV export, zh: 清洗 CSV 导出 }
+    body:
+      en: Open the CSV, split and join columns with flash fill, extend series with autofill, and save it as XLSX.
+      zh: 打开 CSV，用快速填充拆分合并列，用自动填充补齐序列，存成 XLSX。
+
+slide:
+  - id: pitch-deck
+    art: slide-pitch
+    uses: [stage, props]
+    title: { en: Pitch deck, zh: 路演 PPT }
+    body:
+      en: Slides with layouts, organised into sections, with shapes, pictures and tables.
+      zh: 套用版式的幻灯片，按分节组织，配形状、图片和表格。
+  - id: quarterly-review
+    art: slide-chart
+    uses: [props, motion]
+    title: { en: Quarterly review, zh: 季度汇报 }
+    body:
+      en: Charts and SmartArt that build in with object animations, and transitions between sections.
+      zh: 图表和 SmartArt 配上对象动画逐个出现，分节之间加转场。
+  - id: training-deck
+    art: slide-video
+    uses: [media, export]
+    title: { en: Training deck with video, zh: 带视频的培训课件 }
+    body:
+      en: Audio and video inside the slides, exported as PPTX for the room and as PDF for the handout.
+      zh: 幻灯片里嵌音频和视频，现场用 PPTX，讲义导出 PDF。
+
+pdf:
+  - id: fill-sign
+    art: pdf-sign
+    uses: [forms]
+    title: { en: Fill and sign a form, zh: 填表并签名 }
+    body:
+      en: Detect the form fields, fill them in, sign, and leave comments for the next person.
+      zh: 识别表单字段、填好、签名，再给下一个人留批注。
+  - id: redact
+    art: pdf-redact
+    uses: [redact]
+    title: { en: Redact before sharing, zh: 分享前涂黑敏感信息 }
+    body:
+      en: True redaction removes the text underneath, and a watermark marks the copy you send out.
+      zh: 真正的涂黑会删掉底下的文字，再加一个水印标明这是外发的副本。
+  - id: searchable-scans
+    art: pdf-ocr
+    uses: [ocr, compliance]
+    title: { en: Searchable archive, zh: 可搜索的扫描件归档 }
+    body:
+      en: OCR makes scanned pages searchable, and conversion to PDF/A keeps them readable for the long term.
+      zh: OCR 让扫描页可以搜索，转成 PDF/A 长期保存。
+
+vector:
+  - id: logo
+    art: vector-logo
+    uses: [paths]
+    title: { en: Logo construction, zh: Logo 设计 }
+    body:
+      en: Shapes and free paths with their handles, plus type, built up into a logo you can export as SVG.
+      zh: 用形状、自由路径和锚点手柄，加上文字，搭出一个能导出 SVG 的 Logo。
+  - id: icon-set
+    art: vector-icons
+    uses: [artboards, export]
+    title: { en: Icon set, zh: 图标集 }
+    body:
+      en: One icon per artboard, aligned and grouped, exported as SVG, PNG and CSS for the web.
+      zh: 每个图标一个画板，对齐、编组，导出 SVG、PNG 和网页用的 CSS。
+  - id: recolor
+    art: vector-recolor
+    uses: [recolor, ai]
+    title: { en: Recolour a brand illustration, zh: 插画换品牌色 }
+    body:
+      en: Open the .ai file and recolour the whole illustration in one go for a new palette.
+      zh: 打开 .ai 文件，一次把整幅插画换成新的配色。
+
+layout:
+  - id: magazine
+    art: layout-magazine
+    uses: [pages, stories]
+    title: { en: Magazine spread, zh: 杂志跨页 }
+    body:
+      en: Pages and spreads side by side on one canvas, with a text story flowing from column to column.
+      zh: 页面和跨页并排放在一张画布上，正文从一栏流到下一栏。
+  - id: brochure
+    art: layout-brochure
+    uses: [frames, swatches]
+    title: { en: Product brochure, zh: 产品手册 }
+    body:
+      en: Text and graphic frames filled with copy and photos, coloured from shared swatches.
+      zh: 文本框和图形框里放文案和照片，颜色都取自共享色板。
+  - id: menu
+    art: layout-menu
+    uses: [stories, swatches]
+    title: { en: Restaurant menu, zh: 餐厅菜单 }
+    body:
+      en: Paragraph styles keep every dish and price consistent, and a table in the layout lines up the prices.
+      zh: 段落样式让每道菜和价格保持一致，版面里的表格把价格对齐。
+
+motion:
+  - id: title
+    art: motion-title
+    uses: [comps, layers, interchange]
+    title: { en: Animated title, zh: 动态标题 }
+    body:
+      en: A composition with text and shape layers moving on keyframes, rendered to MP4.
+      zh: 文字层和形状层在关键帧上运动的合成，渲染成 MP4。
+  - id: lower-third
+    art: motion-lower
+    uses: [layers, masks]
+    title: { en: Lower third, zh: 人名条 }
+    body:
+      en: A name bar that wipes in through a mask, with layer styles, ready to drop on any interview.
+      zh: 通过蒙版擦入的人名条，带图层样式，放到哪段访谈上都能用。
+  - id: roto
+    art: motion-roto
+    uses: [roto, masks]
+    title: { en: Rotoscoped highlight, zh: 抠像高亮 }
+    body:
+      en: Roto tools cut the subject out, and a track matte keeps the glow behind them.
+      zh: 用 Roto 工具把人物抠出来，再用轨道遮罩让光效留在人物后面。
+
+cad:
+  - id: floor-plan
+    art: cad-plan
+    uses: [draft, blocks]
+    title: { en: Apartment floor plan, zh: 户型平面图 }
+    body:
+      en: Walls from lines and polylines, doors and furniture as reusable blocks with attributes.
+      zh: 用直线和多段线画墙，门和家具做成带属性的可复用图块。
+  - id: part
+    art: cad-part
+    uses: [dims, draft, cmd]
+    title: { en: Machined part drawing, zh: 零件加工图 }
+    body:
+      en: Arcs, fillets and hatches with linear dimensions on their own layer, exported to PDF for the workshop.
+      zh: 圆弧、倒圆角和填充，线性标注放在单独的图层上，导出 PDF 给车间。
+  - id: site-plan
+    art: cad-site
+    uses: [cmd, draft, dxf]
+    title: { en: Site layout from the command line, zh: 用命令行画总平面 }
+    body:
+      en: Type the commands you already know, array the parking bays, and keep everything in DXF.
+      zh: 敲熟悉的命令，阵列出停车位，所有内容都保存在 DXF 里。

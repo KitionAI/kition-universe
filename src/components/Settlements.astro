@@ -1,0 +1,68 @@
+---
+// "Settlements on this planet": listed products that use this kit. Renders
+// nothing at all when there are none (no placeholders).
+import SettlementCard from './SettlementCard.astro';
+import { type Lang, universe, t, href } from '../lib/universe';
+import { productsOnPlanet } from '../lib/products';
+import { bw } from '../i18n/builtWith';
+
+interface Props {
+  lang: Lang;
+  kit: string;
+}
+const { lang, kit } = Astro.props;
+const b = bw(lang);
+const list = productsOnPlanet(kit);
+const add = universe().productGalaxy.add;
+---
+
+{
+  list.length > 0 && (
+    <section class="settlements" aria-labelledby={`h-settle-${kit}`}>
+      <div class="head">
+        <h2 id={`h-settle-${kit}`}>{b('bw.onPlanet')}</h2>
+        <a class="add" href={href(lang, '/built-with/submit/')}>+ {t(add.cta, lang)}</a>
+      </div>
+      <p class="sub">{b('bw.onPlanetSub')}</p>
+      <ul class="list" role="list">
+        {list.map((p) => (
+          <li>
+            <SettlementCard lang={lang} product={p} compact />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 20px;
+  }
+  .add {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .add:hover {
+    color: var(--text);
+  }
+  .sub {
+    color: var(--muted);
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    grid-auto-rows: 1fr;
+  }
+  .list > li {
+    min-width: 0;
+  }
+</style>

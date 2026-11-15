@@ -1,0 +1,60 @@
+---
+// What each kit makes: one tile per kit, in the fixed kit order, showing a
+// picture the kit itself rendered (the last frame of one of its replays).
+// The picture starts the replay; the name goes to the planet.
+import { type Lang, universe, t, planetHref, cluster } from '../lib/universe';
+import { replaysOf, replayId, replayThumb } from '../lib/replays';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const u = universe();
+---
+
+<ul class="kit-wall" role="list">
+  {
+    u.planets.map((p) => {
+      const r = replaysOf(p.id)[0];
+      const sc = r && p.scenarios.find((x) => x.id === r.scenario);
+      return (
+        <li class="tile pcard" data-planet={p.id} style={`--kit:${p.color.dark}`}>
+          {r ? (
+            <button class="shot" type="button" data-replay={replayId(r.kit, r.scenario)} aria-label={`${zh ? '回放' : 'Replay'}: ${p.name} · ${sc ? t(sc.title, lang) : r.title}`}>
+              <img src={replayThumb(r)} alt="" loading="lazy" decoding="async" width="480" height="300" />
+              <span class="play">▶ {sc ? t(sc.title, lang) : r.title}</span>
+            </button>
+          ) : (
+            <a class="shot none" href={planetHref(lang, p.id)} tabindex="-1" aria-hidden="true"><span>{p.ext || p.name}</span></a>
+          )}
+          <a class="meta" href={planetHref(lang, p.id)}>
+            <span class="name"><i></i>{p.name}{p.status === 'preview' && <em>Preview</em>}</span>
+            <span class="line">{t(p.tagline, lang)}</span>
+            <span class="where">{t(cluster(p.cluster).label, lang)} · {t(p.planet, lang)} →</span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .kit-wall { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+  .tile { display: flex; flex-direction: column; border: 1px solid var(--line); border-top: 3px solid var(--kit); border-radius: 14px; overflow: hidden; background: var(--surface); min-width: 0; }
+  .shot { position: relative; display: block; padding: 0; border: 0; background: #fff; cursor: pointer; overflow: hidden; aspect-ratio: 16 / 10; }
+  .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; transition: transform 0.3s ease; }
+  .shot:hover img, .shot:focus-visible img { transform: scale(1.04); }
+  .shot .play { position: absolute; left: 8px; bottom: 8px; max-width: calc(100% - 16px); padding: 5px 10px; border-radius: 999px; background: rgba(8, 10, 22, 0.86); color: #fff; font: 600 0.7rem/1.2 var(--font-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .shot:hover .play, .shot:focus-visible .play { background: var(--kit); color: #0b0c16; }
+  .shot.none { display: grid; place-items: center; background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--kit) 45%, #0b0c16), #0b0c16 75%); text-decoration: none; cursor: default; }
+  .shot.none span { font: 600 1.1rem/1 var(--font-mono); color: color-mix(in srgb, var(--kit) 80%, #fff); }
+  .meta { display: grid; gap: 4px; padding: 12px 14px 14px; text-decoration: none; color: var(--text); flex: 1; align-content: start; }
+  .name { font: 600 1.05rem/1.2 var(--font-display); display: flex; align-items: center; gap: 7px; }
+  .name i { width: 9px; height: 9px; border-radius: 50%; background: var(--kit); box-shadow: 0 0 10px var(--kit); }
+  .name em { font: 600 0.58rem/1 var(--font-mono); font-style: normal; padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); }
+  .line { font-size: 0.82rem; line-height: 1.45; color: var(--muted); }
+  .where { font: 0.64rem/1.4 var(--font-mono); color: var(--muted); margin-top: 4px; }
+  .meta:hover .name, .meta:hover .where { color: var(--kit); }
+  .tile:global(.is-seen) .name::after { content: '✓'; color: #3fd17b; font-size: 0.75rem; }
+</style>

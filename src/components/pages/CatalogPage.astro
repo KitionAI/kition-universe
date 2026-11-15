@@ -1,0 +1,224 @@
+---
+// The star catalog: the whole universe as an accessible list, no 3D needed.
+import Base from '../../layouts/Base.astro';
+import { type Lang, stationHref, universe, t, planetsIn, planetHref, href } from '../../lib/universe';
+import { ui } from '../../i18n/ui';
+import { productsOnPlanet, productHref } from '../../lib/products';
+import { bw } from '../../i18n/builtWith';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = ui(lang);
+const b = bw(lang);
+const u = universe();
+const site = Astro.site!;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Kition Universe', item: new URL(href(lang, '/'), site).href },
+      { '@type': 'ListItem', position: 2, name: s('catalog.h1'), item: new URL(href(lang, '/catalog/'), site).href },
+    ],
+  },
+];
+---
+
+<Base lang={lang} title={s('catalog.title')} description={s('catalog.sub')} path="/catalog/" og="catalog" jsonLd={jsonLd}>
+  <div class="wrap section">
+    <h1>{s('catalog.h1')}</h1>
+    <p class="lede">{s('catalog.sub')}</p>
+
+    {
+      u.clusters.map((c) => (
+        <section id={c.id} aria-labelledby={`h-${c.id}`} class="cl">
+          <h2 id={`h-${c.id}`}>
+            {c.name} <span>· {t(c.label, lang)}</span>
+          </h2>
+          <p class="muted">{t(c.blurb, lang)}</p>
+          <div class="scroll" role="region" aria-labelledby={`h-${c.id}`} tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">{s('catalog.colKit')}</th>
+                  <th scope="col">{s('catalog.colPlanet')}</th>
+                  <th scope="col">{s('catalog.colExt')}</th>
+                  <th scope="col">{s('catalog.colStatus')}</th>
+                  <th scope="col">{s('catalog.colWhat')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {planetsIn(c.id).map((p) => (
+                  <tr class="kit-light" style={`--kit-l:${p.color.light};--kit-d:${p.color.dark}`} data-planet={p.id}>
+                    <th scope="row">
+                      <a href={planetHref(lang, p.id)}>
+                        <span class="dot" aria-hidden="true" /> {p.name}
+                      </a>
+                      <span class="seen" aria-label={s('planet.landed')} hidden>
+                        ✓
+                      </span>
+                    </th>
+                    <td>{t(p.planet, lang)}</td>
+                    <td>
+                      {[...p.formats.native, ...p.formats.opens].map((f) => (
+                        <code>{f}</code>
+                      ))}
+                    </td>
+                    <td>
+                      <span class:list={['badge', { preview: p.status === 'preview' }]}>{s(`planet.status.${p.status}` as any)}</span>
+                    </td>
+                    <td>
+                      <p>{t(p.tagline, lang)}</p>
+                      <ul>
+                        {p.capabilities.map((cap) => (
+                          <li>
+                            <a href={`${planetHref(lang, p.id)}#cap-${cap.id}`}>{t(cap.building, lang)}</a>: {t(cap.title, lang)}
+                          </li>
+                        ))}
+                      </ul>
+                      {productsOnPlanet(p.id).length > 0 && (
+                        <p class="settle">
+                          {b('bw.catalogLine')}{' '}
+                          {productsOnPlanet(p.id).map((x, i) => (
+                            <>
+                              {i > 0 && ', '}
+                              <a href={productHref(lang, x.id)}>{x.name}</a>
+                            </>
+                          ))}
+                        </p>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ))
+    }
+
+    <section aria-labelledby="h-obj" class="cl">
+      <h2 id="h-obj">{s('catalog.objects')}</h2>
+      <ul class="objs">
+        <li>
+          <a href={href(lang, '/protocol/')}><strong>{u.star.name}</strong></a> — {t(u.star.tagline, lang)}
+        </li>
+        {
+          u.stations.map((st) => (
+            <li>
+              <a href={stationHref(lang, st.href)}>
+                <strong>{t(st.name, lang)}</strong>
+              </a>{' '}
+              — {t(st.title, lang)} {t(st.body, lang)}
+            </li>
+          ))
+        }
+        <li>
+          <a href={href(lang, '/built-with/')}><strong>{t(u.productGalaxy.name, lang)}</strong></a> — Built with Kition. {t(u.productGalaxy.blurb, lang)}
+        </li>
+        <li>
+          <a href={href(lang, '/scenarios/')}><strong>{lang === 'zh' ? '场景星系' : 'Scenario galaxies'}</strong></a> — {lang === 'zh' ? '12 个不同场景的星系，用不同的 Kit 组合连接真实能力。' : 'Twelve scenario galaxies connecting real capabilities through different kit combinations.'}
+        </li>
+        <li>
+          <a href={u.galaxies[0].href}><strong>{t(u.galaxies[0].name, lang)}</strong></a> — {t(u.galaxies[0].body, lang)}
+        </li>
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { visited } from '../../scripts/chrome';
+  const v = new Set(visited());
+  document.querySelectorAll<HTMLElement>('tr[data-planet]').forEach((tr) => {
+    if (v.has(tr.dataset.planet || '')) tr.querySelector<HTMLElement>('.seen')!.hidden = false;
+  });
+</script>
+
+<style>
+  .cl {
+    margin-top: 48px;
+  }
+  h2 span {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.8em;
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .scroll {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 760px;
+    font-size: 0.93rem;
+  }
+  th,
+  td {
+    text-align: left;
+    vertical-align: top;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  thead th {
+    font: 600 0.75rem/1 var(--font-display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  th[scope='row'] a {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    font: 700 1.05rem/1 var(--font-display);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  th[scope='row'] a:hover {
+    text-decoration: underline;
+  }
+  .seen {
+    color: #1fa35c;
+    margin-left: 6px;
+  }
+  td code {
+    display: inline-block;
+    margin: 0 4px 4px 0;
+    font-size: 0.8rem;
+  }
+  td p {
+    margin: 0 0 6px;
+  }
+  td ul {
+    margin: 0;
+    padding-left: 1.1em;
+    color: var(--muted);
+  }
+  td ul a {
+    color: var(--text);
+  }
+  td .settle {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  td .settle a {
+    color: var(--text);
+  }
+  .objs {
+    display: grid;
+    gap: 10px;
+    padding-left: 1.2em;
+  }
+</style>

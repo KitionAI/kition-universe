@@ -1,0 +1,125 @@
+# Propose a scenario galaxy: a kind of work done by passing a file through several kits.
+# The spec is CONTRIBUTING.md. scripts/intake.mjs reads this form by its labels: change a
+# label here and there together.
+name: Propose a scenario galaxy
+description: A kind of work done with two to four kits, in order. Free; you are credited on the galaxy.
+title: "[Galaxy] "
+labels: [scenario-galaxy]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A scenario galaxy shows one kind of work as a route through kits: for example a business review goes
+        sheet → doc → slide → pdf. Every step must be something the kit already does: pick each step from the
+        scenarios listed on the kit's planet page (their ids are in `data/scenarios.yaml`). A galaxy cannot
+        promise a capability a kit does not have, and it is not an advert: no product names in its name or text.
+  - type: input
+    id: name
+    attributes:
+      label: Galaxy name (English)
+      description: Two or three words naming the kind of work, like "Brand Studio" or "Research Lab".
+    validations:
+      required: true
+  - type: input
+    id: name_zh
+    attributes:
+      label: Galaxy name (Chinese, optional)
+  - type: input
+    id: ask
+    attributes:
+      label: Task phrase (English)
+      description: What someone would say they want to do, starting with a verb. "Prepare a quarterly review".
+    validations:
+      required: true
+  - type: input
+    id: ask_zh
+    attributes:
+      label: Task phrase (Chinese, optional)
+  - type: input
+    id: summary
+    attributes:
+      label: Summary (English)
+      description: One sentence on what happens across the steps.
+    validations:
+      required: true
+  - type: input
+    id: summary_zh
+    attributes:
+      label: Summary (Chinese, optional)
+  - type: input
+    id: outcome
+    attributes:
+      label: Outcome (English)
+      description: The files you end up with, one per step. "Regional analysis, written report, review deck and annotated handoff."
+    validations:
+      required: true
+  - type: input
+    id: outcome_zh
+    attributes:
+      label: Outcome (Chinese, optional)
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: Two to four lines, in the order the work happens, each `kit: scenario-id`. Each kit once.
+      placeholder: |
+        sheet: sales-pivot
+        doc: report
+        slide: quarterly-review
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: form
+    attributes:
+      label: Layout
+      description: lane — steps strictly one after another. ring — steps you go round more than once. binary — two groups of kits working side by side. hub — one kit in the middle that the others feed.
+      options:
+        - lane
+        - ring
+        - binary
+        - hub
+    validations:
+      required: true
+  - type: input
+    id: hub
+    attributes:
+      label: Hub kit (hub layout only)
+      description: The kit in the middle. Must be one of your steps.
+  - type: input
+    id: color
+    attributes:
+      label: Galaxy colour (optional)
+      description: One colour as #rrggbb. Left empty, a maintainer picks one that is not taken.
+      placeholder: "#8fafff"
+  - type: input
+    id: by_name
+    attributes:
+      label: Proposed by
+      description: You, your team or your company. Shown on the galaxy.
+    validations:
+      required: true
+  - type: input
+    id: by_url
+    attributes:
+      label: Your URL (optional)
+      placeholder: https://
+  - type: input
+    id: by_github
+    attributes:
+      label: Your GitHub user or organisation (optional)
+      placeholder: octocat
+  - type: textarea
+    id: why
+    attributes:
+      label: Where this work is really done this way (optional)
+      description: A public page, post or repository that shows this workflow. It helps the review; it is not published.
+  - type: checkboxes
+    id: agree
+    attributes:
+      label: Conditions
+      options:
+        - label: Every step is a scenario the kit already lists
+          required: true
+        - label: I agree to the contribution rules (CONTRIBUTING.md)
+          required: true

@@ -1,0 +1,1004 @@
+---
+// Home hero: static SVG poster first (LCP, no-WebGL fallback), then the
+// three.js island fades in on top when the browser is idle.
+import StarMapPoster from './StarMapPoster.astro';
+import ScenarioMapPoster from './ScenarioMapPoster.astro';
+import { type Lang, stationHref, universe, t, planetHref, href, worldFacts } from '../lib/universe';
+import { withBase } from '../lib/base';
+import { listedProducts, productHref, tagline, outboundRel, productPlanet } from '../lib/products';
+import { ui } from '../i18n/ui';
+import { bw } from '../i18n/builtWith';
+import { scenarioGalaxies, scenarioHref, scenarioAsks, GALAXY_COUNT } from '../lib/scenarioGalaxies';
+import { replayFor, replayId, replayThumb, replaysOf } from '../lib/replays';
+import type { UniverseSceneData } from '../scripts/scene/types';
+
+interface Props {
+  lang: Lang;
+  initialGalaxy?: string;
+  overviewTitle?: string;
+}
+const { lang, initialGalaxy = 'khp', overviewTitle } = Astro.props;
+const scenarioEntry = initialGalaxy !== 'khp';
+const selected = scenarioGalaxies.find(g=>g.id===initialGalaxy);
+const s = ui(lang);
+const u = universe();
+
+const keys = [
+  'scene.land', 'scene.landing', 'scene.ship', 'scene.blackhole', 'scene.blackholeBody', 'home.starTitle',
+  'home.beyondTitle', 'home.shipsBody', 'home.badge', 'nav.protocol', 'planet.status.preview',
+  'galaxy.khp', 'galaxy.goto', 'galaxy.sdkDocs', 'galaxy.allSettlements', 'galaxy.delivery', 'galaxy.usedBy', 'galaxy.settlement',
+  'galaxy.details', 'galaxy.visit', 'galaxy.badge',
+] as const;
+const pgx = u.productGalaxy;
+const zh = lang === 'zh';
+const sheetReplay = replaysOf('sheet')[0];
+// the tour's four stops: the protocol, one kit, one scenario, the products
+const tourStops = [
+  { go: { galaxy: 'khp' }, title: zh ? '① 协议：KHP' : '① The protocol: KHP', text: zh ? `中间这颗恒星是 Kit Harness Protocol：AI 用同一组调用查看、执行、检查专业文件。绕着它的 ${u.planets.length} 颗星球，每一颗是一个 kit。` : `The star in the middle is the Kit Harness Protocol: one set of calls for an agent to inspect, run and check professional files. Each of the ${u.planets.length} planets around it is a kit.` },
+  { go: { planet: 'sheet' }, title: zh ? '② 一个 Kit：sheet' : '② One kit: sheet', text: zh ? '每个 kit 是一个 AI 能直接操作的专业编辑器。右边回放的是真实的 kit 命令，图是 kit 自己渲染的。' : 'A kit is a professional editor an agent can drive. The replay on the right shows real kit commands, and the pictures are rendered by the kit.', replay: sheetReplay ? replayId(sheetReplay.kit, sheetReplay.scenario) : undefined },
+  { go: { galaxy: 'business-review' }, title: zh ? '③ 一个场景：经营汇报' : '③ One scenario: a business review', text: zh ? '同一批 kit 可以拼成不同的工作。这里一份汇报依次经过 sheet、doc、slide、pdf，飞船把文件从一站运到下一站。' : 'The same kits combine into different kinds of work. Here a review passes through sheet, doc, slide and pdf; the courier carries the file from one to the next.' },
+  { go: { galaxy: 'products' }, title: zh ? '④ 你的产品' : '④ Your product', text: zh ? 'Kition SDK 把这些 kit 放进你自己的产品：嵌入界面、脚本调用、无界面运行，或者通过 MCP 交给 AI。' : 'The Kition SDK puts these kits into your own product: embedded, scripted, headless, or handed to an agent through MCP.' },
+];
+
+const data: UniverseSceneData = {
+  lang,
+  strings: Object.fromEntries(keys.map((k) => [k, s(k as any, { name: '{name}' })])),
+  planets: u.planets.map((p) => ({
+    id: p.id, name: p.name, nick: t(p.planet, lang), cluster: p.cluster, status: p.status, color: p.color, surface: p.surface,
+    ship: t(p.ship, lang), href: planetHref(lang, p.id), tagline: t(p.tagline, lang), world: t(p.world, lang), facts: worldFacts(p.surface, lang),
+    replay: (r => r ? { id: replayId(r.kit, r.scenario), thumb: replayThumb(r), goal: t(r.goal, lang), frames: r.frames.length } : undefined)(replaysOf(p.id)[0]),
+    usedIn: scenarioGalaxies.filter(g => g.kits.some(k => k.kit === p.id)).map(g => ({ id: g.id, name: g.name[lang], color: g.color })),
+  })),
+  clusters: u.clusters.map((c) => ({ id: c.id, angle: c.angle, distance: c.distance, label: t(c.label, lang) })),
+  stations: u.stations.map((st) => ({
+    id: st.id, kind: st.kind, name: t(st.name, lang), title: t(st.title, lang), body: t(st.body, lang), cta: t(st.cta, lang), href: stationHref(lang, st.href),
+    angle: st.angle, distance: st.distance, height: st.height,
+  })),
+  galaxies: u.galaxies.map((g) => ({ id: g.id, name: t(g.name, lang), body: t(g.body, lang), href: g.href, position: g.position })),
+  star: {
+    name: u.star.name, short: u.star.short, tagline: t(u.star.tagline, lang), lines: u.star.lines.map((l) => t(l, lang)), body: t(u.star.body, lang),
+    href: u.star.href, page: href(lang, '/protocol/'),
+  },
+  agentDocs: u.mcp.docs,
+  newKit: {
+    name: t(u.newKit.name, lang), title: t(u.newKit.title, lang), body: t(u.newKit.body, lang), cta: t(u.newKit.cta, lang), href: u.newKit.href,
+    protocolPage: href(lang, '/protocol/'), angle: u.newKit.angle, distance: u.newKit.distance, height: u.newKit.height,
+  },
+  productGalaxy: {
+    name: t(pgx.name, lang), blurb: t(pgx.blurb, lang), position: pgx.position,
+    sdk: { name: pgx.sdk.name, license: pgx.sdk.license, body: t(pgx.sdk.body, lang), href: pgx.sdk.href, docs: pgx.sdk.docs },
+    delivery: pgx.delivery.map((d) => ({ id: d.id, name: d.name, body: t(d.body, lang), docs: d.docs })),
+    add: {
+      name: t(pgx.add.name, lang), title: t(pgx.add.title, lang), body: t(pgx.add.body, lang), cta: t(pgx.add.cta, lang),
+      href: href(lang, '/built-with/submit/'), badgeHref: href(lang, '/built-with/badge/'),
+    },
+    listHref: href(lang, '/built-with/'),
+    products: listedProducts().map((p) => ({
+      id: p.id, name: p.name, tagline: tagline(p, lang), kits: p.kits, delivery: p.delivery, byKition: !!p.by_kition, pick: p.editors_pick,
+      href: productHref(lang, p.id), url: p.url, rel: outboundRel(p), statusLabel: p.status === 'preview' ? bw(lang)('bw.preview') : undefined,
+      planet: productPlanet(p, (kit) => u.planets.find((x) => x.id === kit)?.color.dark ?? '#8b7cf0'),
+    })),
+  },
+  scenarioGalaxies: scenarioGalaxies.map(g=>({
+    id:g.id, name:g.name[lang], summary:g.summary[lang], outcome:g.outcome[lang], color:g.color, position:g.position, href:scenarioHref(lang,g.id),
+    form:g.form, hub:Math.max(0,g.kits.findIndex(k=>k.kit===g.hub)),
+    by:g.by?{name:g.by.name,url:g.by.url||(g.by.github?`https://github.com/${g.by.github}`:undefined)}:undefined,
+    kits:g.kits.map(entry=>{
+      const p=u.planets.find(p=>p.id===entry.kit)!;const sc=p.scenarios.find(sc=>sc.id===entry.scenario)!;
+      const r=replayFor(p.id,sc.id);
+      return {id:p.id,title:t(sc.title,lang),body:t(sc.body,lang),href:`${planetHref(lang,p.id)}#scenario-${sc.id}`,status:p.status,ext:p.ext||p.formats.native[0]||'',
+        replay:r?{id:replayId(p.id,sc.id),thumb:replayThumb(r),goal:t(r.goal,lang),frames:r.frames.length}:undefined};
+    }),
+  })),
+};
+---
+
+<section
+  class:list={['stage', { 'scenario-entry': scenarioEntry }]}
+  id="universe-stage"
+  data-initial-galaxy={initialGalaxy}
+  data-scene="universe"
+  aria-labelledby="hero-h1"
+  data-loading={s('home.loading3d')}
+  data-nowebgl={s('home.noWebgl')}
+  data-lowpower={s('home.static3dOff')}
+  style={`--sky:url(${withBase('/assets/space/infinite-sky.webp')})`}
+>
+  <div class="scene-layer">
+    <div class="poster-wrap">
+      {scenarioEntry ? <ScenarioMapPoster lang={lang} focus={initialGalaxy} /> : <><StarMapPoster lang={lang} preset="landscape" /><StarMapPoster lang={lang} preset="portrait" /></>}
+    </div>
+    <div class="scene-labels" role="group" aria-label={s('nav.map')}></div>
+  </div>
+
+  {scenarioEntry ? <div class="scenario-intro">
+    <p class="mission-label">{GALAXY_COUNT} GALAXIES / 16 KITS</p>
+    <h1 id="hero-h1">{selected?.name[lang] || overviewTitle || (lang==='zh'?'场景星系':'Scenario Galaxies')}</h1>
+    <p>{selected?.summary[lang] || (lang==='zh'?'不同的场景，让 Kit 组成不同的世界。':'Different scenarios. New worlds built from shared kits.')}</p>
+    <a href={selected ? '#scenario-details' : '#scenarios'}>{lang==='zh'?'探索场景组合':'Explore the combinations'} <span>↓</span></a>
+  </div> : <div class="hero-copy">
+    <p class="mission-label">{lang === 'zh' ? 'KITION 宇宙 · 探索星系' : 'KITION UNIVERSE · EXPLORE THE GALAXIES'}</p>
+    <h1 id="hero-h1">{s('home.h1')} <span>{s('home.h1b')}</span></h1>
+    <p class="sub">{s('home.sub')}</p>
+    <div class="cta">
+      <a class="btn primary" href={href(lang, '/catalog/')}>{s('home.catalogCta')}</a>
+      <a class="btn" href="#planets">{s('home.planetsTitle')}</a>
+    </div>
+  </div>}
+    {!scenarioEntry && <nav class="universe-systems" aria-label={lang === 'zh' ? '宇宙组成' : 'Universe systems'}>
+      <a href="#planets"><strong>{u.planets.length}</strong><span>{lang === 'zh' ? '专业 Kit 星球' : 'PROFESSIONAL KITS'}</span></a>
+      <a href={scenarioHref(lang)} data-galaxy-go="overview"><strong>{scenarioGalaxies.length}</strong><span>{lang === 'zh' ? '场景星系' : 'SCENARIO GALAXIES'}</span></a>
+      <a href="#interface"><strong>UI</strong><span>{lang === 'zh' ? 'Tessera 空间站' : 'TESSERA STATION'}</span></a>
+    </nav>}
+
+  <nav class="galaxy-nav" aria-label={lang === 'zh' ? '星系导航' : 'Galaxy navigation'}>
+    <a href={scenarioHref(lang)} data-galaxy-go="overview">{lang==='zh'?'总览':'Overview'}</a>
+    <a href={href(lang, '/catalog/')} data-galaxy-go="khp">{lang === 'zh' ? 'Kit' : 'Kits'}</a>
+    <a href={href(lang, '/built-with/')} data-galaxy-go="products">{lang === 'zh' ? '产品' : 'Products'}</a>
+    <details class="scenario-atlas">
+      <summary><span data-atlas-current>{selected?.name[lang] || (lang==='zh'?'场景':'Scenarios')}</span> <b>{scenarioGalaxies.length}</b> <span aria-hidden="true">⌃</span></summary>
+      <div class="atlas-list"><p>{lang==='zh'?'选择你的场景星系':'CHOOSE YOUR SCENARIO'}</p>{scenarioGalaxies.map((g,i)=><a href={scenarioHref(lang,g.id)} data-galaxy-go={g.id} style={`--signal:${g.color}`}><i></i><span><strong>{g.name[lang]}</strong><small>{g.kits.map(k=>k.kit).join(' · ')}</small></span><em>{String(i+1).padStart(2,'0')}</em></a>)}</div>
+    </details>
+  </nav>
+  <div class="space-tools">
+    <span class="space-mode"><b aria-hidden="true">∞</b> {lang === 'zh' ? '深空漫游' : 'DEEP SPACE'}</span>
+    <button type="button" data-tour hidden>{lang === 'zh' ? '▶ 60 秒导览' : '▶ 60-second tour'}</button>
+    <button type="button" data-immersive aria-pressed="false" aria-controls="universe-stage" data-enter={lang === 'zh' ? '⛶ 沉浸探索' : '⛶ Immersive view'} data-exit={lang === 'zh' ? '↙ 退出沉浸 · Esc' : '↙ Exit · Esc'} hidden>{lang === 'zh' ? '⛶ 沉浸探索' : '⛶ Immersive view'}</button>
+  </div>
+  <div class="taskbar">
+    <button class="ask" type="button" data-search-open>
+      <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>{lang === 'zh' ? '想做什么？搜场景、Kit、命令、文件格式' : 'What do you want to make? Search scenarios, kits, commands, file formats'}</span>
+      <kbd>⌘K</kbd>
+    </button>
+    <div class="asks" role="list" aria-label={lang === 'zh' ? '常见任务' : 'Common tasks'}>
+      {['business-review', 'brand-studio', 'film-production', 'architecture', 'team-planning'].map((id) => {
+        const g = scenarioGalaxies.find((g) => g.id === id)!;
+        return <a role="listitem" href={scenarioHref(lang, id)} data-galaxy-go={id} style={`--signal:${g.color}`}>{scenarioAsks[id][lang]}</a>;
+      })}
+    </div>
+  </div>
+  <div class="tour-card" hidden role="region" aria-label={lang === 'zh' ? '导览' : 'Tour'} data-stops={JSON.stringify(tourStops)}>
+    <p class="t-count"></p>
+    <h2 class="t-title" tabindex="-1"></h2>
+    <p class="t-text" aria-live="polite"></p>
+    <div class="t-bar" aria-hidden="true"><i></i></div>
+    <p class="t-actions">
+      <button type="button" data-t="back">{lang === 'zh' ? '上一站' : 'Back'}</button>
+      <button type="button" class="main" data-t="next" data-next={lang === 'zh' ? '下一站 →' : 'Next →'} data-done={lang === 'zh' ? '结束，自己逛' : 'Done, explore'}></button>
+      <button type="button" data-t="exit">{lang === 'zh' ? '退出' : 'Exit'}</button>
+    </p>
+  </div>
+  <div class="arrive" hidden aria-live="polite"><p class="a-kind"></p><p class="a-name"></p><p class="a-sum"></p></div>
+  <div class="hover-card" aria-hidden="true"><img alt="" decoding="async" /><p class="h-goal"></p><p class="h-hint">{lang === 'zh' ? '点击查看 · ▶ 可回放' : 'Click for details · ▶ replay'}</p></div>
+  <div class="travel-streaks" aria-hidden="true"></div>
+  <div class="hud">
+    <p class="hint"><span class="pointer">{s('home.hint')}</span><span class="touch">{s('home.hintTouch')}</span><span class="keys">{s('home.hintKeys')}</span></p>
+    <p class="status" aria-live="polite"><span class="msg"></span><button class="btn small load3d" type="button" hidden>{s('home.try3d')}</button></p>
+  </div>
+
+  <aside class="scene-panel" hidden aria-labelledby="scene-panel-title" role="dialog" aria-modal="false">
+    <button class="p-close" type="button" aria-label={s('scene.close')}>×</button>
+    <p class="p-kind eyebrow"></p>
+    <h2 class="p-title" id="scene-panel-title" tabindex="-1"></h2>
+    <div class="p-body"></div>
+    <div class="p-actions"></div>
+  </aside>
+
+  <div class="scene-toast" role="status" hidden></div>
+
+  <div class="scene-warp" hidden>
+    <div class="streaks" aria-hidden="true"></div>
+    <p class="w-text" role="status"></p>
+    <button class="btn w-skip" type="button">{s('scene.skip')}</button>
+  </div>
+
+  <script type="application/json" id="universe-data" set:html={JSON.stringify(data)} />
+  <noscript><style>.stage .hud .hint{display:none}</style></noscript>
+</section>
+
+<script>
+  import { hasWebGL, lowPower, forcedMode, whenIdle } from '../scripts/scene/support';
+  import { visited } from '../scripts/chrome';
+
+  const root = document.querySelector<HTMLElement>('[data-scene=universe]')!;
+  const status = root.querySelector<HTMLElement>('.status .msg')!;
+  const btn = root.querySelector<HTMLButtonElement>('.load3d')!;
+  const msgs = root.dataset;
+  const immersive = root.querySelector<HTMLButtonElement>('[data-immersive]')!;
+  const inertBefore = new Map<HTMLElement, boolean>();
+  let scrollBefore = { x: 0, y: 0 };
+  function setImmersive(on: boolean) {
+    if (on) scrollBefore = { x: scrollX, y: scrollY };
+    root.classList.toggle('immersive', on);
+    document.body.classList.toggle('universe-immersive', on);
+    immersive.setAttribute('aria-pressed', String(on));
+    immersive.textContent = (on ? immersive.dataset.exit : immersive.dataset.enter)!;
+    if (on) {
+      let child: HTMLElement = root;
+      while (child.parentElement) {
+        for (const sibling of child.parentElement.children) if (sibling !== child && sibling instanceof HTMLElement) {
+          inertBefore.set(sibling, sibling.inert); sibling.inert = true;
+        }
+        if (child.parentElement === document.body) break;
+        child = child.parentElement;
+      }
+    } else {
+      inertBefore.forEach((wasInert, element) => element.inert = wasInert);
+      inertBefore.clear();
+      window.scrollTo({ left: scrollBefore.x, top: scrollBefore.y, behavior: 'instant' });
+      immersive.focus({ preventScroll: true });
+    }
+  }
+  immersive.addEventListener('click', () => setImmersive(immersive.getAttribute('aria-pressed') !== 'true'));
+  window.addEventListener('keydown', e => { if (e.key === 'Escape' && root.classList.contains('immersive')) setImmersive(false); });
+
+  // mark visited planets on the static poster too
+  const seen = new Set(visited());
+  root.querySelectorAll<SVGAElement>('.poster a.planet').forEach((a) => seen.has(a.dataset.planet || '') && a.classList.add('is-seen'));
+
+  const start = () => {
+    btn.hidden = true;
+    root.classList.add('booting');
+    status.textContent = msgs.loading || '';
+    import('../scripts/scene/universe')
+      .then(async (m) => {
+        const data = JSON.parse(document.getElementById('universe-data')!.textContent || '{}');
+        await m.mountUniverse(root, data);
+        immersive.hidden = false;
+        import('../scripts/tour').then((t) => t.initTour(root));
+        status.textContent = '';
+        root.classList.remove('booting');
+      })
+      .catch((err) => {
+        console.error(err);
+        root.classList.remove('booting');
+        status.textContent = msgs.nowebgl || '';
+      });
+  };
+
+  const forced = forcedMode();
+  if (!hasWebGL()) {
+    status.textContent = msgs.nowebgl || '';
+    root.classList.add('static');
+  } else if (forced === 'static' || (forced !== '3d' && lowPower())) {
+    root.classList.add('static');
+    status.textContent = msgs.lowpower || '';
+    btn.hidden = false;
+    btn.addEventListener('click', start, { once: true });
+  } else {
+    whenIdle(start);
+  }
+</script>
+
+<style>
+  .stage {
+    position: relative;
+    height: max(560px, calc(100svh - 60px));
+    overflow: hidden;
+    background: var(--space-grad);
+    isolation: isolate;
+  }
+  :global([data-theme='dark']) .stage {
+    background: linear-gradient(180deg, rgba(3, 6, 15, .08), rgba(3, 6, 15, .2)), var(--sky) center / cover, #03060f;
+  }
+  .space-tools { position:absolute; z-index:4; top:12px; right:24px; display:flex; align-items:center; gap:15px; }
+  .space-mode { font:.56rem/1 var(--font-mono); letter-spacing:.13em; color:var(--muted); display:flex; gap:7px; align-items:center; }
+  .space-mode b { font-size:1.2rem; color:#78c8da; font-weight:400; }
+  .space-tools button { border:1px solid var(--line); border-radius:6px; background:color-mix(in srgb,var(--bg) 75%,transparent); color:var(--text); padding:6px 10px; font:.65rem/1.2 var(--font-body); cursor:pointer; backdrop-filter:blur(10px); }
+  .space-tools button:hover { border-color:var(--muted); }
+  .stage:global(.immersive) { position:fixed; inset:0; z-index:100; width:100%; height:100dvh !important; }
+  :global(body.universe-immersive) { overflow:hidden; }
+  @media(max-width:700px) { .space-tools { right:16px; top:14px; }.space-mode { display:none; } }
+  .mission-label {
+    color: #72c9db;
+    font: 500 .68rem/1.4 var(--font-mono);
+    letter-spacing: .2em;
+    margin-bottom: 16px;
+  }
+  .galaxy-nav { position: absolute; bottom: 65px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; padding: 5px; gap: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-solid); box-shadow: var(--shadow); }
+  .galaxy-nav a { padding: 9px 14px; border-radius: 999px; font: 500 .75rem var(--font-display); white-space: nowrap; text-decoration: none; }
+  .galaxy-nav a span { color: var(--muted); font-size: .6rem; margin-right: 5px; }
+  .galaxy-nav a[aria-current='true'] { background: var(--surface); color: var(--star); outline: 1px solid var(--line); }
+  .scene-labels :global(.lbl-scenario .n), .scene-labels :global(.lbl-scenekit .n) { color:var(--signal); }
+  .scene-labels :global(.lbl-scenekit .k) { max-width:190px; white-space:normal; font-size:.65rem; }
+  .scene-labels :global(.lbl-scenario .n) { font-size:1.1rem; }
+  .scenario-intro { position:absolute; z-index:2; top:42px; left:max(28px,calc((100% - 1400px)/2 + 16px)); max-width:330px; pointer-events:none; }
+  .scenario-intro h1 { font-size:clamp(1.8rem,3vw,2.7rem); margin:0 0 15px; text-shadow:0 2px 24px var(--bg); }
+  .scenario-intro h1 span { display:block; font:500 .8rem/1.5 var(--font-mono); letter-spacing:.12em; color:var(--muted); margin-top:10px; }
+  .scenario-intro p:not(.mission-label) { font-size:.9rem; color:var(--muted); margin-bottom:20px; }
+  .scenario-intro a { pointer-events:auto; font-size:.8rem; text-decoration:none; border-bottom:1px solid var(--line); padding-bottom:9px; display:inline-block; }
+  .scenario-intro a span { color:var(--star); margin-left:24px; }
+  .scenario-intro small { display:block; color:var(--muted); font-size:.65rem; margin-top:18px; }
+  .stage:global(.intro-hidden) .scenario-intro { opacity:0; pointer-events:none; }
+  .stage:global(.intro-hidden) .scenario-intro a { pointer-events:none; }
+
+
+  @media(max-width:700px) { .stage.scenario-entry { height:max(700px,calc(100svh - 60px)); }.scenario-intro { top:24px; left:24px; }.scenario-intro h1 { font-size:1.8rem; margin-bottom:8px; }.scenario-intro h1 span { display:none; }.scenario-intro p:not(.mission-label) { margin:0 0 10px; }.scenario-intro small { margin-top:10px; }.scenario-intro .mission-label { margin-bottom:10px; } }
+  :global([data-theme='light']) .scene-labels :global(.lbl-scenekit .n) { color: #775329; }
+  :global([data-theme='light']) .scene-labels :global(.lbl-scenario .n), :global([data-theme='light']) .galaxy-nav a[aria-current='true'] { color: #775329; }
+  @media(max-width:550px) { .stage:global(.away) { height: max(560px, calc(100svh - 60px)); }.galaxy-nav { bottom: 82px; }.galaxy-nav a { padding: 10px 9px; font-size: .68rem; }.galaxy-nav a span { margin-right: 3px; } }
+  :global([data-theme='light']) .mission-label { color: #30647b; }
+
+
+  /* ── tour ── */
+  .tour-card { position:absolute; z-index:6; left:max(24px,calc((100% - 1400px)/2 + 16px)); top:40px; width:min(360px,calc(100% - 48px)); padding:16px 18px 14px; border-radius:16px; border:1px solid color-mix(in srgb,var(--star) 55%,var(--line)); background:var(--surface-solid); box-shadow:var(--shadow); }
+  .tour-card[hidden] { display:none; }
+  .tour-card .t-count { margin:0 0 4px; font:600 .62rem/1.4 var(--font-mono); letter-spacing:.12em; color:var(--star); }
+  .tour-card .t-title { margin:0 0 6px; font-size:1.1rem; outline:none; }
+  .tour-card .t-text { margin:0 0 12px; font-size:.86rem; line-height:1.55; color:var(--text); }
+  .tour-card .t-bar { height:2px; background:var(--line); border-radius:2px; overflow:hidden; margin-bottom:12px; }
+  .tour-card .t-bar i { display:block; height:100%; width:0; background:var(--star); }
+  .tour-card .t-actions { margin:0; display:flex; gap:6px; }
+  .tour-card button { padding:7px 11px; border-radius:9px; border:1px solid var(--line); background:none; color:var(--text); font:600 .74rem/1 var(--font-display); cursor:pointer; }
+  .tour-card button.main { background:var(--star); border-color:var(--star); color:#1b1206; margin-right:auto; }
+  .stage:global(.touring) .hero-copy, .stage:global(.touring) .scenario-intro, .stage:global(.touring) .universe-systems, .stage:global(.touring) .arrive { opacity:0 !important; pointer-events:none; }
+  .space-tools [data-tour] { border-color:color-mix(in srgb,var(--star) 60%,var(--line)); color:var(--star); }
+  @media(max-width:700px) { .tour-card { top:auto; bottom:128px; left:12px; width:calc(100% - 24px); } }
+  /* ── task bar: where a newcomer starts ── */
+  .taskbar { position:absolute; z-index:3; left:50%; bottom:122px; transform:translateX(-50%); width:min(640px,calc(100% - 32px)); display:grid; gap:8px; justify-items:center; }
+  .taskbar .ask { display:flex; align-items:center; gap:10px; width:100%; padding:11px 14px; border-radius:14px; border:1px solid var(--line); background:color-mix(in srgb,var(--surface-solid) 82%,transparent); backdrop-filter:blur(14px); color:var(--muted); font:500 .82rem/1.2 var(--font-body); cursor:pointer; box-shadow:var(--shadow); text-align:left; }
+  .taskbar .ask span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .taskbar .ask:hover, .taskbar .ask:focus-visible { border-color:var(--star); color:var(--text); }
+  .taskbar kbd { font:.62rem/1 var(--font-mono); padding:4px 6px; border-radius:6px; border:1px solid var(--line); color:var(--muted); }
+  .taskbar .asks { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+  .taskbar .asks a { padding:5px 11px; border-radius:999px; font:500 .7rem/1.3 var(--font-display); text-decoration:none; color:var(--text); border:1px solid color-mix(in srgb,var(--signal) 50%,transparent); background:color-mix(in srgb,var(--bg) 70%,transparent); backdrop-filter:blur(10px); white-space:nowrap; }
+  .taskbar .asks a::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--signal); margin-right:6px; vertical-align:1px; }
+  .taskbar .asks a:hover, .taskbar .asks a:focus-visible { background:color-mix(in srgb,var(--signal) 22%,var(--bg)); }
+  .stage[data-current-galaxy]:not([data-current-galaxy='overview']):not([data-current-galaxy='khp']) .taskbar .asks { display:none; }
+  .stage:global(.warping) .taskbar, .stage:global(.touring) .taskbar { opacity:0; pointer-events:none; }
+  @media(max-width:700px) { .taskbar { bottom:132px; }.taskbar .asks { display:none; }.taskbar kbd { display:none; } }
+  @media(max-height:640px) { .taskbar .asks { display:none; } }
+
+  /* ── arrival: the galaxy introduces itself ── */
+  .arrive { position:absolute; z-index:2; left:50%; top:74px; transform:translateX(-50%); text-align:center; pointer-events:none; max-width:min(560px,calc(100% - 40px)); opacity:0; }
+  .arrive:global(.show) { animation:arrive 4.2s ease both; }
+  .arrive .a-kind { margin:0 0 6px; font:500 .62rem/1.4 var(--font-mono); letter-spacing:.16em; text-transform:uppercase; color:var(--signal); }
+  .arrive .a-name { margin:0; font:600 clamp(1.5rem,3vw,2.3rem)/1.1 var(--font-display); text-shadow:0 2px 26px var(--bg), 0 0 46px color-mix(in srgb,var(--signal) 55%,transparent); }
+  .arrive .a-sum { margin:8px 0 0; font-size:.85rem; color:var(--muted); text-shadow:0 1px 12px var(--bg); }
+  @keyframes arrive { 0% { opacity:0; transform:translateX(-50%) translateY(10px) scale(.96); } 12% { opacity:1; transform:translateX(-50%) translateY(0) scale(1); } 80% { opacity:1; } 100% { opacity:0; } }
+
+  /* ── hover card ── */
+  .hover-card { position:absolute; z-index:4; left:0; top:0; width:230px; padding:8px; border-radius:12px; border:1px solid var(--line); background:var(--surface-solid); box-shadow:var(--shadow); pointer-events:none; opacity:0; transition:opacity .16s ease; will-change:transform,opacity; }
+  .hover-card:global(.show) { opacity:1; }
+  .hover-card img { display:block; width:100%; aspect-ratio:3/2; object-fit:cover; object-position:top; border-radius:7px; background:#fff; }
+  .hover-card p { margin:7px 2px 0; font-size:.72rem; line-height:1.4; }
+  .hover-card .h-hint { color:var(--muted); font:.6rem/1.3 var(--font-mono); margin-top:4px; }
+
+  /* ── a long trip: faint streaks towards the centre ── */
+  .travel-streaks { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .35s ease; background:repeating-conic-gradient(from 0deg at 50% 52%, transparent 0deg 2.4deg, color-mix(in srgb,#bcd2ff 16%,transparent) 2.4deg 2.7deg, transparent 2.7deg 5.3deg); mask-image:radial-gradient(circle at 50% 52%, transparent 0 24%, #000 78%); -webkit-mask-image:radial-gradient(circle at 50% 52%, transparent 0 24%, #000 78%); }
+  .stage:global(.traveling) .travel-streaks { opacity:1; }
+  @media (prefers-reduced-motion: reduce) { .travel-streaks { display:none; }.arrive:global(.show) { animation:none; opacity:1; } }
+
+  /* ── scenario galaxy labels: step number, replay mark, the kit being worked on ── */
+  .scene-labels :global(.lbl-scenekit) { display:grid; grid-template-columns:auto auto; column-gap:6px; justify-content:center; justify-items:start; align-items:baseline; text-align:left; }
+  .scene-labels :global(.lbl-scenekit .step) { font:600 .6rem/1 var(--font-mono); color:var(--bg); background:var(--signal); border-radius:5px; padding:3px 4px; }
+  .scene-labels :global(.lbl-scenekit .k) { grid-column:1 / -1; }
+  .scene-labels :global(.lbl-scenekit .play) { position:absolute; right:-18px; top:1px; font-size:.6rem; color:var(--signal); }
+  .scene-labels :global(.lbl-scenekit.active .n) { text-shadow:0 0 14px var(--signal); }
+  .scene-labels :global(.lbl-scenekit.active .step) { box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 35%,transparent); }
+  .scene-labels :global(.lbl-scenario .k) { max-width:260px; white-space:normal; font-size:.66rem; display:none; }
+  .scene-labels :global(.lbl-scenario.hot .k), .scene-labels :global(.lbl-scenario:focus-visible .k) { display:block; }
+  .scene-labels :global(.galaxy-tag)::after { content:attr(data-kits); display:block; font:500 .58rem/1.5 var(--font-mono); letter-spacing:.04em; text-transform:none; color:var(--muted); opacity:0; transition:opacity .2s; }
+  .scene-labels :global(.galaxy-tag.linked)::after, .scene-labels :global(.galaxy-tag:hover)::after, .scene-labels :global(.galaxy-tag:focus-visible)::after { opacity:1; }
+  .stage:global(.linking) :global(.galaxy-tag:not(.linked)) { opacity:.35 !important; }
+
+  /* ── panel: the kit's own picture, the steps of a scenario ── */
+  .p-body :global(.facts) { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 8px; }
+  .p-body :global(.facts span) { font:600 .6rem/1.3 var(--font-mono); letter-spacing:.04em; padding:3px 7px; border-radius:5px; border:1px solid var(--line); color:var(--muted); }
+  .p-body :global(.facts span:first-child) { color:var(--kit); border-color:color-mix(in srgb,var(--kit) 55%,transparent); }
+  .p-body :global(.world) { font-size:.84rem; color:var(--muted); margin:0 0 12px; }
+  .p-body :global(.rel-h) { margin:14px 0 4px; font:600 .6rem/1.4 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .p-body :global(.rel) { list-style:none; margin:0 0 4px; padding:0; display:grid; gap:2px; }
+  .p-body :global(.rel a) { font-size:.82rem; text-decoration:none; color:var(--text); border-bottom:1px solid var(--line); }
+  .p-body :global(.rel a:hover) { color:var(--star); border-color:var(--star); }
+  .p-body :global(.p-thumb) { position:relative; display:block; width:100%; padding:0; border:1px solid var(--line); border-radius:10px; overflow:hidden; cursor:pointer; background:#fff; }
+  .p-body :global(.p-thumb img) { display:block; width:100%; aspect-ratio:16/10; object-fit:cover; object-position:top; }
+  .p-body :global(.p-thumb span) { position:absolute; left:8px; bottom:8px; padding:5px 10px; border-radius:999px; background:rgba(8,10,22,.82); color:#fff; font:600 .7rem/1.2 var(--font-display); }
+  .p-body :global(.p-thumb:hover span), .p-body :global(.p-thumb:focus-visible span) { background:var(--star); color:#1b1206; }
+  .p-body :global(.goal) { margin:8px 0 12px; padding-left:10px; border-left:2px solid var(--star); font-size:.84rem; color:var(--muted); }
+  .p-body :global(.kits button) { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; border:1px solid color-mix(in srgb,var(--kit) 55%,transparent); background:none; color:var(--text); font:inherit; font-size:.78rem; cursor:pointer; }
+  .p-body :global(.kits button::before) { content:''; width:6px; height:6px; border-radius:50%; background:var(--kit); }
+  .p-body :global(.kits button:hover) { background:color-mix(in srgb,var(--kit) 18%,transparent); }
+  .p-body :global(.steps) { list-style:none; margin:12px 0; padding:0; display:grid; gap:6px; }
+  .p-body :global(.steps li) { display:flex; align-items:center; gap:9px; padding:6px 8px; border:1px solid var(--line); border-left:3px solid var(--signal); border-radius:9px; }
+  .p-body :global(.steps .no) { font:600 .62rem/1 var(--font-mono); color:var(--muted); }
+  .p-body :global(.steps img) { width:54px; height:36px; object-fit:cover; object-position:top; border-radius:4px; background:#fff; flex:none; }
+  .p-body :global(.steps .what) { flex:1; font-size:.8rem; line-height:1.35; min-width:0; }
+  .p-body :global(.steps small) { display:block; color:var(--muted); font:.62rem/1.4 var(--font-mono); }
+  .p-body :global(.mini) { flex:none; width:28px; height:28px; border-radius:50%; border:1px solid var(--line); background:none; color:var(--text); cursor:pointer; font-size:.65rem; }
+  .p-body :global(.mini:hover), .p-body :global(.mini:focus-visible) { background:var(--star); border-color:var(--star); color:#1b1206; }
+  .universe-systems {
+    position: absolute;
+    right: max(24px, calc((100% - 1400px) / 2 + 16px));
+    top: 46px;
+    z-index: 2;
+    display: flex;
+    gap: 24px;
+    padding: 16px 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    backdrop-filter: blur(12px);
+    width: fit-content;
+  }
+  .universe-systems a { display: grid; gap: 4px; text-decoration: none; }
+  .universe-systems strong { font: 600 1.25rem/1 var(--font-display); color: var(--text); }
+  .universe-systems span { font: .65rem/1.5 var(--font-mono); letter-spacing: .05em; color: var(--muted); }
+  .universe-systems a:hover strong { color: var(--star); }
+  .scene-layer {
+    position: absolute;
+    inset: 0;
+  }
+  /* keeps the headline readable over the brightest part of the sky */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(70% 60% at 0% 0%, color-mix(in srgb, var(--bg) 78%, transparent) 0%, transparent 70%);
+  }
+  .poster-wrap {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.6s ease;
+  }
+  .poster-wrap :global(.poster.portrait) {
+    display: none;
+  }
+  @media (max-aspect-ratio: 1/1) {
+    .poster-wrap :global(.poster.landscape) {
+      display: none;
+    }
+    .poster-wrap :global(.poster.portrait) {
+      display: block;
+    }
+  }
+  .stage :global(.scene-canvas) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    touch-action: none;
+  }
+  .stage:global(.live) :global(.scene-canvas) {
+    opacity: 1;
+  }
+  .stage:global(.live) .poster-wrap {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .scene-labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .scene-labels :global(.lbl) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    min-height: 24px;
+    min-width: 24px;
+    justify-content: center;
+    padding: 3px 9px 4px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-display);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, opacity 0.2s linear;
+    will-change: transform;
+  }
+  .scene-labels :global(.lbl .n) {
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.1;
+    text-shadow: 0 0 6px var(--bg), 0 0 2px var(--bg);
+  }
+  .scene-labels :global(.lbl .k) {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-shadow: 0 0 5px var(--bg);
+  }
+  .scene-labels :global(.lbl .k em) {
+    font-style: normal;
+    color: var(--star);
+  }
+  .scene-labels :global(.lbl .dot) {
+    display: none;
+  }
+  .scene-labels :global(.lbl-planet .k) {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.2s, max-height 0.2s;
+  }
+  .scene-labels :global(.lbl-planet.hot .k),
+  .scene-labels :global(.lbl-planet:focus-visible .k) {
+    max-height: 2em;
+    opacity: 1;
+  }
+  .scene-labels :global(.lbl-planet .n::before) {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--kit);
+    box-shadow: 0 0 8px var(--kit);
+    margin-right: 6px;
+    vertical-align: 2px;
+  }
+  .scene-labels :global(.cluster-tag) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font: 600 0.7rem/1 var(--font-display);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.85;
+    white-space: nowrap;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .scene-labels :global(.lbl.hot),
+  .scene-labels :global(.lbl:focus-visible) {
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    opacity: 1 !important;
+  }
+  .scene-labels :global(.lbl-star .k) {
+    color: var(--text);
+    opacity: 0.8;
+  }
+  .scene-labels :global(.lbl-star .n) {
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+  }
+  .scene-labels :global(.lbl-station),
+  .scene-labels :global(.lbl-galaxy) {
+    font-size: 0.8rem;
+  }
+  .scene-labels :global(.lbl-station .n),
+  .scene-labels :global(.lbl-galaxy .n) {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .scene-labels :global(.lbl-ship) {
+    padding: 10px;
+    border-radius: 50%;
+  }
+  /* Product Galaxy and the next orbit */
+  .scene-labels :global(.lbl-sdk .n) {
+    font-size: 1.02rem;
+    letter-spacing: 0.06em;
+    color: #8ff4ff;
+  }
+  :global([data-theme-resolved='light']) .scene-labels :global(.lbl-sdk .n) {
+    color: #0b7c88;
+  }
+  .scene-labels :global(.lbl-delivery) {
+    padding: 2px 9px 3px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-solid) 55%, transparent);
+    border: 1px solid color-mix(in srgb, var(--kit) 70%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  .scene-labels :global(.lbl-delivery .n) {
+    font: 600 0.72rem/1.2 ui-monospace, 'SF Mono', Menlo, monospace;
+    color: var(--kit);
+    text-shadow: none;
+  }
+  :global([data-theme-resolved='light']) .scene-labels :global(.lbl-delivery .n) {
+    color: color-mix(in srgb, var(--kit) 55%, #000);
+  }
+  .scene-labels :global(.lbl-product .n::before),
+  .scene-labels :global(.lbl-addproduct .n::before) {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    transform: rotate(45deg);
+    background: #5fe0d0;
+    box-shadow: 0 0 8px #5fe0d0;
+    margin-right: 7px;
+    vertical-align: 2px;
+  }
+  .scene-labels :global(.lbl-addproduct .n::before) {
+    background: transparent;
+    border: 1.5px dashed #8ff4ff;
+    box-shadow: none;
+  }
+  .scene-labels :global(.lbl-addproduct .n),
+  .scene-labels :global(.lbl-newkit .n) {
+    font-size: 0.86rem;
+  }
+  .scene-labels :global(.lbl-addproduct .k) {
+    color: #8ff4ff;
+  }
+  .scene-labels :global(.lbl-newkit .n) {
+    color: var(--star);
+  }
+  :global([data-theme-resolved='light']) .scene-labels :global(.lbl-addproduct .k) {
+    color: #0b7c88;
+  }
+  .scene-labels :global(.galaxy-tag) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font: 600 clamp(.65rem, .9vw, .85rem) / 1.2 var(--font-display);
+    letter-spacing: .06em;
+    background:transparent; border:0; padding:7px; cursor:pointer;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--text);
+    text-shadow: 0 0 18px var(--bg), 0 0 40px color-mix(in srgb, #5fe0d0 45%, transparent);
+    pointer-events: none;
+    will-change: transform, opacity;
+    transition: opacity 0.3s linear;
+  }
+  .scene-labels :global(.edge-chip) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, #5fe0d0 55%, transparent);
+    background: color-mix(in srgb, var(--surface-solid) 72%, transparent);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    font: 600 0.82rem/1 var(--font-display);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: 0 0 24px color-mix(in srgb, #5fe0d0 30%, transparent);
+    will-change: transform;
+  }
+  .scene-labels :global(.edge-chip .arrow) {
+    display: inline-block;
+    color: #5fe0d0;
+    transform: rotate(var(--angle, 0rad));
+    animation: nudge 1.6s ease-in-out infinite;
+  }
+  .scene-labels :global(.edge-chip:hover),
+  .scene-labels :global(.edge-chip:focus-visible) {
+    background: var(--surface);
+    border-color: #5fe0d0;
+  }
+  @keyframes nudge {
+    50% {
+      translate: 3px 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scene-labels :global(.edge-chip .arrow) {
+      animation: none;
+    }
+  }
+  .p-body :global(.forms) {
+    padding-left: 1.1em;
+    display: grid;
+    gap: 6px;
+  }
+  .p-body :global(.forms b) {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    margin-right: 4px;
+  }
+  .p-body :global(.kits) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .p-body :global(.kits a) {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--kit) 55%, transparent);
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .p-body :global(.kits a::before) {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--kit);
+  }
+  .p-body :global(.muted) {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .scene-labels :global(.ship-dot) {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .scene-labels :global(.lbl-ship:focus-visible .ship-dot),
+  .scene-labels :global(.lbl-ship.hot .ship-dot) {
+    background: var(--accent);
+  }
+
+  .hero-copy {
+    position: absolute;
+    left: max(16px, calc((100% - 1400px) / 2 + 16px));
+    top: clamp(20px, 5vh, 56px);
+    max-width: min(470px, calc(100% - 32px));
+    pointer-events: none;
+    z-index: 2;
+  }
+  .hero-copy > * {
+    pointer-events: auto;
+  }
+  .hero-copy {
+    transition: opacity 0.4s ease, translate 0.4s ease;
+  }
+  .stage:global(.away) .hero-copy {
+    opacity: 0;
+    translate: -24px 0;
+    pointer-events: none;
+  }
+  .stage:global(.away) .universe-systems { opacity: 0; pointer-events: none; }
+  .scene-labels :global(.lbl-station .n) { color: var(--station, var(--text)); }
+  .stage:global(.away) .hero-copy > * {
+    pointer-events: none;
+  }
+  .stage:global(.away)::before {
+    opacity: 0;
+  }
+  .stage::before {
+    transition: opacity 0.4s ease;
+  }
+  .hero-copy h1 {
+    font-size: clamp(1.7rem, 3.4vw, 3.2rem);
+    text-shadow: 0 0 18px var(--bg);
+  }
+  .hero-copy h1 span {
+    display: block;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.62em;
+    margin-top: 0.3em;
+  }
+  .sub {
+    color: var(--muted);
+    max-width: 44ch;
+    text-shadow: 0 0 12px var(--bg);
+    font-size: .9rem;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .hud {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .hud p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 16px;
+  }
+  .hint .keys,
+  .hint .touch {
+    display: none;
+  }
+  @media (pointer: coarse) {
+    .hint .pointer {
+      display: none;
+    }
+    .hint .touch {
+      display: inline;
+    }
+  }
+  .stage:focus-within .hint .keys {
+    display: inline;
+  }
+  .stage:focus-within .hint .pointer,
+  .stage:focus-within .hint .touch {
+    display: none;
+  }
+  .stage:not(.live) .hint {
+    visibility: hidden;
+  }
+  .status {
+    pointer-events: auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn.small {
+    padding: 7px 12px;
+    font-size: 0.82rem;
+  }
+
+  .scene-panel {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: min(380px, calc(100% - 32px));
+    max-height: calc(100% - 32px);
+    overflow: auto;
+    z-index: 5;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 22px 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+  }
+  .p-title {
+    font-size: 1.35rem;
+    outline: none;
+  }
+  .p-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .p-body :global(.lines) {
+    display: grid;
+    gap: 2px;
+    font-weight: 600;
+  }
+  .p-body :global(.swatches) {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1em;
+  }
+  .p-body :global(.swatches i) {
+    flex: 1;
+    height: 26px;
+    border-radius: 4px;
+    background: var(--kit);
+    animation: win 2.6s ease-in-out infinite alternate;
+  }
+  .p-body :global(.swatches i:nth-child(2n)) {
+    animation-delay: -1.3s;
+  }
+  @keyframes win {
+    to {
+      opacity: 0.35;
+    }
+  }
+  .p-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .scene-toast {
+    position: absolute;
+    left: 50%;
+    top: 18px;
+    transform: translateX(-50%);
+    z-index: 6;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 18px;
+    box-shadow: var(--shadow);
+    font: 600 0.9rem/1.3 var(--font-display);
+    max-width: calc(100% - 32px);
+    text-align: center;
+  }
+
+  .scene-warp {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 14px;
+    cursor: pointer;
+  }
+  .streaks {
+    position: absolute;
+    inset: -20%;
+    background: repeating-conic-gradient(from 0deg, transparent 0deg 3deg, color-mix(in srgb, var(--kit) 55%, transparent) 3deg 3.6deg, transparent 3.6deg 9deg);
+    mask: radial-gradient(circle, transparent 8%, #000 60%);
+    animation: warp 0.75s cubic-bezier(0.6, 0, 1, 1) forwards;
+    opacity: 0;
+  }
+  @keyframes warp {
+    from {
+      transform: scale(0.4);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1.6);
+      opacity: 1;
+    }
+  }
+  .w-text {
+    position: relative;
+    font: 700 1.4rem/1.2 var(--font-display);
+    text-shadow: 0 0 20px var(--bg);
+    margin: 0;
+  }
+  .w-skip {
+    position: relative;
+  }
+  .stage:global(.warping) .hero-copy,
+  .stage:global(.warping) .scene-labels,
+  .stage:global(.warping) .hud {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  @media (max-width: 700px) {
+    .stage { height: 960px; }
+    .universe-systems { top: 182px; left: 16px; right: auto; gap: 24px; padding: 12px 16px; }
+    .universe-systems strong { font-size: 1.05rem; }
+    .universe-systems span { font-size: .6rem; }
+    .mission-label { font-size: .58rem; margin-bottom: 10px; }
+    .hero-copy {
+      top: 16px;
+    }
+    .hero-copy h1 {
+      font-size: 1.55rem;
+    }
+    .sub {
+      display: none;
+    }
+    .scene-labels :global(.lbl .n) {
+      font-size: 0.8rem;
+    }
+    .scene-labels :global(.lbl .k) {
+      display: none;
+    }
+    .scene-panel {
+      top: auto;
+      bottom: 12px;
+      right: 12px;
+      max-height: 60%;
+    }
+  }
+</style>
+
+<style>
+.scenario-atlas { position:static; }.scenario-atlas summary { display:flex; align-items:center; gap:7px; padding:9px 14px; font:500 .75rem var(--font-display); cursor:pointer; list-style:none; }.scenario-atlas summary::-webkit-details-marker{display:none}.scenario-atlas summary b { font:500 .6rem var(--font-mono); color:var(--muted); border:1px solid var(--line); border-radius:4px; padding:2px 4px; }.scenario-atlas summary [data-atlas-current]{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.atlas-list{position:absolute;bottom:calc(100% + 18px);left:50%;transform:translateX(-50%);width:min(380px,calc(100vw - 36px));max-height:min(560px,65svh);overflow:auto;overscroll-behavior:contain;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--surface-solid);box-shadow:var(--shadow);}.atlas-list p{font:.6rem var(--font-mono);letter-spacing:.14em;color:var(--muted);margin:4px 10px 12px}.galaxy-nav .atlas-list a{display:flex;align-items:center;gap:13px;border-radius:9px;padding:12px 10px}.atlas-list a:hover{background:var(--surface)}.atlas-list i{width:8px;height:8px;background:var(--signal);border-radius:50%;box-shadow:0 0 15px var(--signal)}.galaxy-nav .atlas-list a span{display:grid;gap:5px;font-size:.8rem;color:var(--text);margin:0}.atlas-list strong{font-weight:500}.atlas-list small{font:.6rem var(--font-mono);color:var(--muted)}.atlas-list em{font:normal .6rem var(--font-mono);margin-left:auto;color:var(--muted)}
+@media(max-width:700px){.galaxy-nav{max-width:calc(100% - 20px);gap:0;bottom:75px}.galaxy-nav>a,.scenario-atlas summary{padding:10px 9px;font-size:.68rem}.scenario-atlas summary [data-atlas-current]{max-width:85px}.atlas-list{width:calc(100vw - 36px)}.scenario-intro{max-width:calc(100% - 48px)}.scenario-intro p:not(.mission-label){max-width:290px;font-size:.8rem}.scenario-intro .mission-label{font-size:.55rem;letter-spacing:.1em}.stage:global(.overview) :global(.galaxy-tag){font-size:.58rem;letter-spacing:0;padding:3px}}
+</style>

@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+import MissionArtifact from '../MissionArtifact.astro';
+import UniverseStage from '../UniverseStage.astro';
+import { type Lang, href, planet, planetHref } from '../../lib/universe';
+import { missions, missionCopy } from '../../lib/missions';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const m = missionCopy(lang);
+const text = (en: string, cn: string) => zh ? cn : en;
+---
+<Base lang={lang} title={`${m.name} · AI ${zh ? '工作流演示' : 'workflow demos'}`} description={m.description} path="/missions/" og="missions">
+  <UniverseStage lang={lang} initialGalaxy="overview" />
+  <div class="mission-page" id="flight-plans" data-mission-console data-lang={lang}>
+    <div class="wrap">
+      <header class="mission-heading">
+        <div><p class="eyebrow">FLIGHT PLANS / 01 — 03</p><h2>{text('Choose your destination.', '选一条航线，看看如何抵达。')}</h2></div>
+        <p>{text('Every stop is a kit. Follow the route to explore its role and an example result.', '每一站都是一个 Kit。沿着航线，查看它如何参与任务，以及这一站的示例产物。')}</p>
+      </header>
+
+      <nav class="mission-selector" aria-label={text('Choose a mission', '选择任务航线')}>
+        {missions.map((mission) => <a href={`${href(lang, '/missions/')}?mission=${mission.id}#mission-${mission.id}`} data-select-mission={mission.id} style={`--signal:${mission.color}`}>
+          <span class="route-number">{mission.number} <span>↗</span></span>
+          <strong>{mission.title[lang]}</strong>
+          <span class="route-kits">{mission.steps.map(s => s.kit).join(' → ')}</span>
+        </a>)}
+      </nav>
+
+      {missions.map((mission) => <article class="mission-panel" id={`mission-${mission.id}`} data-mission-panel={mission.id} style={`--signal:${mission.color}`}>
+        <header class="panel-head">
+          <div><p class="eyebrow">{text('FLIGHT PLAN', '任务航线')} / {mission.number}</p><h2>{mission.title[lang]}</h2><p>{mission.summary[lang]}</p></div>
+          <span class="demo-label">{m.demo} · {mission.steps.length} {text('stops', '站')}</span>
+        </header>
+        <div class="brief"><span>{text('YOUR BRIEF', '任务说明')}</span><p>{mission.brief[lang]}</p></div>
+        <div class="route-track" data-demo-control hidden aria-label={text('Workflow steps', '工作流步骤')}>
+          {mission.steps.map((step,i) => <button type="button" data-select-step={i} aria-controls={`${mission.id}-step-${i}`}>
+            <span class="planet-node" style={`--planet:${planet(step.kit).color.dark}`}>{String(i+1).padStart(2,'0')}</span>
+            <strong>{step.kit}</strong><span>{step.title[lang]}</span>
+          </button>)}
+        </div>
+        <div class="mission-controls" data-demo-control hidden>
+          <div class="playback">
+            <button type="button" class="btn primary" data-action="play">{text('Play demo', '播放演示')}</button>
+            <button type="button" class="btn" data-action="previous" aria-label={text('Previous step', '上一步')}>←</button>
+            <button type="button" class="btn" data-action="next" aria-label={text('Next step', '下一步')}>→</button>
+            <button type="button" class="reset" data-action="reset">{text('Reset', '重置')}</button>
+          </div>
+          <p class="playback-status" role="status" aria-live="polite"></p>
+          <div class="mission-progress" role="progressbar" aria-label={text('Demo route position', '演示航线进度')} aria-valuemin="0" aria-valuemax={mission.steps.length} aria-valuenow="0"><span></span></div>
+        </div>
+        {mission.steps.map((step,i) => <section class="step-content" id={`${mission.id}-step-${i}`} data-step-content={i} aria-labelledby={`${mission.id}-step-title-${i}`}>
+          <div class="artifact">
+            <div class="artifact-bar"><span class="file-dot"></span><code>{step.file}</code><span>{text('SAMPLE', '示例')}</span></div>
+            <MissionArtifact mission={mission.id} step={i} lang={lang} label={step.output[lang]} />
+            <div class="artifact-caption"><span>0{i+1} / 0{mission.steps.length}</span><p>{step.output[lang]}</p></div>
+          </div>
+          <div class="step-info">
+            <p class="eyebrow">{text('AT THIS STOP', '抵达这一站')} / {step.kit}</p>
+            <h3 id={`${mission.id}-step-title-${i}`}>{step.title[lang]}</h3>
+            <p>{step.action[lang]}</p>
+            <dl><div><dt>{text('MISSION INPUT', '任务输入')}</dt><dd>{mission.input[lang]}</dd></div><div><dt>{text('REVIEW CHECKPOINT', '审阅检查点')}</dt><dd>{step.review[lang]}</dd></div></dl>
+            <a class="kit-link" href={planetHref(lang,step.kit)}>{text(`Explore the ${step.kit} kit`, `查看 ${step.kit} 的实际能力`)} ↗</a>
+          </div>
+        </section>)}
+        <div class="handoff" data-handoff hidden>
+          <div><p class="eyebrow">{text('HUMAN REVIEW', '人工审阅')}</p><h3>{text('You make the final call.', '最后一步，由你确认。')}</h3><p>{mission.result[lang]}</p><p class="handoff-note">{text('This confirmation applies only to this demo. No files are generated or submitted.', '此确认仅用于本次演示，不会生成或提交文件。')}</p></div>
+          <button type="button" class="btn primary" data-action="approve">{text('Approve example handoff', '确认示例交付')}</button>
+        </div>
+      </article>)}
+      <noscript><p class="demo-note">{text('All example steps are shown below each route. Enable JavaScript to use playback and review controls.', '当前展示每条航线的全部示例步骤。启用 JavaScript 后可使用播放与审阅控件。')}</p></noscript>
+      <aside class="mission-about"><p>{text('The workflow is a concept. Kit links show current capabilities, including preview limitations. Automatic handoffs between kits are not connected in this demo.', '航线展示的是工作流构想。各 Kit 链接说明当前能力及预览限制；本演示尚未接入 Kit 间的自动交接。')}</p><a href={href(lang,'/protocol/')}>{text('Explore KHP & MCP', '了解 KHP 与 MCP')} ↗</a></aside>
+    </div>
+  </div>
+</Base>
+<script>import '../../scripts/missions';</script>
+<style>
+  .mission-page { padding: 64px 0 70px; background: var(--bg); scroll-margin-top:60px; }
+  .mission-heading { display:flex; align-items:end; justify-content:space-between; gap:40px; margin-bottom:35px; }
+  .mission-heading h2 { font-size:clamp(1.5rem,2.4vw,2.2rem); margin-bottom:0; }
+  .mission-heading > p { max-width:44ch; color:var(--muted); font-size:.86rem; margin:0; }
+  .eyebrow { font-family:var(--font-mono); letter-spacing:.12em; font-size:.65rem; color:var(--star); }
+  .demo-note { color:var(--muted); font-size:.76rem; }
+  .mission-selector { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin: 6px 0 34px; border-block:1px solid var(--line); }
+  .mission-selector a { min-width: 0; display: grid; gap: 13px; padding: 22px; border: 0; border-right:1px solid var(--line); border-radius: 0; background:transparent; text-decoration: none; transition: border-color .2s, background .2s; }
+  .mission-selector a:last-child { border-right:0; }.mission-selector a[aria-current='true'] { box-shadow:inset 0 -2px var(--signal); background:color-mix(in srgb,var(--signal) 5%,var(--bg)); }
+  .route-number { display: flex; justify-content: space-between; color: var(--signal); font: .75rem var(--font-mono); }
+  .mission-selector strong { font: 500 1.15rem var(--font-display); }
+  .route-kits { color: var(--muted); font: .69rem/1.7 var(--font-mono); }
+  .mission-panel { border: 0; border-radius: 0; padding: 8px 0 30px; background: transparent; margin-bottom: 24px; scroll-margin-top: 85px; }
+  .panel-head { display: flex; justify-content: space-between; align-items: start; gap: 20px; }.panel-head .eyebrow { color: var(--signal); margin-bottom: 10px; }.panel-head h2 { font-size: 1.7rem; }.panel-head p:last-child { color: var(--muted); font-size: .88rem; margin: 0; }
+  .demo-label { color: var(--muted); font: .65rem var(--font-mono); white-space: nowrap; padding: 7px 0; }
+  .brief { display: grid; grid-template-columns: 105px 1fr; gap: 15px; border-block: 1px solid var(--line); padding: 18px 0; margin-top: 23px; }.brief > span { font: .65rem/1.8 var(--font-mono); color: var(--muted); }.brief p { margin: 0; font-size: .85rem; max-width: 90ch; }
+  .route-track { display: grid; grid-template-columns: repeat(4,1fr); margin: 26px 0; }
+  .route-track button { position: relative; display: grid; justify-items: center; gap: 7px; border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 8px 2px; font: .7rem/1.6 var(--font-body); }
+  .route-track button::before { content: ''; position: absolute; top: 28px; left: 0; right: 0; height: 1px; background: var(--line); }.route-track button:first-child::before { left: 50%; }.route-track button:last-child::before { right: 50%; }
+  .planet-node { position: relative; z-index: 1; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--planet); color: var(--text); background: var(--bg-2); font: .65rem var(--font-mono); }
+  .route-track button[aria-current='step'] .planet-node { background: var(--planet); color: #151526; box-shadow: 0 0 0 5px color-mix(in srgb,var(--planet) 12%,transparent),0 0 24px color-mix(in srgb,var(--planet) 28%,transparent); }
+  .route-track button[aria-current='step'] { color: var(--text); }.route-track strong { font: 600 .85rem var(--font-display); }
+  .step-content { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(235px,1fr); gap: 30px; margin-top: 24px; align-items: start; }
+  .artifact { min-width: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg); }
+  .artifact-bar { display: flex; align-items: center; gap: 9px; padding: 13px 16px; color: var(--muted); }.artifact-bar code { font-size: .68rem; overflow-wrap: anywhere; }.artifact-bar > span:last-child { margin-left: auto; font: .55rem var(--font-mono); }.file-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); flex-shrink: 0; }
+  .artifact-caption { display: flex; gap: 14px; padding: 15px 18px; }.artifact-caption > span { color: var(--signal); font: .65rem/1.8 var(--font-mono); white-space: nowrap; }.artifact-caption p { margin: 0; font-size: .72rem; color: var(--muted); }
+  .step-info { padding: 8px 0; }.step-info .eyebrow { color: var(--signal); font-size: .62rem; }.step-info h3 { font-size: 1.35rem; margin-block: 16px; }.step-info > p:not(.eyebrow) { font-size: .88rem; }.step-info dl { margin-block: 24px; }.step-info dl div + div { margin-top: 22px; }.step-info dt { color: var(--muted); font: .6rem var(--font-mono); margin-bottom: 8px; }.step-info dd { margin: 0; font-size: .78rem; line-height: 1.8; }.kit-link { font-size: .75rem; color: var(--muted); }
+  .mission-controls { position: sticky; top: 60px; z-index: 4; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); background: var(--bg); }.playback { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }.playback .btn { font-size: .78rem; padding: 9px 15px; }.playback .btn:disabled { opacity: .35; cursor: default; }.reset { background: none; border: 0; color: var(--muted); font: .75rem var(--font-body); cursor: pointer; padding: 10px; }.playback-status { font: .68rem/1.8 var(--font-mono); color: var(--muted); margin: 0 0 0 auto; }
+  .mission-progress { width: 100%; height: 2px; background: var(--line); }.mission-progress span { display: block; height: 100%; width: 25%; background: var(--signal); transition: width .3s; }
+  .handoff { display: flex; gap: 25px; align-items: center; justify-content: space-between; margin-top: 25px; padding: 24px; border: 1px solid color-mix(in srgb,var(--signal) 40%,var(--line)); border-radius: 12px; background: color-mix(in srgb,var(--signal) 5%,var(--bg)); }.handoff p { margin-bottom: 8px; font-size: .85rem; }.handoff .eyebrow { font-size: .62rem; color: var(--signal); }.handoff .handoff-note { color: var(--muted); font-size: .72rem; }.handoff .btn { flex-shrink: 0; font-size: .8rem; }
+  .mission-about { display: flex; align-items: baseline; justify-content: space-between; gap: 35px; margin-top: 28px; font-size: .76rem; color: var(--muted); }.mission-about p { max-width: 85ch; }.mission-about a { white-space: nowrap; }
+  :global([data-theme='light']) .mission-selector a, :global([data-theme='light']) .mission-panel { --signal: #7c5a38 !important; }
+  @media(max-width:850px) { .mission-heading { display:block; }.mission-heading > p { margin-top:18px; }.mission-selector a { padding: 17px; }.step-content { grid-template-columns: 1fr; gap: 16px; }.step-info dl { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }.step-info dl div + div { margin: 0; }.handoff { flex-direction: column; align-items: start; } }
+  @media(max-width:550px) { .mission-page { padding-top:36px; }.mission-selector { grid-template-columns:1fr; gap:0; }.mission-selector a { border-right:0; border-bottom:1px solid var(--line); }.mission-selector a:last-child { border-bottom:0; }.mission-selector a { grid-template-columns: 30px 1fr; gap: 5px 13px; padding: 15px; }.route-number { grid-row: span 2; }.route-number span { display: none; }.route-kits { font-size: .64rem; }.mission-selector strong { font-size: 1rem; }.mission-panel { padding: 10px 0; }.panel-head { flex-direction: column; gap: 8px; }.panel-head h2 { font-size: 1.5rem; }.brief { grid-template-columns: 1fr; gap: 7px; }.route-track { margin: 15px -6px; }.route-track button { font-size: .59rem; }.route-track strong { font-size: .75rem; }.planet-node { width: 36px; height: 36px; }.route-track button::before { top: 26px; }.step-info dl { grid-template-columns: 1fr; gap: 18px; }.mission-controls { gap: 12px; }.playback-status { margin-left: 0; }.handoff { padding: 18px; }.mission-about { display: block; } }
+</style>

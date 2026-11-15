@@ -1,0 +1,146 @@
+---
+import type { Lang } from '../lib/universe';
+import { withBase } from '../lib/base';
+interface Props { mission: string; step: number; lang: Lang; label: string }
+const { mission, step, lang, label } = Astro.props;
+const zh = lang === 'zh';
+const txt = (en: string, cn: string) => zh ? cn : en;
+const brand = mission === 'brand';
+const ink = brand ? '#f0ecff' : '#252a42';
+const muted = brand ? '#bcb1d3' : '#6c7184';
+const id = `artifact-${mission}-${step}`;
+---
+<svg viewBox="0 0 720 420" role="img" aria-label={label}>
+  <defs>
+    <linearGradient id={`${id}-wash`} x2="1" y2="1"><stop stop-color="#292240"/><stop offset="1" stop-color="#0c1328"/></linearGradient>
+    <clipPath id={`${id}-clip`}><rect width="720" height="420" rx="12"/></clipPath>
+  </defs>
+  <g clip-path={`url(#${id}-clip)`}>
+    <rect width="720" height="420" rx="12" fill={brand ? `url(#${id}-wash)` : '#f0f0ec'}/>
+    <text x="40" y="38" fill={muted} font-size="11" letter-spacing="3">{brand ? 'ORBIT / OBSERVATORY' : mission === 'report' ? 'ORBIT / MONTHLY REVIEW' : 'ORBIT / KNOWLEDGE ATLAS'}</text>
+    <text x="680" y="38" fill={muted} font-size="10" text-anchor="end">{txt('ILLUSTRATIVE SAMPLE', '预设产物示意')}</text>
+    {mission === 'report' && step === 0 && <>
+      <text x="40" y="92" fill={ink} font-size="27" font-weight="600">{txt('A clearer view of growth.', '增长，清晰可见。')}</text>
+      <text x="40" y="121" fill={muted} font-size="13">{txt('Sample units · previous month / current month', '示例单位 · 上月 / 本月')}</text>
+      {[['North','北区',12,18],['East','东区',20,24],['West','西区',10,12]].map(([en,cn,a,b],i)=><g>
+        <line x1="40" x2="330" y1={158+i*60} y2={158+i*60} stroke="#d3d5dd"/>
+        <text x="40" y={190+i*60} fill={ink} font-size="15">{txt(String(en),String(cn))}</text>
+        <text x="223" y={190+i*60} fill={muted} font-size="15">{a}</text>
+        <text x="290" y={190+i*60} fill={ink} font-size="15" font-weight="600">{b}</text>
+        <rect x={402+i*86} y={330-Number(a)*6} width="23" height={Number(a)*6} fill="#c7c4d9" rx="4"/>
+        <rect x={429+i*86} y={330-Number(b)*6} width="23" height={Number(b)*6} fill="#7869b3" rx="4"/>
+      </g>)}
+      <text x="40" y="374" fill={ink} font-size="16">{txt('TOTAL', '合计')} 42 → 54</text>
+      <text x="650" y="374" fill="#6a5b9c" text-anchor="end" font-size="21" font-weight="600">+28.6%</text>
+    </>}
+    {mission === 'report' && step === 1 && <>
+      <rect x="38" y="60" width="644" height="328" rx="5" fill="#fff"/>
+      <text x="68" y="106" fill={ink} font-size="27" font-weight="600">{txt('Monthly operations review', '月度经营回顾')}</text>
+      <text x="68" y="143" fill="#74669d" font-size="16">{txt('01 / The finding', '01 / 关键发现')}</text>
+      <text x="68" y="177" fill={ink} font-size="17">{txt('Sample total increased from 42 to 54.', '示例合计由 42 增至 54。')}</text>
+      <text x="68" y="205" fill={muted} font-size="13">{txt('Source: regional-review.xlsx · three example regions', '来源：regional-review.xlsx · 三个示例区域')}</text>
+      {[0,1,2].map(i=><rect x="68" y={235+i*18} width={i===2?370:560} height="6" rx="3" fill="#e0e2e9"/>)}
+      <rect x="68" y="309" width="560" height="49" rx="5" fill="#f2edf9"/>
+      <text x="88" y="339" fill="#665482" font-size="14">{txt('Review: confirm the explanation before sharing.', '审阅：分享前，确认原因解释有依据。')}</text>
+    </>}
+    {mission === 'report' && step === 2 && <>
+      <rect x="38" y="64" width="644" height="311" rx="8" fill="#242237"/>
+      <text x="70" y="105" fill="#c3badf" font-size="12" letter-spacing="2">01 / THE BIG PICTURE</text>
+      <text x="70" y="218" fill="#ffd2a0" font-size="82" font-weight="600">+28.6%</text>
+      <text x="70" y="258" fill="#f5f1ff" font-size="22">{txt('A stronger month.', '一个增长的月份。')}</text>
+      <text x="70" y="292" fill="#bcb5cc" font-size="13">{txt('Preset sample data · 42 → 54 units', '预设示例数据 · 42 → 54 单位')}</text>
+      {[90,145,180].map((h,i)=><rect x={476+i*51} y={307-h} width="32" height={h} rx="5" fill={i===2?'#ffbe78':'#73688d'}/>)}
+    </>}
+    {mission === 'report' && step === 3 && <>
+      {[0,1,2].map(i=><g transform={`translate(${45+i*215}, 75)`}>
+        <rect width="197" height="292" rx="4" fill="#fff" stroke="#d8dbe3"/>
+        <text x="19" y="32" fill={ink} font-size="12">0{i+1} / {txt('REVIEW', '审阅稿')}</text>
+        {[0,1,2,3,4,5,6].map(j=><rect x="19" y={59+j*21} width={j%3===2?115:157} height="5" rx="2" fill="#d4d8e1"/>)}
+        <rect x="15" y={i===1?96:74} width="166" height="22" fill="#ffcc78" opacity=".5"/>
+        <circle cx="174" cy={i===1?107:85} r="11" fill="#b77a32"/>
+        <text x="174" y={i===1?111:89} text-anchor="middle" fill="#fff" font-size="11">{i+1}</text>
+        <text x="19" y="265" fill={muted} font-size="11">{txt('Human review', '人工审阅')}</text>
+      </g>)}
+    </>}
+    {brand && step === 0 && <>
+      <g transform="translate(205 219) rotate(-25)"><ellipse rx="112" ry="44" fill="none" stroke="#c5b3ff" stroke-width="8"/><circle r="54" fill="none" stroke="#f3edff" stroke-width="12"/><circle cx="103" r="12" fill="#ffce91"/></g>
+      <text x="371" y="214" fill={ink} font-size="58" letter-spacing="7">ORBIT</text>
+      <text x="375" y="249" fill={muted} font-size="12" letter-spacing="4">A DIFFERENT PERSPECTIVE</text>
+      {['#c5b3ff','#ffce91','#77dbc8','#f3edff'].map((color,i)=><rect x={376+i*63} y="290" width="50" height="28" rx="5" fill={color}/>)}
+    </>}
+    {brand && step === 1 && <>
+      <image href={withBase("/assets/space/deep-field.webp")} x="0" y="56" width="720" height="364" preserveAspectRatio="xMidYMid slice" opacity=".7"/>
+      <rect x="36" y="80" width="648" height="302" rx="8" fill="none" stroke="#c6b5f0" stroke-opacity=".4"/>
+      <text x="70" y="177" fill="#e0d5ff" font-size="12" letter-spacing="4">ORBIT / FIELD NOTES</text>
+      <text x="66" y="238" fill="#fff" font-size="45">{txt('Look a little further.', '再看远一些。')}</text>
+      <rect x="70" y="275" width="153" height="37" rx="18" fill="#c5b3ff"/>
+      <text x="147" y="299" fill="#292240" text-anchor="middle" font-size="12">{txt('Explore observations', '探索观测记录')}</text>
+    </>}
+    {brand && step === 2 && <>
+      <rect x="38" y="69" width="644" height="308" rx="7" fill="#16172b" stroke="#6b5b99"/>
+      <text x="60" y="98" fill="#c5b3ff" font-size="15" letter-spacing="3">ORBIT</text>
+      <line x1="60" x2="658" y1="116" y2="116" stroke="#3c3554"/>
+      <text x="60" y="167" fill={ink} font-size="27">{txt('A window into the universe.', '一扇望向宇宙的窗。')}</text>
+      <rect x="60" y="191" width="263" height="5" rx="2" fill="#615879"/>
+      {[0,1,2].map(i=><g>
+        <rect x={60+i*201} y="224" width="185" height="125" rx="7" fill="#24223d" stroke="#74619d" stroke-dasharray="4 4"/>
+        <circle cx={152+i*201} cy="267" r={17+i*6} fill={['#c5b3ff','#ffce91','#77dbc8'][i]} opacity=".8"/>
+        <rect x={77+i*201} y="308" width="120" height="5" rx="2" fill="#84789d"/>
+        <rect x={77+i*201} y="324" width="85" height="4" rx="2" fill="#504762"/>
+      </g>)}
+    </>}
+    {brand && step === 3 && <>
+      <rect x="40" y="88" width="451" height="258" rx="9" fill="#101423" stroke="#74619d"/>
+      <image href={withBase("/assets/space/deep-field.webp")} x="47" y="120" width="437" height="219" preserveAspectRatio="xMidYMid slice" opacity=".55"/>
+      <circle cx="57" cy="104" r="3" fill="#ffbe78"/><circle cx="69" cy="104" r="3" fill="#77dbc8"/>
+      <text x="68" y="170" fill="#d7c9ff" font-size="13" letter-spacing="3">ORBIT</text>
+      <text x="68" y="234" fill="#fff" font-size="25">{txt('Look a little further.', '再看远一些。')}</text>
+      <rect x="532" y="67" width="141" height="298" rx="23" fill="#101423" stroke="#a492c9" stroke-width="2"/>
+      <image href={withBase("/assets/space/deep-field.webp")} x="541" y="102" width="123" height="211" preserveAspectRatio="xMidYMid slice" opacity=".6"/>
+      <text x="553" y="143" fill="#e1d5ff" font-size="12" letter-spacing="2">ORBIT</text>
+      <text x="553" y="199" fill="#fff" font-size="18">{txt('Look further.', '看向远方。')}</text>
+      <rect x="578" y="337" width="50" height="4" rx="2" fill="#8d7fa7"/>
+    </>}
+    {mission === 'knowledge' && step === 0 && <>
+      {[0,1,2].map(i=><g transform={`translate(${44+i*218},${77+i*9})`}>
+        <rect width="195" height="273" rx="5" fill="#fff" stroke="#d7dce1"/>
+        <text x="20" y="33" fill="#378f82" font-size="12">SOURCE 0{i+1}</text>
+        <text x="20" y="73" fill={ink} font-size="21">{[txt('Orbit','轨道'),txt('Light','光照'),txt('Window','观测窗口')][i]}</text>
+        {[0,1,2,3,4,5].map(j=><rect x="20" y={105+j*19} width={j===5?90:152} height="5" rx="2" fill="#d8dee1"/>)}
+        <rect x="16" y="135" width="160" height="18" fill="#a0e2d4" opacity=".6"/>
+        <text x="20" y="244" fill={muted} font-size="11">{txt('Fictional observation · p. 1', '虚构观测资料 · 第 1 页')}</text>
+      </g>)}
+    </>}
+    {mission === 'knowledge' && step === 1 && <>
+      <rect x="40" y="67" width="640" height="310" rx="7" fill="#fff"/>
+      <text x="68" y="112" fill={ink} font-size="27">{txt('Observation index', '观测笔记索引')}</text>
+      {[txt('Orbit → observation windows','轨道 → 观测窗口'),txt('Light → visibility conditions','光照 → 可见条件'),txt('Sources → evidence for every note','来源 → 每条笔记的依据')].map((line,i)=><g>
+        <circle cx="76" cy={166+i*56} r="4" fill="#489b8b"/>
+        <text x="94" y={172+i*56} fill="#347a6e" font-size="17">{line}</text>
+        <text x="94" y={193+i*56} fill={muted} font-size="11">[[source-0{i+1}]] · [[observation-notes]]</text>
+      </g>)}
+    </>}
+    {mission === 'knowledge' && step === 2 && <>
+      <text x="40" y="94" fill={ink} font-size="27">{txt('A source for every idea.', '每个观点，都有来源。')}</text>
+      <rect x="40" y="127" width="640" height="219" rx="7" fill="#fff"/>
+      <rect x="40" y="127" width="640" height="43" rx="7" fill="#dce9e5"/>
+      <text x="61" y="154" fill="#3b6d61" font-size="12">{txt('TOPIC','主题')}</text><text x="329" y="154" fill="#3b6d61" font-size="12">{txt('SOURCE','来源')}</text><text x="546" y="154" fill="#3b6d61" font-size="12">{txt('REVIEW','审阅')}</text>
+      {[txt('Orbit','轨道'),txt('Light','光照'),txt('Observation window','观测窗口')].map((name,i)=><g>
+        <line x1="40" x2="680" y1={229+i*57} y2={229+i*57} stroke="#e5e9eb"/>
+        <text x="61" y={204+i*57} fill={ink} font-size="16">{name}</text><text x="329" y={204+i*57} fill={muted} font-size="13">source-0{i+1} · p.1</text>
+        <rect x="532" y={184+i*57} width="119" height="29" rx="14" fill="#ecf0eb"/><text x="591" y={203+i*57} text-anchor="middle" fill="#607763" font-size="11">{txt('To review','待审阅')}</text>
+      </g>)}
+    </>}
+    {mission === 'knowledge' && step === 3 && <>
+      <path d="M360 210L145 118M360 210L571 118M360 210L145 326M360 210L571 326" fill="none" stroke="#80a99c" stroke-width="2"/>
+      {[[145,118,txt('Orbit','轨道')],[571,118,txt('Light','光照')],[145,326,txt('Sources','来源')],[571,326,txt('Review','审阅')]].map(([x,y,name])=><g>
+        <rect x={Number(x)-83} y={Number(y)-29} width="166" height="58" rx="10" fill="#fff" stroke="#b8cfc7"/>
+        <text x={x} y={Number(y)+6} text-anchor="middle" fill="#416e62" font-size="18">{name}</text>
+      </g>)}
+      <rect x="246" y="174" width="228" height="72" rx="13" fill="#d3e6de" stroke="#80a99c"/>
+      <text x="360" y="216" text-anchor="middle" fill="#2b594c" font-size="20">{txt('Observation window','观测窗口')}</text>
+      <text x="360" y="382" text-anchor="middle" fill={muted} font-size="12">{txt('Connections are hypotheses to review, not established findings.', '关系为待审阅的示例推断，并非实际研究结论。')}</text>
+    </>}
+  </g>
+</svg>
+<style>svg { width: 100%; height: auto; display: block; font-family: var(--font-body); }</style>

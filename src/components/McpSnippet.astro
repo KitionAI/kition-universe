@@ -1,0 +1,65 @@
+---
+import { type Lang, universe, t } from '../lib/universe';
+
+interface Props {
+  lang: Lang;
+  kit?: string;
+}
+const { lang, kit } = Astro.props;
+const m = universe().mcp;
+const intro = kit ? t(m.intro, lang).replaceAll('sheet_', `${kit}_`) : t(m.intro, lang);
+---
+
+<div class="mcp">
+  <p>{intro}</p>
+  <div class="code">
+    <pre><code>{m.snippet}</code></pre>
+    <button class="btn small copy" type="button" data-copy={m.snippet} data-done={lang === 'zh' ? '已复制' : 'Copied'}>{lang === 'zh' ? '复制' : 'Copy'}</button>
+  </div>
+  <p class="note">{t(m.note, lang)}</p>
+  <p class="note"><a href={m.docs}>{lang === 'zh' ? 'Agent 工具参考：inspect、run、check 和错误码' : 'Agent tools reference: inspect, run, check and error codes'} →</a></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.mcp .copy').forEach((b) =>
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy || '');
+        const old = b.textContent;
+        b.textContent = b.dataset.done || 'Copied';
+        setTimeout(() => (b.textContent = old), 1500);
+      } catch {
+        /* clipboard blocked: the snippet is still selectable */
+      }
+    }),
+  );
+</script>
+
+<style>
+  .code {
+    position: relative;
+  }
+  pre {
+    margin: 0 0 10px;
+    padding: 18px;
+    border-radius: 12px;
+    background: #0d0f24;
+    color: #dcdaff;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    line-height: 1.5;
+  }
+  .copy {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  .btn.small {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  .note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>

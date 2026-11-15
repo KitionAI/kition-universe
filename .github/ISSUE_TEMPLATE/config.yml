@@ -1,0 +1,7 @@
+# Built with Kition submissions and reports go through the forms; other questions
+# about the kits belong in the main Kition repository.
+blank_issues_enabled: true
+contact_links:
+  - name: Questions about Kition or the kits
+    url: https://github.com/KitionAI/kition/issues
+    about: Bugs and questions about the kits themselves go to KitionAI/kition.

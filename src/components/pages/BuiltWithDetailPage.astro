@@ -1,0 +1,372 @@
+---
+// One settlement: what it is, which kits it uses and how, who made it. Only
+// fields present in data/products.yaml are shown; nothing is filled in.
+import Base from '../../layouts/Base.astro';
+import SettlementCard from '../SettlementCard.astro';
+import { type Lang, universe, t, href, planet, planetHref } from '../../lib/universe';
+import { type Product, productHref, tagline, description, outboundRel, neighbourProducts } from '../../lib/products';
+import { bw, categoryName, collabName } from '../../i18n/builtWith';
+import { withBase } from '../../lib/base';
+
+interface Props {
+  lang: Lang;
+  product: Product;
+}
+const { lang, product: p } = Astro.props;
+const b = bw(lang);
+const u = universe();
+const site = Astro.site!;
+const rel = outboundRel(p);
+const kits = p.kits.map((k) => planet(k));
+const others = neighbourProducts(p, 3);
+const deliveries = p.delivery.map((d) => u.productGalaxy.delivery.find((x) => x.id === d)!).filter(Boolean);
+const tag = tagline(p, lang);
+const pageUrl = new URL(productHref(lang, p.id), site).href;
+const date = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+const appCategory: Record<Product['category'], string> = {
+  office: 'BusinessApplication',
+  design: 'DesignApplication',
+  video: 'MultimediaApplication',
+  engineering: 'DesignApplication',
+  education: 'EducationalApplication',
+  'developer-tools': 'DeveloperApplication',
+  'ai-agent': 'BusinessApplication',
+  other: 'UtilitiesApplication',
+};
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: p.name,
+    description: description(p, lang),
+    url: p.url ?? pageUrl,
+    mainEntityOfPage: pageUrl,
+    applicationCategory: appCategory[p.category],
+    ...(p.screenshot ? { image: new URL(withBase(p.screenshot), site).href } : {}),
+    author: { '@type': 'Organization', name: p.author.name, ...(p.author.url ? { url: p.author.url } : {}) },
+    ...(p.open_source ? { sameAs: [p.open_source] } : {}),
+    keywords: ['Built with Kition', ...kits.map((k) => `Kition ${k.name}`)].join(', '),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Kition Universe', item: new URL(href(lang, '/'), site).href },
+      { '@type': 'ListItem', position: 2, name: 'Built with Kition', item: new URL(href(lang, '/built-with/'), site).href },
+      { '@type': 'ListItem', position: 3, name: p.name, item: pageUrl },
+    ],
+  },
+];
+---
+
+<Base lang={lang} title={b('bw.d.title', { name: p.name, tagline: tag })} description={tag} path={`/built-with/${p.id}/`} og={`bw-${p.id}`} jsonLd={jsonLd}>
+  <div class="wrap section">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={href(lang, '/built-with/')}>Built with Kition</a> <span aria-hidden="true">/</span> <span aria-current="page">{p.name}</span>
+    </nav>
+
+    <div class:list={['hero', { 'without-shot': !p.screenshot }]}>
+      <div class="intro">
+        <p class="eyebrow">Built with Kition · {b('bw.settlement')}</p>
+        <h1>{p.name}</h1>
+        {
+          (p.by_kition || p.editors_pick || p.status !== 'live') && (
+            <p class="tags">
+              {p.by_kition && <span class="badge kition">{b('bw.byKition')}</span>}
+              {p.editors_pick && <span class="badge">{b('bw.pick')}</span>}
+              {p.status === 'paused' && <span class="badge preview">{b('bw.paused')}</span>}
+              {p.status === 'preview' && <span class="badge preview">{b('bw.preview')}</span>}
+            </p>
+          )
+        }
+        <p class="lede">{tag}</p>
+        {p.status === 'paused' && <p class="paused">{b('bw.pausedBody')}</p>}
+        {p.status === 'preview' && <p class="paused">{b('bw.previewBody')}</p>}
+        <p class="actions">
+          {p.url ? <a class="btn primary" href={p.url} rel={rel}>{b('bw.d.visit', { name: p.name })} <span aria-hidden="true">↗</span></a> : <a class="btn primary" href="#product-kits">{b('bw.d.exploreKits')}</a>}
+          {p.open_source && <a class="btn" href={p.open_source} rel={rel}>{b('bw.d.source')}</a>}
+        </p>
+      </div>
+      {
+        p.screenshot && (
+          <figure class="shot">
+            <img src={withBase(p.screenshot)} alt={b('bw.d.screenshot', { name: p.name })} width="1600" height="1000" decoding="async" fetchpriority="high" />
+          </figure>
+        )
+      }
+    </div>
+
+    <div class="cols">
+      <div class="desc">
+        <p>{description(p, lang)}</p>
+      </div>
+      <dl class="facts card" aria-label={b('bw.d.facts')}>
+        <div id="product-kits">
+          <dt>{b('bw.d.kits')}</dt>
+          <dd>
+            <ul class="kits" role="list">
+              {
+                kits.map((k) => (
+                  <li class="kit-light" style={`--kit-l:${k.color.light};--kit-d:${k.color.dark}`}>
+                    <a href={planetHref(lang, k.id)}>
+                      <span class="dot" aria-hidden="true" />
+                      {k.name}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </dd>
+        </div>
+        <div>
+          <dt>{b('bw.d.delivery')}</dt>
+          <dd>
+            <ul class="del" role="list">
+              {
+                deliveries.map((d) => (
+                  <li>
+                    <code>{d.name}</code> <span>{t(d.body, lang)}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </dd>
+        </div>
+        {
+          p.collab && (
+            <div>
+              <dt>{b('bw.d.collab')}</dt>
+              <dd>{collabName(p.collab, lang)}</dd>
+            </div>
+          )
+        }
+        <div>
+          <dt>{b('bw.d.category')}</dt>
+          <dd><a href={`${href(lang, '/built-with/')}?category=${p.category}`}>{categoryName(p.category, lang)}</a></dd>
+        </div>
+        <div>
+          <dt>{b('bw.d.author')}</dt>
+          <dd>
+            {p.author.url ? <a href={p.author.url} rel={rel}>{p.author.name}</a> : p.author.name}
+            {p.author.github && (
+              <>
+                {' · '}
+                <a href={`https://github.com/${p.author.github}`} rel={rel}>
+                  GitHub @{p.author.github}
+                </a>
+              </>
+            )}
+          </dd>
+        </div>
+        {
+          p.open_source && (
+            <div>
+              <dt>{b('bw.d.open')}</dt>
+              <dd>
+                <a class="repo" href={p.open_source} rel={rel}>
+                  {p.open_source.replace(/^https?:\/\/(www\.)?/, '')}
+                </a>
+              </dd>
+            </div>
+          )
+        }
+        <div>
+          <dt>{b('bw.d.added')}</dt>
+          <dd><time datetime={p.added}>{date(p.added)}</time></dd>
+        </div>
+        {
+          p.last_checked && (
+            <div>
+              <dt>{b('bw.d.checked')}</dt>
+              <dd><time datetime={p.last_checked}>{date(p.last_checked)}</time></dd>
+            </div>
+          )
+        }
+      </dl>
+    </div>
+
+    {
+      others.length > 0 && (
+        <section class="others" aria-labelledby="h-others">
+          <h2 id="h-others">{b('bw.d.others')}</h2>
+          <ul class="grid" role="list">
+            {others.map((x) => (
+              <li>
+                <SettlementCard lang={lang} product={x} compact />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <footer class="foot-note">
+      <p>
+        <a href={href(lang, '/built-with/')}>← {b('bw.d.back')}</a>
+        {' · '}
+        <a href={u.site.links.report}>{b('bw.d.report')}</a>
+        <span class="muted"> — {b('bw.d.reportBody')}</span>
+      </p>
+      <p class="muted">{b('bw.notEndorsement')}</p>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .section {
+    padding-top: 28px;
+  }
+  .crumbs {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .crumbs a {
+    color: var(--muted);
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero > * {
+    min-width: 0;
+  }
+  .hero.without-shot { grid-template-columns: 1fr; max-width: 880px; }
+  h1 {
+    overflow-wrap: anywhere;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .kition {
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    color: var(--accent);
+  }
+  .paused {
+    padding: 10px 14px;
+    border: 1px dashed color-mix(in srgb, var(--star) 70%, transparent);
+    border-radius: 10px;
+    font-size: 0.92rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .shot {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    background: var(--bg-2);
+  }
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    margin-top: 48px;
+    align-items: start;
+  }
+  .cols > * {
+    min-width: 0;
+  }
+  .desc p {
+    font-size: 1.05rem;
+    max-width: 62ch;
+  }
+  .facts {
+    margin: 0;
+    display: grid;
+    gap: 16px;
+  }
+  dt {
+    font: 600 0.72rem/1 var(--font-display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .kits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .kits a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px 3px 8px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--kit) 40%, var(--line));
+    background: color-mix(in srgb, var(--kit) 10%, transparent);
+    font: 600 0.8rem/1.5 var(--font-display);
+    text-decoration: none;
+  }
+  .kits a:hover {
+    border-color: var(--kit);
+  }
+  .kits .dot {
+    width: 8px;
+    height: 8px;
+    box-shadow: none;
+  }
+  .del {
+    display: grid;
+    gap: 6px;
+    font-size: 0.92rem;
+  }
+  .del li {
+    display: grid;
+    grid-template-columns: 6.5em 1fr;
+    gap: 8px;
+  }
+  .del code {
+    font-weight: 600;
+  }
+  .del span {
+    color: var(--muted);
+  }
+  .others {
+    margin-top: 56px;
+  }
+  .others .grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  }
+  .foot-note {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 0.88rem;
+  }
+  .muted {
+    color: var(--muted);
+  }
+  @media (max-width: 860px) {
+    .hero,
+    .cols {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+</style>

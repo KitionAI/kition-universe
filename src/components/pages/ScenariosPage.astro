@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import UniverseStage from '../UniverseStage.astro';
+import ScenarioTeaser from '../ScenarioTeaser.astro';
+import ScenarioCards from '../ScenarioCards.astro';
+import {type Lang,planet,planetHref,t,href,universe} from '../../lib/universe';
+import {scenarioGalaxy,scenarioHref} from '../../lib/scenarioGalaxies';
+import {replayFor,replayId,replayThumb} from '../../lib/replays';
+interface Props {lang:Lang; id?:string}
+const {lang,id}=Astro.props;
+const g=id?scenarioGalaxy(id):undefined;
+const text=(en:string,zh:string)=>lang==='zh'?zh:en;
+const title=g?.name[lang] || text('Scenario Galaxies','场景星系');
+const description=g?.summary[lang] || text('Explore twelve scenario galaxies built from sixteen professional kits. Different combinations for different kinds of work.','探索由 16 个专业 Kit 组合而成的 12 个场景星系。不同的工作场景，不同的能力组合。');
+---
+<Base lang={lang} title={title} description={description} path={`/scenarios/${id?id+'/':''}`} og={id?`scenario-${id}`:'scenarios'}>
+  <UniverseStage lang={lang} initialGalaxy={id||'overview'}/>
+  {g ? <>
+    <section class="section scene-details" id="scenario-details"><div class="wrap">
+      <a class="back" href={scenarioHref(lang)}>← {text('All scenario galaxies','所有场景星系')}</a>
+      <header><div><p class="eyebrow">{text('SCENARIO GALAXY','场景星系')} / {g.kits.length} KITS</p><h2>{g.name[lang]}</h2><p class="lede">{g.summary[lang]}</p></div><aside><span class="eyebrow">{text('WHAT YOU CAN MAKE','可以制作')}</span><p>{g.outcome[lang]}</p>{g.by&&<p class="by">{text('Proposed by','提议者')} {(g.by.url||g.by.github)?<a href={g.by.url||`https://github.com/${g.by.github}`} rel="nofollow ugc noopener">{g.by.name}</a>:g.by.name}</p>}</aside></header>
+      <ol class="combinations" role="list">{g.kits.map((entry,i)=>{const p=planet(entry.kit);const sc=p.scenarios.find(sc=>sc.id===entry.scenario)!;const r=replayFor(p.id,sc.id);return <li style={`--signal:${p.color.dark}`}>
+        {r ? <button class="shot" type="button" data-replay={replayId(p.id,sc.id)} aria-label={`${text('Replay','回放')}: ${p.name} · ${t(sc.title,lang)}`}><img src={replayThumb(r)} alt="" loading="lazy" decoding="async" width="480" height="300"/><span>▶ {text('Replay this step','回放这一步')} · {r.commands} {text('commands','条命令')}</span></button> : <div class="shot none"><span>{p.ext||p.name}</span></div>}
+        <div class="kit-heading"><span class="number">{String(i+1).padStart(2,'0')}</span><a href={planetHref(lang,p.id)}>{p.name}</a>{p.status==='preview'&&<span class="badge">Preview</span>}</div>
+        <h3>{t(sc.title,lang)}</h3><p>{t(sc.body,lang)}</p><ul class="capabilities" role="list">{sc.uses.map(id=><li><a href={`${planetHref(lang,p.id)}#cap-${id}`}>{t(p.capabilities.find(c=>c.id===id)!.title,lang)}</a></li>)}</ul>
+        <a class="kit-link" href={`${planetHref(lang,p.id)}#scenario-${sc.id}`}>{text('Explore this kit','探索这个 Kit')} ↗</a>
+      </li>})}</ol>
+      <div class="shared"><p>{text('These are ways to combine kit capabilities. Explore a kit to see its examples, status and documentation.','这些场景展示 Kit 能力的组合方式。进入 Kit 可以查看具体示例、当前状态和文档。')}</p><a href={href(lang,'/built-with/')}>{text('Explore Kition workspaces','探索 Kition 工作空间')} →</a></div>
+    </div></section>
+    <section class="section other"><div class="wrap"><p class="eyebrow">KEEP EXPLORING</p><h2>{text('A different scene. A new combination.','换一种场景，发现新的组合。')}</h2><ScenarioCards lang={lang} exclude={id}/></div></section>
+  </> : <ScenarioTeaser lang={lang}/>}
+  <section class="section propose"><div class="wrap"><div class="card">
+    <div><p class="eyebrow">{text('ADD A GALAXY','添加一个星系')}</p><h2>{text('Does your work go through the kits another way?','你的工作是用另一种方式经过这些 kit 的吗？')}</h2>
+    <p>{text('Propose a scenario galaxy: two to four kits in order, each step something the kit already does. It is free, and you are credited on the galaxy.','提议一个场景星系：两到四个 kit 按顺序排开，每一步都是这个 kit 已有的能力。免费，星系上会署你的名字。')}</p></div>
+    <p class="row"><a class="btn primary" href={universe().site.links.galaxy}>{text('Propose a scenario galaxy','提议一个场景星系')} ↗</a><a class="btn" href={universe().site.links.contributing}>{text('The spec','收录规范（英文）')} ↗</a></p>
+  </div></div></section>
+</Base>
+<style>
+.propose .card{display:flex;gap:30px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-left:3px solid var(--star)}.propose h2{font-size:1.3rem;margin:6px 0 8px}.propose p{color:var(--muted);margin:0;max-width:640px}.propose .row{display:flex;gap:10px;flex-wrap:wrap}.by{font-size:.8rem;margin-top:10px}
+.combinations{list-style:none;padding:0}.combinations .shot{position:relative;display:block;width:100%;padding:0;margin:0 0 16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;aspect-ratio:16/10}.combinations .shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:left top;transition:transform .3s}.combinations button.shot:hover img{transform:scale(1.03)}.combinations .shot span{position:absolute;left:8px;bottom:8px;padding:5px 10px;border-radius:999px;background:rgba(8,10,22,.86);color:#fff;font:600 .68rem/1.2 var(--font-display)}.combinations button.shot:hover span,.combinations button.shot:focus-visible span{background:var(--signal);color:#0b0c16}.combinations .shot.none{display:grid;place-items:center;cursor:default;background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--signal) 40%,#0b0c16),#0b0c16 75%)}.combinations .shot.none span{position:static;background:none;font:600 1rem var(--font-mono);color:color-mix(in srgb,var(--signal) 80%,#fff)}
+.back{display:inline-block;margin-bottom:38px;font-size:.8rem;color:var(--muted)}header{display:grid;grid-template-columns:1.4fr 1fr;gap:70px;align-items:end;margin-bottom:40px}header .lede{font-size:1.05rem;margin:0}header aside{border-left:1px solid var(--line);padding-left:30px}header aside p{margin:12px 0 0;color:var(--muted);line-height:1.7}.combinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;list-style:none;padding:0}.combinations>li{padding:30px;border:1px solid var(--line);border-top:2px solid var(--signal);border-radius:12px;background:var(--bg-2)}.kit-heading{display:flex;gap:15px;align-items:center;margin-bottom:24px}.kit-heading>a{font:600 1.6rem var(--font-display);text-decoration:none;color:var(--signal)}.number{font:.6rem var(--font-mono);color:var(--muted)}.badge{margin-left:auto}.combinations h3{font-size:1.15rem}.combinations p{font-size:.9rem;color:var(--muted);line-height:1.8}.capabilities{display:flex;flex-wrap:wrap;gap:8px 16px;list-style:none;padding:0;font-size:.75rem;margin:22px 0}.kit-link{display:inline-block;margin-top:10px;font-size:.85rem}.shared{display:flex;gap:40px;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:24px;margin-top:30px}.shared p{max-width:65ch;color:var(--muted);font-size:.8rem}.shared a{font-size:.85rem;flex-shrink:0}.other{background:var(--bg-2)}@media(max-width:700px){header{grid-template-columns:1fr;gap:25px}header aside{padding-left:20px}.combinations{grid-template-columns:1fr}.combinations>li{padding:24px}.shared{flex-direction:column;align-items:start;gap:12px}}
+</style>

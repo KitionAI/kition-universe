@@ -1,0 +1,13 @@
+---
+import ScenarioCards from './ScenarioCards.astro';
+import {type Lang} from '../lib/universe';
+import {scenarioHref,scenarioGalaxies} from '../lib/scenarioGalaxies';
+interface Props {lang:Lang}
+const {lang}=Astro.props;
+---
+<section class="section" id="scenarios" aria-labelledby="scenarios-title"><div class="wrap">
+  <p class="eyebrow">{scenarioGalaxies.length} SCENARIO GALAXIES / SHARED KITS</p>
+  <div class="heading"><div><h2 id="scenarios-title">{lang==='zh'?'每一种场景，都有自己的星系。':'A galaxy for every kind of work.'}</h2><p class="lede">{lang==='zh'?'相同的 Kit，在不同场景里组合成新的世界。从品牌到建筑，从研究到影视。':'The same kits combine into new worlds. From brands to buildings, from research to film.'}</p></div><a class="btn" href={scenarioHref(lang)}>{lang==='zh'?'打开场景星图':'Open the scenario atlas'} ↗</a></div>
+  <ScenarioCards lang={lang}/>
+</div></section>
+<style>.heading{display:flex;justify-content:space-between;align-items:end;gap:24px}.heading>div{max-width:760px}.heading .lede{font-size:1rem;margin-bottom:0}.heading .btn{flex-shrink:0;font-size:.8rem}.eyebrow{color:var(--star)}@media(max-width:800px){.heading{flex-direction:column;align-items:start}}</style>

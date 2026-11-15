@@ -1,0 +1,1384 @@
+# Kition Universe — the one data file that drives the whole site:
+# star map, star catalog, planet pages, sitemap.xml, llms.txt and OG images.
+#
+# Facts about kits come from the KitionAI/kition repository (paths in `sources`,
+# read at the commit checked out on 2026-10-23). Product lines follow the owner
+# decisions of 2026-10-31 (office, design, media, engineering; html, design and scene in Preview); the
+# Preview status of layout and cad comes from the product brief.
+# Do not add numbers or capabilities that have no source.
+#
+# Kit order is fixed: note, table, board, photo, film, doc, sheet, slide, pdf,
+# vector, layout, motion, cad, html, scene, design.
+# html, scene and design verified against their kit.json and README.md on 2026-10-31.
+
+site:
+  name: Kition Universe
+  links:
+    main: https://kition.ai
+    skills: https://kition.ai
+    protocol: https://kitharness.org
+    tessera: https://github.com/KitionAI/kition-tessera
+    github: https://github.com/KitionAI/kition
+    download: https://github.com/KitionAI/kition/releases/latest
+    # Built with Kition: submissions and reports are GitHub issue forms in this site's repo
+    # (the brief names KitionAI/kition-universe; it does not exist publicly yet)
+    submit: https://github.com/KitionAI/kition-universe/issues/new?template=built-with-kition.yml
+    report: https://github.com/KitionAI/kition-universe/issues/new?template=report-listing.yml
+    # propose a scenario galaxy, and the rules for every kind of submission
+    galaxy: https://github.com/KitionAI/kition-universe/issues/new?template=scenario-galaxy.yml
+    contributing: https://github.com/KitionAI/kition-universe/blob/main/CONTRIBUTING.md
+  facts:
+    license: Apache-2.0
+
+star:
+  name: Kit Harness Protocol
+  short: KHP
+  href: https://kitharness.org
+  tagline:
+    en: The open protocol every planet orbits.
+    zh: 每颗星球都绕着转的开放协议。
+  lines:
+    - en: MCP lets AI connect to tools.
+      zh: MCP 让 AI 连上工具。
+    - en: KHP lets AI operate professional software.
+      zh: KHP 让 AI 操作专业软件。
+    - en: Kition is the first open pro suite built on it.
+      zh: Kition 是第一套建在它上面的开源专业软件。
+  body:
+    en: >-
+      KHP is the contract between an AI agent and a kit. Every kit answers the same small set of
+      calls: inspect a file, list its commands, run one, query, batch, check. Each inspect and run
+      comes back with a rendered preview image, and errors are structured (not-found, read-only,
+      unknown-command), so an agent can see what it changed and recover when it is wrong. Kits
+      declare how far they go, from basic to agent-ready to agent-ready-complete.
+    zh: KHP 是 AI Agent 和 kit 之间的约定。每个 kit 都回应同一小组调用：查看文件、列出命令、执行、查询、批量、检查。每次查看和执行都会带回一张渲染好的预览图，错误也是结构化的（not-found、read-only、unknown-command），所以 Agent 能看见自己改了什么，出错时也能自己纠正。每个 kit 会声明自己做到哪一级：basic、agent-ready或 agent-ready-complete。
+
+mcp:
+  # the agent tools reference (<kit>_inspect, _run, _check, errors): every "how the AI calls it" link goes here
+  docs: https://github.com/KitionAI/kition-sdk/blob/main/docs/sdk/agent.md
+  intro:
+    en: >-
+      Kition ships an MCP server for its kits. Run it over stdio against a folder, without the app open,
+      and your agent gets tools like sheet_inspect, sheet_run and sheet_check for every kit.
+    zh: Kition 自带一个 kit 的 MCP server。用 stdio 指向一个文件夹运行，不用打开应用，你的 Agent 就会拿到每个 kit 的sheet_inspect、sheet_run、sheet_check 这类工具。
+  snippet: |-
+    # Claude Code
+    claude mcp add kition -- kition-kits-mcp --workspace /path/to/your/folder
+
+    # Any MCP client (mcpServers config)
+    {
+      "mcpServers": {
+        "kition": {
+          "command": "kition-kits-mcp",
+          "args": ["--workspace", "/path/to/your/folder"]
+        }
+      }
+    }
+  note:
+    en: The kition-kits-mcp binary comes with Kition. Without a licence key it runs in development and evaluation mode.
+    zh: kition-kits-mcp 随 Kition 一起提供。没有许可证密钥时，它以开发和评估模式运行。
+
+clusters:
+  - id: office
+    name: Kition Office
+    label: { en: Office Cluster, zh: Office 星团 }
+    blurb:
+      en: Notes, tables, whiteboards, documents, spreadsheets, slides, PDFs and HTML.
+      zh: 笔记、表格、白板、文档、电子表格、幻灯片、PDF 和 HTML。
+    angle: -8
+    distance: 33
+  - id: design
+    name: Kition Design
+    label: { en: Design Cluster, zh: Design 星团 }
+    blurb:
+      en: Images, vectors, page layout and interface design.
+      zh: 图像、矢量、版式和界面设计。
+    angle: 196
+    distance: 29
+  - id: video
+    name: Kition Media
+    label: { en: Media Cluster, zh: Media 星团 }
+    blurb:
+      en: Video editing and motion graphics.
+      zh: 视频剪辑和动态图形。
+    angle: 140
+    distance: 30
+  - id: cad
+    name: Kition Engineering
+    label: { en: Engineering Cluster, zh: 工程星团 }
+    blurb:
+      en: Technical drawings and complete 3D scenes, from dimensions to animation.
+      zh: 从工程制图到三维场景，从精确标注到建模动画。
+    angle: 72
+    distance: 27
+
+planets:
+  # ───────────────────────────── Office ─────────────────────────────
+  - id: note
+    order: 1
+    name: note
+    cluster: office
+    kitId: kit.note
+    planet: { en: Library Planet, zh: 图书馆星 }
+    ext: .md
+    status: beta
+    color: { light: "#5645d4", dark: "#8b7cf0" }
+    surface: { style: bands, look: gas, size: 1.18, moons: 1, tilt: 0.2 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A calm gas giant in soft violet bands, like the edges of a stack of pages. One small moon keeps it company."
+      zh: "一颗安静的气态巨行星，淡紫色的条带像一摞书页的侧边。旁边有一颗小卫星。"
+    tagline:
+      en: Connected Markdown notes your AI can edit and you can review.
+      zh: 互相连接的 Markdown 笔记，AI 来改，你来审。
+    summary:
+      en: >-
+        note is Kition's Markdown document kit. Write with live preview, link notes together, drop in
+        diagrams and math, and let the agent edit the real file while you accept or reject each change.
+      zh: note 是 Kition 的 Markdown 文档 kit。实时预览写作、把笔记互相链接、插入图表和公式；Agent 直接改真实文件，你逐条接受或拒绝。
+    capabilities:
+      - id: links
+        building: { en: Backlink Library, zh: 反链图书馆 }
+        shape: dome
+        title: { en: Connected notes, zh: 互相连接的笔记 }
+        body:
+          en: Internal links, backlinks, tags and outlines tie notes together, with embeds, templates and daily notes.
+          zh: 内部链接、反向链接、标签和大纲把笔记连在一起，还有嵌入、模板和日记。
+      - id: diagrams
+        building: { en: Diagram Observatory, zh: 图表天文台 }
+        shape: spire
+        title: { en: Diagrams and math, zh: 图表和公式 }
+        body:
+          en: Mermaid diagrams and KaTeX math render right inside the Markdown.
+          zh: Mermaid 图表和 KaTeX 公式直接在 Markdown 里渲染。
+      - id: search
+        building: { en: Search Stacks, zh: 检索书库 }
+        shape: stack
+        title: { en: Full-text search, zh: 全文检索 }
+        body:
+          en: Search every note in the workspace, then export finished work to PDF.
+          zh: 检索工作区里的所有笔记，写完可以导出成 PDF。
+      - id: review
+        building: { en: Review Hall, zh: 审阅大厅 }
+        shape: columns
+        title: { en: Reviewable agent edits, zh: 可审阅的 Agent 修改 }
+        body:
+          en: The agent edits the active document; every addition and deletion is shown so you can accept or reject it.
+          zh: Agent 直接修改当前文档，每处增删都标出来，你可以逐条接受或拒绝。
+      - id: comments
+        building: { en: Comment Café, zh: 批注咖啡馆 }
+        shape: block
+        title: { en: Comment threads, zh: 批注讨论 }
+        body:
+          en: Add, reply to and resolve comment threads, by hand or through the agent.
+          zh: 添加、回复和解决批注，可以手动，也可以交给 Agent。
+    formats:
+      native: [".md", ".markdown"]
+      opens: []
+    commands:
+      - { name: text.read, what: { en: Read the document text, zh: 读取文档文本 } }
+      - { name: text.insert, what: { en: Insert text at a position, zh: 在指定位置插入文本 } }
+      - { name: text.replace, what: { en: Replace a span of text, zh: 替换一段文本 } }
+      - { name: document.replace, what: { en: Rewrite the whole document, zh: 重写整篇文档 } }
+      - { name: comment.add, what: { en: Start a comment thread, zh: 发起批注 } }
+      - { name: comment.resolve, what: { en: Resolve a thread, zh: 解决批注 } }
+    ship:
+      en: Agent ship landing on note to link up a week of meeting notes
+      zh: Agent 飞船降落 note，把一周的会议笔记串起来
+    repo: KitionAI/kition · packages/document-kit
+    sources: [README.md, packages/document-kit/kit.json, kits/modules.json, src/lib/script/kits/document.ts]
+    tools: []
+
+  - id: table
+    order: 2
+    name: table
+    cluster: office
+    kitId: kit.table
+    planet: { en: Warehouse Planet, zh: 仓库星 }
+    ext: .ktable
+    status: beta
+    version: 0.2.0
+    color: { light: "#0c8375", dark: "#3fd1bf" }
+    surface: { style: grid, look: city, size: 0.95 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A world covered by a regular grid of blocks and lit streets: every lot holds a record, every street links one table to another."
+      zh: "整颗星球铺满规整的街区和发光的街道：每个地块是一条记录，每条街把一张表连到另一张表。"
+    tagline:
+      en: Structured tables that turn data into useful tools.
+      zh: 结构化表格，把数据变成好用的工具。
+    summary:
+      en: >-
+        table keeps typed records next to your knowledge: fields, attachments, formulas, views and AI fields
+        that fill themselves in. Workflows and the agent read and write the same file.
+      zh: table 把带类型的记录放在知识旁边：字段、附件、公式、视图，以及会自动填写的 AI 字段。工作流和 Agent 读写的是同一个文件。
+    capabilities:
+      - id: fields
+        building: { en: Field Depot, zh: 字段仓库 }
+        shape: block
+        title: { en: Typed fields, zh: 带类型的字段 }
+        body:
+          en: Typed fields, attachments, formulas and links between tables.
+          zh: 带类型的字段、附件、公式，以及表与表之间的关联。
+      - id: views
+        building: { en: View Hangar, zh: 视图机库 }
+        shape: block
+        title: { en: Views and dashboards, zh: 视图和仪表盘 }
+        body:
+          en: Filters, sorting, grouping, multiple views and dashboards over the same records.
+          zh: 对同一批记录做筛选、排序、分组，建多个视图和仪表盘。
+      - id: ai-fields
+        building: { en: AI Field Factory, zh: AI 字段工厂 }
+        shape: tower
+        title: { en: AI fields, zh: AI 字段 }
+        body:
+          en: AI fields generate text, structured values and media for every record, so the table is both queue and review surface.
+          zh: AI 字段为每条记录生成文本、结构化数据和媒体，表格既是任务队列，也是审阅界面。
+      - id: import
+        building: { en: Import Dock, zh: 导入码头 }
+        shape: crane
+        title: { en: Import and export, zh: 导入导出 }
+        body:
+          en: Import CSV, TSV and XLSX into a table; export CSV and Markdown.
+          zh: 把 CSV、TSV、XLSX 导入成表格；导出 CSV 和 Markdown。
+      - id: workflows
+        building: { en: Workflow Rail, zh: 工作流轨道 }
+        shape: screen
+        title: { en: Shared with workflows, zh: 和工作流共用 }
+        body:
+          en: Workflows and form or email sync read and write tables through the kit.
+          zh: 工作流、表单和邮件同步都通过这个 kit 读写表格。
+    formats:
+      native: [".ktable"]
+      opens: [".csv", ".tsv", ".xlsx"]
+    commands:
+      - { name: table.records.create, what: { en: Add records, zh: 新增记录 } }
+      - { name: table.records.update, what: { en: Update records, zh: 更新记录 } }
+      - { name: table.fields.create, what: { en: Add a field, zh: 新增字段 } }
+      - { name: table.views.create, what: { en: Create a view, zh: 新建视图 } }
+      - { name: table.import.run, what: { en: Import a file, zh: 导入文件 } }
+      - { name: table.csv.export, what: { en: Export CSV, zh: 导出 CSV } }
+      - { name: table.dashboards.upsert, what: { en: Build a dashboard, zh: 搭建仪表盘 } }
+    ship:
+      en: Agent ship landing on table to read receipt photos into records
+      zh: Agent 飞船降落 table，把小票照片读成记录
+    repo: KitionAI/kition-table
+    sources: [README.md, crates/kition-kits/src/manager.rs, docs/table-file-import.md, src/lib/script/kits/table.ts, kits/kits.lock.json]
+    tools: []
+
+  - id: board
+    order: 3
+    name: board
+    cluster: office
+    kitId: kit.board
+    planet: { en: Doodle Planet, zh: 涂鸦星 }
+    ext: .kboard
+    status: beta
+    color: { light: "#966e00", dark: "#ffd04d" }
+    surface: { style: patches, look: terra, size: 1.0, moons: 1 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A warm ocean world with scattered continents and drifting clouds, as loose as a sketch on a whiteboard. It has one moon."
+      zh: "一颗温暖的海洋星球，零散的大陆和飘动的云，像白板上随手画的草图。有一颗卫星。"
+    tagline:
+      en: An infinite whiteboard where AI proposes and you decide.
+      zh: 无限白板，AI 提方案，你来定。
+    summary:
+      en: >-
+        board is an infinite canvas for diagrams, mind maps, flowcharts, sticky-note clusters and freeform
+        sketches. The agent proposes typed changes that you accept or reject before they land.
+      zh: board 是一块无限画布，画流程图、思维导图、便利贴分组和随手草图。Agent 提出有类型的修改，你接受或拒绝之后才生效。
+    capabilities:
+      - id: canvas
+        building: { en: Sticky Note Plaza, zh: 便利贴广场 }
+        shape: block
+        title: { en: Infinite canvas, zh: 无限画布 }
+        body:
+          en: Shapes, sticky notes and freeform sketches on a canvas with no edges.
+          zh: 在没有边界的画布上放形状、便利贴和随手草图。
+      - id: diagrams
+        building: { en: Mind Map Tower, zh: 思维导图塔 }
+        shape: spire
+        title: { en: Diagrams and mind maps, zh: 流程图和思维导图 }
+        body:
+          en: Build diagrams, mind maps and flowcharts.
+          zh: 画流程图、思维导图和各种示意图。
+      - id: connectors
+        building: { en: Connector Bridge, zh: 连线大桥 }
+        shape: columns
+        title: { en: Connectors, frames and pages, zh: 连线、框架和页面 }
+        body:
+          en: Connectors that stay bound to their shapes, groups, frames and multiple pages.
+          zh: 连线始终绑在形状上，支持分组、框架和多页。
+      - id: proposals
+        building: { en: Proposal Booth, zh: 提案亭 }
+        shape: screen
+        title: { en: Reviewable AI changes, zh: 可审阅的 AI 修改 }
+        body:
+          en: The agent proposes changes to the board; you accept or reject them before they apply.
+          zh: Agent 对白板提出修改，你接受或拒绝之后才生效。
+      - id: export
+        building: { en: Export Kiosk, zh: 导出小亭 }
+        shape: dome
+        title: { en: SVG and PNG export, zh: 导出 SVG 和 PNG }
+        body:
+          en: Export a board as SVG or PNG.
+          zh: 把白板导出成 SVG 或 PNG。
+    formats:
+      native: [".kboard"]
+      opens: []
+    commands:
+      - { name: element.create, what: { en: Add shapes and notes, zh: 添加形状和便利贴 } }
+      - { name: element.update, what: { en: Move or restyle elements, zh: 移动或修改元素样式 } }
+      - { name: connector.create, what: { en: Connect two elements, zh: 连接两个元素 } }
+      - { name: element.group, what: { en: Group elements, zh: 编组 } }
+      - { name: page.create, what: { en: Add a page, zh: 新增页面 } }
+      - { name: element.reorder, what: { en: Change stacking order, zh: 调整层级 } }
+    ship:
+      en: Agent ship landing on board to turn a brainstorm into a mind map
+      zh: Agent 飞船降落 board，把头脑风暴整理成思维导图
+    repo: KitionAI/kition · packages/board-kit
+    sources: [README.md, packages/board-kit/kit.json, packages/board-kit/src/engine/boardModel.ts, src-tauri/src/workspace/formats.rs]
+    tools: []
+
+  # ───────────────────────────── Design ─────────────────────────────
+  - id: photo
+    order: 4
+    name: photo
+    cluster: design
+    kitId: kit.photo
+    planet: { en: Darkroom Planet, zh: 暗房星 }
+    ext: .psd
+    status: beta
+    version: 0.4.16
+    color: { light: "#087fa1", dark: "#4ccbf0" }
+    surface: { style: swirl, look: storm, size: 1.1, tilt: 0.5 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "An ice giant wrapped in slow turquoise storms that fold over one another, like the layers of an image."
+      zh: "一颗冰巨星，青蓝色的风暴缓慢地互相叠在一起，像一张图里的图层。"
+    tagline:
+      en: Layered image editing that opens PSD files, a free Photoshop alternative for you and your AI.
+      zh: 能打开 PSD 的分层图像编辑，你和 AI 都能用的免费 Photoshop 替代品。
+    summary:
+      en: >-
+        photo edits layered images: layers, masks, adjustment layers, selections, transforms, type and paint.
+        It opens PSD and PSB files directly, and an agent can run the same commands you use.
+      zh: photo 编辑分层图像：图层、蒙版、调整图层、选区、变换、文字和绘画。它直接打开 PSD 和 PSB，Agent 能执行和你一样的命令。
+    capabilities:
+      - id: psd
+        building: { en: PSD Darkroom, zh: PSD 暗房 }
+        shape: dome
+        title: { en: Opens PSD and PSB, zh: 打开 PSD 和 PSB }
+        body:
+          en: Open PSD, PSB and .kphoto files; new files are saved as PSD.
+          zh: 打开 PSD、PSB 和 .kphoto 文件；新建文件默认存成 PSD。
+      - id: layers
+        building: { en: Layer Stacks, zh: 图层大楼 }
+        shape: stack
+        title: { en: Layers and masks, zh: 图层和蒙版 }
+        body:
+          en: Layers, layer masks and clipping masks, duplicated, reordered and flattened on demand.
+          zh: 图层、图层蒙版和剪贴蒙版，可以复制、调序、按需合并。
+      - id: adjust
+        building: { en: Curves Lab, zh: 曲线实验室 }
+        shape: tower
+        title: { en: Adjustment layers, zh: 调整图层 }
+        body:
+          en: Levels, curves, vibrance, hue/saturation and more as non-destructive adjustment layers.
+          zh: 色阶、曲线、自然饱和度、色相/饱和度等，都是不破坏原图的调整图层。
+      - id: paint
+        building: { en: Brush Studio, zh: 笔刷工作室 }
+        shape: block
+        title: { en: Paint, select, transform, type, zh: 绘画、选区、变换、文字 }
+        body:
+          en: Paint strokes, selections, transforms, filters and type.
+          zh: 画笔、选区、变换、滤镜和文字。
+      - id: export
+        building: { en: Export Pier, zh: 导出码头 }
+        shape: crane
+        title: { en: Export, zh: 导出 }
+        body:
+          en: Export PNG, JPG, PSD or TIFF, layers to files, and artboards to PDF.
+          zh: 导出 PNG、JPG、PSD、TIFF，把图层导出成文件，把画板导出成 PDF。
+    formats:
+      native: [".psd", ".kphoto"]
+      opens: [".psb"]
+    commands:
+      - { name: layer.new.layer, what: { en: Add a layer, zh: 新建图层 } }
+      - { name: layer.newAdjustmentLayer.curves, what: { en: Add a curves layer, zh: 新建曲线调整图层 } }
+      - { name: image.adjustments.brightnessContrast, what: { en: Adjust brightness and contrast, zh: 调亮度和对比度 } }
+      - { name: select.rect, what: { en: Make a rectangular selection, zh: 矩形选区 } }
+      - { name: paint.stroke, what: { en: Paint a stroke, zh: 画一笔 } }
+      - { name: layer.createClippingMask, what: { en: Create a clipping mask, zh: 创建剪贴蒙版 } }
+      - { name: layer.flattenImage, what: { en: Flatten the image, zh: 合并图像 } }
+    ship:
+      en: Agent ship landing on photo to add a curves layer to a PSD
+      zh: Agent 飞船降落 photo，给 PSD 加一个曲线调整图层
+    repo: KitionAI/kition-photo
+    sources: [crates/kition-kits/src/manager.rs, src/features/workspace/components/kits/kitFormats.ts, src/lib/script/kits/photo.ts, kits/kits.lock.json]
+    tools: []
+
+  # ───────────────────────────── Video ─────────────────────────────
+  - id: film
+    order: 5
+    name: film
+    cluster: video
+    kitId: kit.film
+    planet: { en: Cinema Planet, zh: 电影星 }
+    ext: .kfilm
+    status: beta
+    version: 0.4.3
+    color: { light: "#2d2f3a", dark: "#a3a7b8" }
+    surface: { style: bands, look: gas, size: 1.12, ring: true, tilt: 0.12 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A grey banded giant with a wide ring, like a reel of film seen from the side."
+      zh: "一颗灰色条纹的巨行星，带着一圈宽星环，像从侧面看的一盘胶片。"
+    tagline:
+      en: A video editor with a real timeline, rendering MP4 right in the app.
+      zh: 有真正时间线的视频剪辑，直接在应用里渲染 MP4。
+    summary:
+      en: >-
+        film cuts video projects: sequences, tracks, clips, trims, transitions, titles and audio. It renders
+        MP4 with progress you can stop, and "Edit in Film" never touches the original clip.
+      zh: film 剪视频项目：序列、轨道、片段、修剪、转场、字幕和音频。渲染 MP4 时能看进度、随时停；"Edit in Film" 从不改动原片。
+    capabilities:
+      - id: timeline
+        building: { en: Timeline Studios, zh: 时间线制片厂 }
+        shape: block
+        title: { en: Timeline editing, zh: 时间线剪辑 }
+        body:
+          en: Sequences and tracks; place, split, trim and ripple-delete clips; transitions, titles and audio.
+          zh: 序列和轨道；放置、切分、修剪、波纹删除片段；转场、字幕和音频。
+      - id: render
+        building: { en: Render Tower, zh: 渲染塔 }
+        shape: tower
+        title: { en: MP4 render, zh: 渲染 MP4 }
+        body:
+          en: Render MP4 inside the kit's worker, with a progress bar and a stop button.
+          zh: 在 kit 的 Worker 里渲染 MP4，有进度条和停止按钮。
+      - id: captions
+        building: { en: Caption Theater, zh: 字幕剧场 }
+        shape: screen
+        title: { en: Captions, zh: 字幕 }
+        body:
+          en: Export captions as SRT, VTT and more.
+          zh: 把字幕导出成 SRT、VTT 等格式。
+      - id: interchange
+        building: { en: Interchange Port, zh: 交换港 }
+        shape: crane
+        title: { en: Edit interchange, zh: 剪辑交换格式 }
+        body:
+          en: Export EDL, XML, FCPXML, OTIO, AAF and OMF timelines; import AAF; apply CUBE and 3DL LUTs.
+          zh: 导出 EDL、XML、FCPXML、OTIO、AAF、OMF 时间线；导入 AAF；套用 CUBE、3DL LUT。
+      - id: safe
+        building: { en: Safe-Copy Vault, zh: 原片保险库 }
+        shape: dome
+        title: { en: Never touches the source, zh: 不碰原片 }
+        body:
+          en: "\"Edit in Film\" from the video viewer creates a new project and never changes the clip."
+          zh: 在视频查看器里点 "Edit in Film" 会新建一个项目，原片不会被改动。
+    formats:
+      native: [".kfilm"]
+      opens: [".aaf"]
+    commands:
+      - { name: file.newSequence, what: { en: Start a sequence, zh: 新建序列 } }
+      - { name: file.import, what: { en: Import media, zh: 导入素材 } }
+      - { name: timeline.place, what: { en: Place a clip on a track, zh: 把片段放到轨道上 } }
+      - { name: edit.rippleDelete, what: { en: Ripple-delete a gap, zh: 波纹删除 } }
+      - { name: captions.export, what: { en: Export captions, zh: 导出字幕 } }
+      - { name: file.exportMedia, what: { en: Render the video, zh: 渲染输出视频 } }
+    ship:
+      en: Agent ship landing on film to trim clips and render an MP4
+      zh: Agent 飞船降落 film，修剪片段并渲染 MP4
+    repo: KitionAI/kition-film
+    sources: [crates/kition-kits/src/manager.rs, docs/kits.md, src/lib/script/kits/film.ts, kits/kits.lock.json]
+    tools: []
+
+  # ───────────────────────────── Office (cont.) ─────────────────────────────
+  - id: doc
+    order: 6
+    name: doc
+    cluster: office
+    kitId: kit.doc
+    planet: { en: Press Planet, zh: 印刷星 }
+    ext: .docx
+    status: beta
+    version: 0.5.7
+    color: { light: "#2b5cd9", dark: "#6b9bff" }
+    surface: { style: grid, look: terra, size: 1.05, tilt: 0.41 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A blue ocean world: ink-dark seas, pale continents and ice at the poles, with clouds passing over."
+      zh: "一颗蓝色的海洋星球：墨色的海、浅色的大陆、两极的冰盖，云层从上面飘过。"
+    tagline:
+      en: A word processor for real DOCX files, operable by AI.
+      zh: 直接编辑真实 DOCX 的文字处理，AI 也能操作。
+    summary:
+      en: >-
+        doc edits DOCX documents: typing, styles, fonts, paragraphs, lists, tables, pictures, headers and
+        footers, references and review. Shapes, charts and ink work the same way as in sheet and slide.
+      zh: doc 编辑 DOCX 文档：输入、样式、字体、段落、列表、表格、图片、页眉页脚、引用和审阅。形状、图表和墨迹的用法和 sheet、slide 一致。
+    capabilities:
+      - id: docx
+        building: { en: DOCX Press, zh: DOCX 印刷厂 }
+        shape: columns
+        title: { en: Real DOCX files, zh: 真实的 DOCX 文件 }
+        body:
+          en: Open and save .docx with styles, fonts, paragraphs, lists, tables and pictures.
+          zh: 打开和保存 .docx，保留样式、字体、段落、列表、表格和图片。
+      - id: layout
+        building: { en: Layout Works, zh: 排版工坊 }
+        shape: block
+        title: { en: Page layout, zh: 页面版式 }
+        body:
+          en: Headers and footers, page number formats, references and equations.
+          zh: 页眉页脚、页码格式、引用和公式。
+      - id: drawing
+        building: { en: Drawing Guild, zh: 绘图行会 }
+        shape: dome
+        title: { en: Shapes, charts and ink, zh: 形状、图表和墨迹 }
+        body:
+          en: Editable shapes, charts and ink, shared with sheet and slide.
+          zh: 可编辑的形状、图表和墨迹，和 sheet、slide 共用一套。
+      - id: protect
+        building: { en: Lock & Key, zh: 锁匠铺 }
+        shape: stack
+        title: { en: Protected documents and templates, zh: 加密文档和模板 }
+        body:
+          en: Open and save password-protected documents; start from blank, letter, resume or report templates.
+          zh: 打开和保存加密文档；可从空白、信件、简历、报告模板开始。
+      - id: export
+        building: { en: Review Desk, zh: 审阅台 }
+        shape: screen
+        title: { en: Review and export, zh: 审阅和导出 }
+        body:
+          en: Review tools for editing passes, plus PDF and PNG export.
+          zh: 用于修订的审阅工具，以及 PDF、PNG 导出。
+    formats:
+      native: [".docx"]
+      opens: []
+    commands:
+      - { name: text.insert, what: { en: Type text, zh: 输入文字 } }
+      - { name: format.bold, what: { en: Make text bold, zh: 加粗 } }
+      - { name: format.set, what: { en: Apply formatting, zh: 设置格式 } }
+      - { name: edit.replaceAll, what: { en: Find and replace everywhere, zh: 全部查找替换 } }
+      - { name: layout.pageNumberFormat, what: { en: Set page number format, zh: 设置页码格式 } }
+      - { name: file.exportPdf, what: { en: Export PDF, zh: 导出 PDF } }
+    ship:
+      en: Agent ship landing on doc to tidy the styles in a DOCX report
+      zh: Agent 飞船降落 doc，整理一份 DOCX 报告的样式
+    repo: KitionAI/kition-word
+    sources: [crates/kition-kits/src/manager.rs, docs/office-editing-unification-plan.md, src/lib/script/kits/word.ts, kits/kits.lock.json]
+    tools: []
+
+  - id: sheet
+    order: 7
+    name: sheet
+    cluster: office
+    kitId: kit.sheet
+    planet: { en: Finance Planet, zh: 金融星 }
+    ext: .xlsx
+    status: beta
+    version: 0.4.19
+    color: { light: "#1a8641", dark: "#4fd17b" }
+    surface: { style: grid, look: city, size: 1.08, moons: 1 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A green city world laid out in cells. The lit streets are its gridlines, and windows come on across the night side. It has one moon."
+      zh: "一颗绿色的城市星球，按单元格排开。发光的街道就是网格线，夜面的窗户一格格亮起。有一颗卫星。"
+    tagline:
+      en: Spreadsheets for XLSX files, with formulas, charts and PivotTables your AI can drive.
+      zh: 直接编辑 XLSX 的电子表格，公式、图表、数据透视表，AI 都能驱动。
+    summary:
+      en: >-
+        sheet is a spreadsheet for XLSX: cells, formulas, formatting, sorting, filtering, tables, charts and
+        PivotTables. It reads XLSM, XLSB, ODS, CSV, TSV and JSON data too.
+      zh: sheet 是直接编辑 XLSX 的电子表格：单元格、公式、格式、排序、筛选、表格、图表和数据透视表。也能读 XLSM、XLSB、ODS、CSV、TSV 和 JSON 数据。
+    capabilities:
+      - id: formulas
+        building: { en: Sheet Bank, zh: 表格银行 }
+        shape: columns
+        title: { en: Cells and formulas, zh: 单元格和公式 }
+        body:
+          en: Cells, formulas, number formats and formatting.
+          zh: 单元格、公式、数字格式和单元格格式。
+      - id: pivot
+        building: { en: Pivot Exchange, zh: 透视交易所 }
+        shape: tower
+        title: { en: Tables and PivotTables, zh: 表格和数据透视表 }
+        body:
+          en: Sort, filter, format as a table and summarise with PivotTables.
+          zh: 排序、筛选、套用表格格式，用数据透视表汇总。
+      - id: charts
+        building: { en: Chart Tower, zh: 图表塔 }
+        shape: spire
+        title: { en: Charts and conditional formats, zh: 图表和条件格式 }
+        body:
+          en: Charts and conditional formatting that update with the data.
+          zh: 图表和条件格式随数据一起更新。
+      - id: fill
+        building: { en: Flash Fill Mint, zh: 快速填充铸币厂 }
+        shape: block
+        title: { en: Autofill and flash fill, zh: 自动填充和快速填充 }
+        body:
+          en: Extend series with autofill and split or combine columns with flash fill.
+          zh: 用自动填充延续序列，用快速填充拆分或合并列。
+      - id: io
+        building: { en: Customs House, zh: 海关大楼 }
+        shape: crane
+        title: { en: Files in and out, zh: 文件进出 }
+        body:
+          en: Open XLSX, XLSM, XLSB and ODS data, CSV, TSV, TXT and JSON; save XLSX, CSV, TSV, JSON or HTML; export PDF.
+          zh: 打开 XLSX、XLSM、XLSB、ODS 数据以及 CSV、TSV、TXT、JSON；保存为 XLSX、CSV、TSV、JSON、HTML；导出 PDF。
+    formats:
+      native: [".xlsx"]
+      opens: [".xlsm", ".xlsb", ".ods", ".csv", ".tsv", ".json"]
+    commands:
+      - { name: cell.set, what: { en: Set a cell, zh: 写入单元格 } }
+      - { name: range.setValues, what: { en: Fill a range, zh: 批量写入区域 } }
+      - { name: home.formatAsTable, what: { en: Format as a table, zh: 套用表格格式 } }
+      - { name: home.conditionalFormat, what: { en: Add conditional formatting, zh: 添加条件格式 } }
+      - { name: edit.flashFill, what: { en: Flash fill a column, zh: 快速填充 } }
+      - { name: file.exportCsv, what: { en: Export CSV, zh: 导出 CSV } }
+      - { name: file.exportPdf, what: { en: Export PDF, zh: 导出 PDF } }
+    ship:
+      en: Agent ship landing on sheet to fix formulas
+      zh: Agent 飞船降落 sheet，修公式
+    repo: KitionAI/kition-sheet
+    sources: [crates/kition-kits/src/manager.rs, src/lib/script/kits/sheet.ts, src-tauri/src/workspace/formats.rs, kits/kits.lock.json]
+    tools: []
+
+  - id: slide
+    order: 8
+    name: slide
+    cluster: office
+    kitId: kit.slide
+    planet: { en: Theater Planet, zh: 剧场星 }
+    ext: .kslide
+    status: beta
+    version: 0.5.10
+    color: { light: "#c0550d", dark: "#ff9a55" }
+    surface: { style: swirl, look: gas, size: 1.3, moons: 2, tilt: 0.05 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "The largest planet here: an orange gas giant with one long-lived storm, like a spotlight on a stage. Two moons circle it."
+      zh: "这里最大的一颗：橙色的气态巨行星，上面有一个长年不散的风暴，像舞台上的一束追光。有两颗卫星。"
+    tagline:
+      en: Presentations that open PPTX, with layouts, charts and animations an agent can build.
+      zh: 能打开 PPTX 的演示文稿，版式、图表、动画，Agent 都能搭。
+    summary:
+      en: >-
+        slide builds decks: slides, layouts, text, shapes, pictures, tables, charts, transitions and
+        animations. It opens PPTX and exports images, PPTX, PDF or an outline.
+      zh: slide 做演示文稿：幻灯片、版式、文字、形状、图片、表格、图表、转场和动画。能打开 PPTX，导出图片、PPTX、PDF 或大纲。
+    capabilities:
+      - id: stage
+        building: { en: Main Stage, zh: 主舞台 }
+        shape: dome
+        title: { en: Slides, layouts and sections, zh: 幻灯片、版式和分节 }
+        body:
+          en: Add slides, apply layouts and organise them into sections.
+          zh: 新增幻灯片、套用版式、按分节组织。
+      - id: props
+        building: { en: Prop Workshop, zh: 道具车间 }
+        shape: block
+        title: { en: Shapes, tables and charts, zh: 形状、表格和图表 }
+        body:
+          en: Shapes, pictures, tables, charts, SmartArt and WordArt.
+          zh: 形状、图片、表格、图表、SmartArt 和艺术字。
+      - id: motion
+        building: { en: Motion Rigging, zh: 动效吊架 }
+        shape: spire
+        title: { en: Transitions and animations, zh: 转场和动画 }
+        body:
+          en: Slide transitions and object animations.
+          zh: 幻灯片转场和对象动画。
+      - id: media
+        building: { en: Screening Room, zh: 放映厅 }
+        shape: screen
+        title: { en: Audio and video, zh: 音视频 }
+        body:
+          en: Insert audio and video into slides.
+          zh: 在幻灯片里插入音频和视频。
+      - id: export
+        building: { en: Ticket Booth, zh: 售票处 }
+        shape: columns
+        title: { en: PPTX in, many formats out, zh: 读 PPTX，导出多种格式 }
+        body:
+          en: Open .pptx; export PNG, JPEG, PPTX, PDF or a text outline.
+          zh: 打开 .pptx；导出 PNG、JPEG、PPTX、PDF 或文字大纲。
+    formats:
+      native: [".kslide", ".pptx"]
+      opens: []
+    commands:
+      - { name: slide.new, what: { en: Add a slide, zh: 新增幻灯片 } }
+      - { name: slide.layout, what: { en: Apply a layout, zh: 套用版式 } }
+      - { name: shape.insert, what: { en: Insert a shape, zh: 插入形状 } }
+      - { name: insert.chart, what: { en: Insert a chart, zh: 插入图表 } }
+      - { name: insert.table, what: { en: Insert a table, zh: 插入表格 } }
+      - { name: insert.smartArt, what: { en: Insert SmartArt, zh: 插入 SmartArt } }
+      - { name: file.export, what: { en: Export the deck, zh: 导出演示文稿 } }
+    ship:
+      en: Agent ship landing on slide to build a deck from an outline
+      zh: Agent 飞船降落 slide，按大纲搭一套演示文稿
+    repo: KitionAI/kition-slide
+    sources: [crates/kition-kits/src/manager.rs, src/lib/script/kits/slide.ts, kits/kits.lock.json]
+    tools: []
+
+  - id: pdf
+    order: 9
+    name: pdf
+    cluster: office
+    kitId: kit.pdf
+    planet: { en: Archive Planet, zh: 档案星 }
+    ext: .pdf
+    status: beta
+    version: 0.3.13
+    color: { light: "#db3527", dark: "#ff7a6b" }
+    surface: { style: craters, look: rock, size: 0.86 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A small red rock covered in craters. Nothing on its surface moves: what is written here stays as it is."
+      zh: "一颗布满陨石坑的红色小岩石星。地表什么都不会动：写在这里的东西就保持原样。"
+    tagline:
+      en: Edit, comment, fill, redact and OCR PDFs, by hand or by agent.
+      zh: 编辑、批注、填表、涂黑、OCR，手动或交给 Agent。
+    summary:
+      en: >-
+        pdf works on pages, text, comments, forms, bookmarks, links, watermarks, redaction, measuring and
+        accessibility. It can OCR scans into searchable text and convert to PDF/A.
+      zh: pdf 处理页面、文字、批注、表单、书签、链接、水印、涂黑、测量和无障碍。能把扫描件 OCR 成可搜索文本，并转换成 PDF/A。
+    capabilities:
+      - id: pages
+        building: { en: Page Archive, zh: 页面档案馆 }
+        shape: stack
+        title: { en: Pages, bookmarks and links, zh: 页面、书签和链接 }
+        body:
+          en: Rotate and organise pages, edit bookmarks and links, and edit paragraph text.
+          zh: 旋转和整理页面，编辑书签和链接，直接改段落文字。
+      - id: forms
+        building: { en: Signing Bureau, zh: 签字局 }
+        shape: block
+        title: { en: Comments, forms and signing, zh: 批注、表单和签名 }
+        body:
+          en: Comment, detect and fill forms, fill and sign.
+          zh: 添加批注，识别并填写表单，填写并签名。
+      - id: ocr
+        building: { en: OCR Reading Room, zh: OCR 阅览室 }
+        shape: dome
+        title: { en: OCR, zh: OCR 文字识别 }
+        body:
+          en: Recognise text in scanned pages and make them searchable.
+          zh: 识别扫描页里的文字，让它可以搜索。
+      - id: redact
+        building: { en: Redaction Vault, zh: 涂黑保险库 }
+        shape: columns
+        title: { en: Redaction and watermarks, zh: 涂黑和水印 }
+        body:
+          en: Apply true redaction and add watermarks.
+          zh: 真正删除被涂黑的内容，添加水印。
+      - id: compliance
+        building: { en: Compliance Tower, zh: 合规塔 }
+        shape: tower
+        title: { en: PDF/A, accessibility, comparison, zh: PDF/A、无障碍、比对 }
+        body:
+          en: Convert to PDF/A, check accessibility, compare two documents and measure on the page.
+          zh: 转换成 PDF/A，检查无障碍，比对两份文档，在页面上测量。
+    formats:
+      native: [".pdf"]
+      opens: [".png", ".jpg", ".tiff", ".gif", ".bmp"]
+    commands:
+      - { name: page_rotate, what: { en: Rotate pages, zh: 旋转页面 } }
+      - { name: text_edit, what: { en: Edit text on the page, zh: 编辑页面文字 } }
+      - { name: comment_add, what: { en: Add a comment, zh: 添加批注 } }
+      - { name: form_fill, what: { en: Fill a form, zh: 填写表单 } }
+      - { name: redact_apply, what: { en: Apply redaction, zh: 执行涂黑 } }
+      - { name: ocr_recognize, what: { en: Run OCR, zh: 执行 OCR } }
+      - { name: accessibility_check, what: { en: Check accessibility, zh: 检查无障碍 } }
+    ship:
+      en: Agent ship landing on pdf to OCR a scanned contract
+      zh: Agent 飞船降落 pdf，给扫描合同做 OCR
+    repo: KitionAI/kition-pdf
+    sources: [crates/kition-kits/src/manager.rs, src/lib/script/kits/pdf.ts, kits/modules.json, kits/kits.lock.json]
+    tools: []
+
+  # ───────────────────────────── Design (cont.) ─────────────────────────────
+  - id: vector
+    order: 10
+    name: vector
+    cluster: design
+    kitId: kit.vector
+    planet: { en: Neon Planet, zh: 霓虹星 }
+    ext: .kvector
+    status: beta
+    version: 0.3.17
+    color: { light: "#58810f", dark: "#a6d64a" }
+    surface: { style: grid, look: ice, size: 0.95, tilt: 0.6 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A crystal world of flat facets. Its seams glow like neon outlines and stay sharp from any distance."
+      zh: "一颗由平整切面组成的晶体星球。接缝像霓虹描边一样发光，离多远看都是锐利的。"
+    tagline:
+      en: Vector drawing that opens .ai and PDF and exports SVG, a free Illustrator alternative.
+      zh: 能打开 .ai 和 PDF、导出 SVG 的矢量绘图，免费的 Illustrator 替代品。
+    summary:
+      en: >-
+        vector draws with shapes, paths, paint, type, alignment, effects and artboards. It opens PDF and .ai
+        files and exports SVG, PDF, PNG, WebP, DXF, EPS and more.
+      zh: vector 用形状、路径、填色、文字、对齐、效果和画板来画图。能打开 PDF 和 .ai，导出 SVG、PDF、PNG、WebP、DXF、EPS 等。
+    capabilities:
+      - id: paths
+        building: { en: Bezier Boulevard, zh: 贝塞尔大道 }
+        shape: spire
+        title: { en: Shapes and paths, zh: 形状和路径 }
+        body:
+          en: Rectangles, stars, spirals, grids and free paths, with paint and type.
+          zh: 矩形、星形、螺旋、网格和自由路径，加上填色和文字。
+      - id: recolor
+        building: { en: Neon Sign Works, zh: 霓虹招牌厂 }
+        shape: screen
+        title: { en: Recolour and effects, zh: 重新着色和效果 }
+        body:
+          en: Recolour artwork in one go and apply effects.
+          zh: 一次性给整幅作品换色，添加效果。
+      - id: artboards
+        building: { en: Artboard Arcade, zh: 画板长廊 }
+        shape: block
+        title: { en: Artboards and alignment, zh: 画板和对齐 }
+        body:
+          en: Multiple artboards, alignment and grouping.
+          zh: 多画板、对齐和编组。
+      - id: ai
+        building: { en: AI File Depot, zh: AI 文件仓库 }
+        shape: crane
+        title: { en: Opens .ai and PDF, zh: 打开 .ai 和 PDF }
+        body:
+          en: Open PDF and .ai files; save as kvector, PDF, SVG, SVGZ or AI.
+          zh: 打开 PDF 和 .ai；保存为 kvector、PDF、SVG、SVGZ 或 AI。
+      - id: export
+        building: { en: Export Lights, zh: 导出灯塔 }
+        shape: tower
+        title: { en: Export for screens and web, zh: 导出到屏幕和网页 }
+        body:
+          en: Export SVG, PDF, PNG, JPG, WebP, DXF, EPS, EMF, TIFF or PSD, and CSS for the web.
+          zh: 导出 SVG、PDF、PNG、JPG、WebP、DXF、EPS、EMF、TIFF、PSD，以及网页用的 CSS。
+    formats:
+      native: [".kvector"]
+      opens: [".ai", ".pdf"]
+    commands:
+      - { name: shape.rectangle, what: { en: Draw a rectangle, zh: 画矩形 } }
+      - { name: shape.star, what: { en: Draw a star, zh: 画星形 } }
+      - { name: path.create, what: { en: Draw a path, zh: 画路径 } }
+      - { name: text.create, what: { en: Add type, zh: 添加文字 } }
+      - { name: object.group, what: { en: Group objects, zh: 编组 } }
+      - { name: recolor.apply, what: { en: Recolour artwork, zh: 重新着色 } }
+      - { name: document.export, what: { en: Export the drawing, zh: 导出绘图 } }
+    ship:
+      en: Agent ship landing on vector to recolour a logo
+      zh: Agent 飞船降落 vector，给 logo 换配色
+    repo: KitionAI/kition-vector
+    sources: [crates/kition-kits/src/manager.rs, src/lib/script/kits/vector.ts, kits/modules.json, kits/kits.lock.json]
+    tools: []
+
+  - id: layout
+    order: 11
+    name: layout
+    cluster: design
+    kitId: kit.layout
+    planet: { en: Publishing Planet, zh: 出版星 }
+    ext: .klayout
+    status: preview
+    version: 0.3.5
+    color: { light: "#d32f8d", dark: "#f57bbd" }
+    surface: { style: patches, look: dunes, size: 1.0, scaffold: true }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A desert of long, even ridges, like columns of type running across a page. The scaffolding means the kit is in Preview."
+      zh: "一片长而均匀的沙垄，像一页纸上排开的文字栏。外面的脚手架表示这个 kit 还在 Preview。"
+    tagline:
+      en: Page layout with frames, stories and styles. In Preview.
+      zh: 用框架、文章和样式排版。Preview 阶段。
+    summary:
+      en: >-
+        layout lays out pages: pages and spreads, frames, text stories, paragraph styles, swatches and tables,
+        all on one canvas. It is still in Preview, so expect it to change.
+      zh: layout 做页面排版：页面和跨页、框架、文章、段落样式、色板和表格，都在一块画布上。它还在 Preview 阶段，会继续变化。
+    capabilities:
+      - id: pages
+        building: { en: Page Press, zh: 页面印刷所 }
+        shape: columns
+        title: { en: Pages and spreads, zh: 页面和跨页 }
+        body:
+          en: Pages and spreads laid out together on one canvas.
+          zh: 页面和跨页在一块画布上一起排。
+      - id: frames
+        building: { en: Frame Yard, zh: 框架工场 }
+        shape: block
+        title: { en: Frames, zh: 框架 }
+        body:
+          en: Create text and graphic frames and fill them.
+          zh: 创建文字框和图形框并填充内容。
+      - id: stories
+        building: { en: Story Mill, zh: 文章磨坊 }
+        shape: stack
+        title: { en: Stories and styles, zh: 文章和样式 }
+        body:
+          en: Text stories that flow through frames, with paragraph styles.
+          zh: 文字在框架之间连续排布，配合段落样式。
+      - id: swatches
+        building: { en: Swatch House, zh: 色板之家 }
+        shape: dome
+        title: { en: Swatches and tables, zh: 色板和表格 }
+        body:
+          en: Shared colour swatches and tables in the layout.
+          zh: 共享色板，版面里放表格。
+    formats:
+      native: [".klayout"]
+      opens: []
+    commands:
+      - { name: frame.create, what: { en: Create a frame, zh: 创建框架 } }
+      - { name: object.fill, what: { en: Fill an object, zh: 填充对象 } }
+    ship:
+      en: Agent ship landing on layout to flow a story through its frames
+      zh: Agent 飞船降落 layout，让文字在框架间排开
+    repo: KitionAI/kition-layout
+    sources: [crates/kition-kits/src/manager.rs, kits/modules.json, kits/kit-colors.json, kits/kits.lock.json]
+    tools: []
+
+  # ───────────────────────────── Video (cont.) ─────────────────────────────
+  - id: motion
+    order: 12
+    name: motion
+    cluster: video
+    kitId: kit.motion
+    planet: { en: Fireworks Planet, zh: 烟花星 }
+    ext: .kmotion
+    status: beta
+    version: 0.3.17
+    color: { light: "#b03fd6", dark: "#d27cf0" }
+    surface: { style: swirl, look: lava, size: 1.05 }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A dark crust split by glowing cracks that pulse slowly. It is never quite still."
+      zh: "深色的地壳被发光的裂纹分开，裂纹缓慢地明暗起伏。它从来不是完全静止的。"
+    tagline:
+      en: Motion graphics with compositions, keyframes, masks and effects, a free After Effects alternative.
+      zh: 合成、关键帧、蒙版、特效的动态图形，免费的 After Effects 替代品。
+    summary:
+      en: >-
+        motion builds motion graphics: compositions, layers, keyframes, effects, masks and text. It swaps
+        timelines with editors and exports MP4 without touching your saved project.
+      zh: motion 做动态图形：合成、图层、关键帧、特效、蒙版和文字。能和剪辑软件交换时间线，导出 MP4 时不动你保存的项目。
+    capabilities:
+      - id: comps
+        building: { en: Keyframe Launchpad, zh: 关键帧发射台 }
+        shape: spire
+        title: { en: Compositions and keyframes, zh: 合成和关键帧 }
+        body:
+          en: Compositions, precomps, layers, keyframes and markers.
+          zh: 合成、预合成、图层、关键帧和标记。
+      - id: layers
+        building: { en: Title Fireworks, zh: 字幕烟花厂 }
+        shape: tower
+        title: { en: Text, shape, solid and null layers, zh: 文字、形状、纯色和空对象图层 }
+        body:
+          en: Text, shape, solid and null layers with layer styles.
+          zh: 文字、形状、纯色和空对象图层，加上图层样式。
+      - id: masks
+        building: { en: Mask Foundry, zh: 蒙版铸造厂 }
+        shape: block
+        title: { en: Masks and mattes, zh: 蒙版和遮罩 }
+        body:
+          en: Masks and track mattes.
+          zh: 蒙版和轨道遮罩。
+      - id: roto
+        building: { en: Roto Lab, zh: 抠像实验室 }
+        shape: dome
+        title: { en: Roto, zh: 抠像 }
+        body:
+          en: Roto tools and face model management.
+          zh: 抠像工具和人脸模型管理。
+      - id: interchange
+        building: { en: Timeline Dock, zh: 时间线码头 }
+        shape: crane
+        title: { en: Timelines in and out, zh: 时间线进出 }
+        body:
+          en: Import and export XML, FCPXML, OTIO, EDL, AAF and OMF; save a frame as a layered PSD; render MP4 from a scratch copy.
+          zh: 导入导出 XML、FCPXML、OTIO、EDL、AAF、OMF；把一帧存成分层 PSD；从临时副本渲染 MP4。
+    formats:
+      native: [".kmotion"]
+      opens: [".xml", ".fcpxml", ".otio", ".edl", ".aaf"]
+    commands:
+      - { name: comp.new, what: { en: Start a composition, zh: 新建合成 } }
+      - { name: layer.newSolid, what: { en: Add a solid layer, zh: 新建纯色图层 } }
+      - { name: layer.newText, what: { en: Add a text layer, zh: 新建文字图层 } }
+      - { name: layer.addMask, what: { en: Add a mask, zh: 添加蒙版 } }
+      - { name: layer.precompose, what: { en: Precompose layers, zh: 预合成 } }
+      - { name: file.importTimeline, what: { en: Import a timeline, zh: 导入时间线 } }
+    ship:
+      en: Agent ship landing on motion to keyframe a title animation
+      zh: Agent 飞船降落 motion，给标题动画打关键帧
+    repo: KitionAI/kition-motion
+    sources: [crates/kition-kits/src/manager.rs, docs/kits.md, src/lib/script/kits/motion.ts, kits/kits.lock.json]
+    tools: []
+
+  # ───────────────────────────── CAD ─────────────────────────────
+  - id: cad
+    order: 13
+    name: cad
+    cluster: cad
+    kitId: kit.cad
+    planet: { en: Construction Planet, zh: 工地星 }
+    ext: .dxf
+    status: preview
+    version: 0.3.18
+    color: { light: "#4f6d8a", dark: "#8eabc8" }
+    surface: { style: craters, look: rock, size: 1.05, ring: true, scaffold: true }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A grey-blue cratered rock with a thin ring and a tower crane on its pole. The scaffolding means the kit is in Preview."
+      zh: "一颗灰蓝色的陨石坑岩石星，有一圈细星环，极点上立着一台塔吊。外面的脚手架表示这个 kit 还在 Preview。"
+    tagline:
+      en: 2D CAD for DXF drawings with a real command line. In Preview.
+      zh: 有真正命令行的 DXF 二维 CAD。Preview 阶段。
+    summary:
+      en: >-
+        cad draws and modifies DXF drawings: lines, arcs, splines, hatches, dimensions, layers, blocks and
+        AutoCAD-style commands, with a command line that runs any entry. It is still in Preview.
+      zh: cad 绘制和修改 DXF 图纸：直线、圆弧、样条、填充、标注、图层、图块，以及 AutoCAD 风格的命令，命令行能执行任意命令。它还在 Preview 阶段。
+    capabilities:
+      - id: dxf
+        building: { en: DXF Crane, zh: DXF 塔吊 }
+        shape: crane
+        title: { en: DXF drawings, zh: DXF 图纸 }
+        body:
+          en: Open DXF drawings; new files start as A3 in millimetres.
+          zh: 打开 DXF 图纸；新建文件默认是毫米单位的 A3。
+      - id: draft
+        building: { en: Drafting Studio, zh: 制图室 }
+        shape: block
+        title: { en: Draw and modify, zh: 绘制和修改 }
+        body:
+          en: Lines, arcs, polylines, splines and hatches; trim, extend, fillet and array.
+          zh: 直线、圆弧、多段线、样条和填充；修剪、延伸、圆角和阵列。
+      - id: dims
+        building: { en: Dimension Bureau, zh: 标注局 }
+        shape: columns
+        title: { en: Dimensions and layers, zh: 标注和图层 }
+        body:
+          en: Linear and other dimensions, organised on layers.
+          zh: 线性标注等各类标注，按图层管理。
+      - id: blocks
+        building: { en: Block Yard, zh: 图块堆场 }
+        shape: stack
+        title: { en: Blocks and attributes, zh: 图块和属性 }
+        body:
+          en: Reusable blocks with attributes.
+          zh: 可复用的图块和属性。
+      - id: cmd
+        building: { en: Command Line Tower, zh: 命令行塔 }
+        shape: tower
+        title: { en: Command line, zh: 命令行 }
+        body:
+          en: AutoCAD-style commands, and a command line that runs any entry; PDF export.
+          zh: AutoCAD 风格的命令，命令行能执行任意命令；可导出 PDF。
+    formats:
+      native: [".dxf"]
+      opens: []
+    commands:
+      - { name: line, what: { en: Draw a line, zh: 画直线 } }
+      - { name: circle, what: { en: Draw a circle, zh: 画圆 } }
+      - { name: pline, what: { en: Draw a polyline, zh: 画多段线 } }
+      - { name: hatch, what: { en: Hatch an area, zh: 填充区域 } }
+      - { name: dimlinear, what: { en: Add a linear dimension, zh: 线性标注 } }
+      - { name: trim, what: { en: Trim to an edge, zh: 修剪 } }
+      - { name: commandLine, what: { en: Run any command-line entry, zh: 执行任意命令行 } }
+    ship:
+      en: Agent ship landing on cad to dimension a floor plan
+      zh: Agent 飞船降落 cad，给平面图加标注
+    repo: KitionAI/kition-cad
+    sources: [crates/kition-kits/src/manager.rs, src/features/workspace/components/kits/kitEditors.ts, src/lib/script/kits/cad.ts, kits/kits.lock.json]
+    tools: []
+
+  - id: html
+    order: 14
+    name: html
+    cluster: office
+    kitId: kit.html
+    planet: { en: Web Planet, zh: 网页星 }
+    ext: .html
+    status: preview
+    version: 0.1.0
+    color: { light: "#b64b22", dark: "#ff986b" }
+    surface: { style: grid, look: storm, size: 0.92, clouds: true, scaffold: true }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A world of fast-moving cloud, drawn again each time you look at it. The scaffolding means the kit is in Preview."
+      zh: "一颗云层流动很快的星球，每次看过去都重新画一遍。外面的脚手架表示这个 kit 还在 Preview。"
+    tagline: { en: HTML source and rendered pixels, in one kit., zh: 在一个 kit 里编辑 HTML，查看真实渲染。 }
+    summary:
+      en: An experimental HTML kit with a source editor, a shared Rust/WASM renderer and PNG output. HTML, CSS and bounded JavaScript run against the same document. Browser compatibility is still incomplete.
+      zh: 实验性的 HTML kit：源码编辑器、共享的 Rust/WASM 渲染器和 PNG 输出。HTML、CSS 和受限的 JavaScript 操作同一份文档，浏览器兼容性仍在完善。
+    capabilities:
+      - id: source
+        building: { en: Source Observatory, zh: 源码观测站 }
+        shape: screen
+        title: { en: Edit HTML source, zh: 编辑 HTML 源码 }
+        body: { en: Replace document source and review the rendered result in the kit editor., zh: 修改文档源码，在 kit 编辑器里查看渲染结果。 }
+      - id: render
+        building: { en: Raster Observatory, zh: 像素观测台 }
+        shape: dome
+        title: { en: Shared rendering, zh: 共享渲染 }
+        body: { en: Render HTML and CSS through the same native and WASM engine and export a PNG snapshot., zh: 原生端和 WASM 使用同一个引擎渲染 HTML、CSS，并输出 PNG 快照。 }
+      - id: resources
+        building: { en: Resource Dock, zh: 资源码头 }
+        shape: block
+        title: { en: Supplied resources, zh: 显式提供资源 }
+        body: { en: Supply images and fonts through the host and inspect diagnostics for unavailable resources., zh: 由宿主提供图片和字体，缺失的资源会出现在诊断信息里。 }
+      - id: viewport
+        building: { en: Viewport Tower, zh: 视口塔 }
+        shape: tower
+        title: { en: Viewport previews, zh: 视口预览 }
+        body: { en: Set the viewport width, height and color scheme to inspect responsive layouts., zh: 调整视口宽高和配色模式，检查响应式布局。 }
+    formats: { native: [".html", ".htm"], opens: [] }
+    commands:
+      - { name: html.setSource, what: { en: Replace the HTML source, zh: 替换 HTML 源码 } }
+    ship: { en: Agent ship landing on html to revise a page and inspect its PNG preview, zh: Agent 飞船降落 html，修改网页并检查 PNG 预览 }
+    repo: KitionAI/kition-html
+    sources: [kit.json, README.md]
+    tools: []
+
+  - id: scene
+    order: 15
+    name: scene
+    cluster: cad
+    kitId: kit.scene
+    planet: { en: Worldbuilding Planet, zh: 造物星 }
+    ext: .kscene
+    status: preview
+    version: 0.14.0
+    color: { light: "#9a5a22", dark: "#e3a46b" }
+    surface: { style: craters, look: terra, size: 1.2, ring: true, moons: 2, scaffold: true }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A small system of its own: a world with seas and clouds, a ring and two moons. The scaffolding means the kit is in Preview."
+      zh: "自成一个小系统：有海有云的星球、一圈星环、两颗卫星。外面的脚手架表示这个 kit 还在 Preview。"
+    tagline: { en: Model, animate and render a world in three dimensions., zh: 建模、动画、渲染，创造三维世界。 }
+    summary:
+      en: A 3D scene kit for mesh modeling, sculpting, materials, rigging, animation and rendering. People and agents edit the same scene, and exchange it through common 3D formats.
+      zh: 三维场景 kit，提供网格建模、雕刻、材质、骨骼、动画和渲染。人和 Agent 编辑同一个场景，并通过常用 3D 格式交换成果。
+    capabilities:
+      - id: modeling
+        building: { en: Geometry Foundry, zh: 几何铸造厂 }
+        shape: columns
+        title: { en: Model and sculpt, zh: 建模与雕刻 }
+        body: { en: Build from primitives, edit meshes, sculpt surfaces and apply modifiers., zh: 从基础几何体开始，编辑网格、雕刻表面并应用修改器。 }
+      - id: materials
+        building: { en: Material Lab, zh: 材质实验室 }
+        shape: dome
+        title: { en: Materials and UVs, zh: 材质与 UV }
+        body: { en: Unwrap UVs, paint textures and build materials with shader nodes., zh: 展开 UV、绘制纹理，用着色器节点构建材质。 }
+      - id: animation
+        building: { en: Motion Dock, zh: 动画船坞 }
+        shape: tower
+        title: { en: Rig and animate, zh: 绑定与动画 }
+        body: { en: Add armatures, constraints, keyframes and animation curves to the scene., zh: 为场景添加骨骼、约束、关键帧和动画曲线。 }
+      - id: render
+        building: { en: Render Observatory, zh: 渲染天文台 }
+        shape: spire
+        title: { en: Light and render, zh: 布光与渲染 }
+        body: { en: Frame cameras, place lights and render through fast or path-traced rendering., zh: 设置相机、布置灯光，使用快速渲染或路径追踪输出画面。 }
+      - id: exchange
+        building: { en: Exchange Terminal, zh: 交换终端 }
+        shape: block
+        title: { en: Exchange 3D files, zh: 交换 3D 文件 }
+        body: { en: Import and export glTF, FBX, USD, OBJ and STL; import existing blend scenes., zh: 导入导出 glTF、FBX、USD、OBJ 和 STL，也能导入已有的 blend 场景。 }
+    formats: { native: [".kscene"], opens: [".glb", ".gltf", ".fbx", ".usd", ".usda", ".usdc", ".usdz", ".obj", ".stl", ".blend"] }
+    commands:
+      - { name: add.cube, what: { en: Add a cube to the scene, zh: 在场景中添加立方体 } }
+      - { name: add.uvSphere, what: { en: Add a UV sphere, zh: 添加 UV 球体 } }
+      - { name: object.transform, what: { en: Set an object's transform, zh: 设置物体变换 } }
+    ship: { en: Agent ship landing on scene to model a scene and render a camera view, zh: Agent 飞船降落 scene，搭建场景并渲染相机画面 }
+    repo: KitionAI/kition-scene
+    sources: [kit.json, README.md, bindings/wasm/src/commands.rs]
+    tools: []
+
+  - id: design
+    order: 16
+    name: design
+    cluster: design
+    kitId: kit.design
+    planet: { en: Interface Planet, zh: 界面星 }
+    ext: .kdesign
+    status: preview
+    version: 0.1.0
+    color: { light: "#00875f", dark: "#02da96" }
+    surface: { style: patches, look: ice, size: 0.9, moons: 1, scaffold: true }
+    # what the globe looks like on the star map, in words (keep it true to `surface`)
+    world:
+      en: "A small crystal world of neat facets, like components snapped to a grid. It has one moon. The scaffolding means the kit is in Preview."
+      zh: "一颗切面整齐的小晶体星球，像吸附在网格上的组件。有一颗卫星。外面的脚手架表示这个 kit 还在 Preview。"
+    tagline: { en: Design interfaces, reusable components and interactive prototypes., zh: 设计界面、复用组件、连接交互原型。 }
+    summary:
+      en: An interface design and prototyping kit with frames, shapes, text, auto layout, components, styles and variables. Its visual editor and AI tools operate the same design document.
+      zh: 界面设计与原型 kit，包含画框、图形、文字、自动布局、组件、样式和变量。可视化编辑器与 AI 工具操作同一份设计文档。
+    capabilities:
+      - id: frames
+        building: { en: Frame Studio, zh: 画框工作室 }
+        shape: screen
+        title: { en: Frames and layers, zh: 画框与图层 }
+        body: { en: Compose screens with frames, shapes, text and a structured layer tree., zh: 使用画框、图形、文字和结构化图层树构建界面。 }
+      - id: layout
+        building: { en: Layout Engine, zh: 布局引擎站 }
+        shape: stack
+        title: { en: Auto layout, zh: 自动布局 }
+        body: { en: Arrange interface content with auto layout instead of positioning every layer by hand., zh: 用自动布局组织界面内容，减少逐个手动定位图层。 }
+      - id: components
+        building: { en: Component Foundry, zh: 组件铸造厂 }
+        shape: block
+        title: { en: Components and variables, zh: 组件与变量 }
+        body: { en: Reuse components, styles and variables across a design document., zh: 在设计文档中复用组件、样式和变量。 }
+      - id: prototype
+        building: { en: Prototype Gate, zh: 原型跃迁门 }
+        shape: spire
+        title: { en: Prototyping, zh: 交互原型 }
+        body: { en: Connect interface screens into a prototype and inspect the design through the same engine., zh: 将界面连接成交互原型，并通过同一个引擎检查设计。 }
+    formats: { native: [".kdesign"], opens: [".fig", ".sketch", ".svg"] }
+    commands:
+      - { name: frame.create, what: { en: Create an interface frame, zh: 创建界面画框 } }
+      - { name: shape.rectangle, what: { en: Draw a rectangle, zh: 绘制矩形 } }
+      - { name: file.render, what: { en: Render the design, zh: 渲染设计 } }
+    ship: { en: Agent ship landing on design to assemble an interface and inspect its render, zh: Agent 飞船降落 design，搭建界面并检查渲染结果 }
+    repo: KitionAI/kition-design
+    sources: [kit.json, README.md, bindings/wasm/src/lib.rs]
+    tools: []
+
+stations:
+  - id: bazaar
+    kind: market
+    name: { en: Skill Bazaar, zh: 星际集市 }
+    angle: -100
+    distance: 24
+    height: 8
+    title:
+      en: Official Skills for every kit
+      zh: 每个 kit 的官方 Skill
+    body:
+      en: >-
+        The goal is a deep library of official Skills for every kit, each one run for real and shipped with a
+        preview image.
+      zh: 目标是给每个 kit 做一套丰富的官方 Skill，每一个都真实跑过、带预览图。
+    cta: { en: Browse Skills on kition.ai, zh: 去 kition.ai 浏览 Skill }
+    href: https://kition.ai
+  - id: ai
+    kind: ai
+    name: { en: AI Agent Relay, zh: AI Agent 中继站 }
+    angle: -45
+    distance: 30
+    height: 12
+    title: { en: Agents that work on real files., zh: AI 操作真实文件。 }
+    body:
+      en: Inspect a document, run its kit commands and check the rendered result. KHP exposes the same engine through MCP, with structured errors and previews that let an agent correct its work.
+      zh: 观察文档、执行 kit 命令、检查渲染结果。KHP 通过 MCP 暴露同一个引擎，结构化错误和预览让 Agent 能看见结果并纠正操作。
+    cta: { en: Explore scenario galaxies, zh: 探索场景星系 }
+    href: /scenarios/
+  - id: ui
+    kind: ui
+    name: { en: Tessera UI Station, zh: Tessera UI 空间站 }
+    angle: -30
+    distance: 44
+    height: 8
+    title: { en: The interface of a whole universe., zh: 整个宇宙，共享界面语言。 }
+    body:
+      en: Kition Tessera supplies the tokens, icons and professional editor components behind the kits. Ribbons, dock panels, color controls and timelines follow the KHP theme contract.
+      zh: Kition Tessera 为 kit 提供设计 Token、图标和专业编辑器组件。功能区、停靠面板、颜色控件和时间轴遵循 KHP 主题协议。
+    cta: { en: Explore the UI system, zh: 查看 UI 系统 }
+    href: "#interface"
+
+galaxies:
+  - id: unknown-1
+    name: { en: Unknown galaxy, zh: 未知星系 }
+    body:
+      en: Build your own on KHP. Any software can become a planet by implementing the Kit Harness Protocol.
+      zh: 在 KHP 上造你自己的星系。任何软件实现了 Kit Harness Protocol，都能成为一颗星球。
+    href: https://kitharness.org
+    position: [-620, 22, -650]
+  - id: unknown-2
+    name: { en: Unknown galaxy, zh: 未知星系 }
+    body:
+      en: Build your own on KHP. Any software can become a planet by implementing the Kit Harness Protocol.
+      zh: 在 KHP 上造你自己的星系。任何软件实现了 Kit Harness Protocol，都能成为一颗星球。
+    href: https://kitharness.org
+    position: [620, 34, -650]
+
+# Two ways to build here (2026-10-25): contribute a kit (a new planet that speaks
+# KHP, in this galaxy) or build a product on the kits (a settlement in the
+# Product Galaxy). Products themselves are in data/products.yaml.
+newKit:
+  angle: -70
+  distance: 46
+  height: 2
+  name: { en: The next orbit, zh: 下一条轨道 }
+  title: { en: Contribute a kit, zh: 贡献一个 kit }
+  body:
+    en: >-
+      Every planet here is a kit: professional software that speaks the Kit Harness Protocol, so people and
+      AI agents can both use it. This orbit is empty. Build a kit on KHP and it becomes the next planet.
+    zh: 这里的每颗星球都是一个 kit：实现了 Kit Harness Protocol 的专业软件，人和 AI Agent 都能用。这条轨道还空着。在 KHP 上做一个 kit，它就是下一颗星球。
+  cta: { en: Read the Kit Harness Protocol, zh: 阅读 Kit Harness Protocol }
+  href: https://kitharness.org
+
+productGalaxy:
+  name: { en: Product Galaxy, zh: 产品星系 }
+  # world position of the galaxy centre; the KHP star sits at the origin
+  position: [190, 0, 14]
+  blurb:
+    en: Products built on the kits. Every kit ships an SDK, so you can put a real spreadsheet, editor or PDF tool inside your own product.
+    zh: 用 kit 搭出来的产品。每个 kit 都提供 SDK，你可以把真正的表格、编辑器、PDF 工具放进自己的产品里。
+  sdk:
+    name: Kition SDK
+    license: Apache-2.0
+    body:
+      en: >-
+        The Kition SDK puts any kit inside your own product, in four ways. Kits stay the same
+        files and the same commands, so your users and their AI agents get real professional software.
+      zh: Kition SDK 能把任何一个 kit 放进你的产品，有四种方式。kit 还是同样的文件、同样的命令，你的用户和他们的 AI Agent 用上的都是真正的专业软件。
+    href: https://github.com/KitionAI/kition/blob/main/docs/kits.md
+    # the SDK's own guide; each delivery form below links its page of it
+    docs: https://github.com/KitionAI/kition-sdk/blob/main/docs/sdk/README.md
+  delivery:
+    - id: embed
+      name: embed
+      docs: https://github.com/KitionAI/kition-sdk/blob/main/docs/sdk/embed.md
+      body:
+        en: Mount a kit's editor in your page, sandboxed in an iframe.
+        zh: 把 kit 的编辑器嵌进你的页面，运行在隔离的 iframe 里。
+    - id: script
+      name: script
+      docs: https://github.com/KitionAI/kition-sdk/blob/main/docs/sdk/script.md
+      body:
+        en: Drive a document from code through the kit's object model.
+        zh: 用代码通过 kit 的对象模型操作文档。
+    - id: headless
+      name: headless
+      docs: https://github.com/KitionAI/kition-sdk/blob/main/docs/sdk/headless.md
+      body:
+        en: Run the kit with no window, to open, edit and save files on a server or in a pipeline.
+        zh: 无界面运行 kit，在服务器或流水线里打开、修改、保存文件。
+    - id: mcp
+      name: mcp
+      docs: https://github.com/KitionAI/kition-sdk/blob/main/docs/sdk/agent.md
+      body:
+        en: Hand the kit's tools to AI agents over MCP.
+        zh: 通过 MCP 把 kit 的工具交给 AI Agent。
+  add:
+    name: { en: Your product here, zh: 你的产品停在这里 }
+    title: { en: Add your product planet, zh: 登记你的产品星球 }
+    body:
+      en: >-
+        Built something on a kit? List it here for free. Every product planet is the same size, there are no paid
+        spots, and the only condition is a "Built with Kition" badge that links back.
+      zh: 用 kit 做了产品？在这里免费登记。所有产品星球一样大，没有付费位置，唯一的条件是放一个链回来的 "Built with Kition" 徽章。
+    cta: { en: Add your product planet, zh: 登记你的产品星球 }

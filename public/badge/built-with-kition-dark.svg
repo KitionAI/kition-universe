@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="188" height="44" viewBox="0 0 188 44" role="img" aria-label="Built with Kition">
+  <title>Built with Kition</title>
+  <defs>
+    <radialGradient id="s" cx="40%" cy="38%" r="65%">
+      <stop offset="0" stop-color="#fff3c4"/>
+      <stop offset=".45" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff6a3d"/>
+    </radialGradient>
+  </defs>
+  <rect x=".5" y=".5" width="187" height="43" rx="10" fill="#0b0d20" stroke="#8b7cf0" stroke-opacity=".45"/>
+  <g transform="translate(8 6)">
+    <ellipse cx="16" cy="16" rx="14.5" ry="5.6" fill="none" stroke="#eceaff" stroke-opacity=".45" stroke-width="1.4" transform="rotate(-18 16 16)"/>
+    <circle cx="16" cy="16" r="6.4" fill="url(#s)"/>
+    <circle cx="28.4" cy="11.6" r="2.3" fill="#8b7cf0"/>
+  </g>
+  <text x="48" y="27.5" fill="#eceaff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" textLength="128" lengthAdjust="spacing">Built with <tspan fill="#b3a8ff" font-weight="700">Kition</tspan></text>
+</svg>

@@ -1,0 +1,6 @@
+---
+import ScenariosPage from '../../components/pages/ScenariosPage.astro';
+import {scenarioGalaxies} from '../../lib/scenarioGalaxies';
+export function getStaticPaths(){return scenarioGalaxies.map(g=>({params:{id:g.id}}));}
+---
+<ScenariosPage lang="en" id={Astro.params.id}/>

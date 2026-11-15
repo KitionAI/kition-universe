@@ -1,0 +1,100 @@
+---
+import { type Lang, type Planet, t, planetHref } from '../lib/universe';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  planet: Planet;
+  compact?: boolean;
+}
+const { lang, planet: p, compact = false } = Astro.props;
+const s = ui(lang);
+const preview = p.status === 'preview';
+---
+
+<a class:list={['pcard', 'kit-light', { compact }]} href={planetHref(lang, p.id)} style={`--kit-l:${p.color.light};--kit-d:${p.color.dark}`} data-planet={p.id}>
+  <span class="orb" aria-hidden="true"></span>
+  <span class="txt">
+    <span class="top">
+      <strong>{p.name}</strong>
+      <span class="nick">{t(p.planet, lang)}</span>
+      <span class="seen" aria-hidden="true" title={s('planet.landed')}>✓</span>
+    </span>
+    {!compact && <span class="tag">{t(p.tagline, lang)}</span>}
+    <span class="meta">
+      <code>{p.ext}</code>
+      <span class:list={['badge', { preview }]}>{s(`planet.status.${p.status}` as any)}</span>
+    </span>
+  </span>
+</a>
+
+<style>
+  .pcard {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    height: 100%;
+  }
+  .pcard:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--kit) 60%, transparent);
+  }
+  .orb {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 30%, color-mix(in srgb, #fff 55%, var(--kit)), var(--kit) 45%, color-mix(in srgb, #000 45%, var(--kit)));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--kit) 14%, transparent), 0 0 24px -4px var(--kit);
+  }
+  .compact .orb {
+    width: 30px;
+    height: 30px;
+  }
+  .txt {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .top {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  strong {
+    font: 700 1.1rem/1.1 var(--font-display);
+  }
+  .nick {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .seen {
+    display: none;
+    color: #1fa35c;
+    font-weight: 700;
+  }
+  :global(.pcard.is-seen) .seen {
+    display: inline;
+  }
+  .tag {
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+  .meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    color: var(--muted);
+  }
+  code {
+    font-size: 0.8rem;
+  }
+</style>

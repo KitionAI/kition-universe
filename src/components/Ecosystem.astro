@@ -1,0 +1,88 @@
+---
+import { type Lang, universe, href } from '../lib/universe';
+import { replaysOf, replayId } from '../lib/replays';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const u = universe();
+// one replay per kit, the first few kits that have one
+const shows = u.planets.map((p) => replaysOf(p.id)[0]).filter(Boolean).slice(0, 6);
+const steps = zh
+  ? [['01', '观察', '读取文档与渲染预览', 'sheet_inspect'], ['02', '执行', '通过引擎修改真实文件', 'sheet_run'], ['03', '校验', '检查结果，再交给人审阅', 'sheet_check']]
+  : [['01', 'Observe', 'Read the document and its preview', 'sheet_inspect'], ['02', 'Act', 'Edit the real file through its engine', 'sheet_run'], ['03', 'Check', 'Validate the result for human review', 'sheet_check']];
+const systems = zh
+  ? [['Tokens', '统一的颜色、间距与主题'], ['Icons', '编辑器共用的图标语言'], ['Components', '功能区、面板、颜色控件、时间轴'], ['KHP UI', '宿主与每个 kit 之间的主题协议']]
+  : [['Tokens', 'Shared colors, spacing and themes'], ['Icons', 'One visual language across editors'], ['Components', 'Ribbons, panels, color controls and timelines'], ['KHP UI', 'A theme contract between hosts and kits']];
+---
+
+<section class="ecosystem section" aria-labelledby="ecosystem-title">
+  <div class="wrap">
+    <div class="intro">
+      <p class="eyebrow">{zh ? '不止是星球' : 'BEYOND THE PLANETS'}</p>
+      <h2 id="ecosystem-title">{zh ? 'AI 来探索，UI 让你掌舵。' : 'AI explores. You take the controls.'}</h2>
+      <p class="lede">{zh ? `${u.planets.length} 个专业 kit，共享同一套协议。Agent 操作引擎，你在熟悉的界面里看见结果。` : `${u.planets.length} professional kits, one shared protocol. Agents operate the engines. You see the results in a familiar interface.`}</p>
+    </div>
+    <div class="systems">
+      <article id="agents" class="system ai" aria-labelledby="agents-title">
+        <p class="system-id"><span>AI</span> {zh ? 'AGENT 舰队' : 'AGENT FLEET'}</p>
+        <h3 id="agents-title">{zh ? '让意图，抵达作品。' : 'From intent to a real artifact.'}</h3>
+        <p>{zh ? 'Agent 可以跨越星球，直接调用专业工具。每一步都有结构化结果和渲染预览，修改仍由你审阅。' : 'Agents travel between planets and call professional tools directly. Structured results and rendered previews keep their work visible for your review.'}</p>
+        <ol class="steps" aria-label={zh ? '以 sheet 为例的 Agent 工作方式' : 'An example agent workflow using sheet'}>
+          {steps.map(([number, title, body, command]) => <li><span class="step-number">{number}</span><div><strong>{title}</strong><p>{body}</p></div><code>{command}</code></li>)}
+        </ol>
+        {shows.length > 0 && <p class="watch"><span>{zh ? '看一次真实的回放：' : 'Watch a real run:'}</span>{shows.map((r) => <button type="button" data-replay={replayId(r.kit, r.scenario)} style={`--kit:${u.planets.find((p) => p.id === r.kit)!.color.dark}`}>▶ {r.kit}</button>)}</p>}
+        <div class="links"><a class="system-link" href={href(lang, '/scenarios/')}>{zh ? '探索场景星系' : 'Explore scenario galaxies'} <span aria-hidden="true">↗</span></a><a class="muted" href={href(lang, '/protocol/')}>KHP & MCP</a></div>
+      </article>
+      <article id="interface" class="system interface" aria-labelledby="interface-title">
+        <p class="system-id"><span>UI</span> TESSERA</p>
+        <h3 id="interface-title">{zh ? '每颗星球，都有驾驶舱。' : 'A cockpit for every planet.'}</h3>
+        <p>{zh ? 'Kition Tessera 是专业软件的界面基础：从设计 Token 到编辑器组件，让不同的 kit 拥有一致的操作语言。' : 'Kition Tessera is the interface foundation for professional software: design tokens and editor components give different kits a shared interaction language.'}</p>
+        <dl class="ui-systems">
+          {systems.map(([name, description]) => <div><dt>{name}</dt><dd>{description}</dd></div>)}
+        </dl>
+        <div class="links">
+          <a class="system-link" href={u.site.links.tessera}>{zh ? '探索 Tessera UI' : 'Explore Tessera UI'} <span aria-hidden="true">↗</span></a>
+          <a class="muted" href={href(lang, '/planet/design/')}>{zh ? '在 design 里设计界面' : 'Design an interface in design'}</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ecosystem { position: relative; border-block: 1px solid var(--line); background: var(--bg); }
+  .intro { margin-bottom: 38px; }
+  .intro h2 { max-width: 24ch; font-size: clamp(1.8rem, 3vw, 2.7rem); }
+  .systems { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .system { --signal: #72c9db; padding: 36px; scroll-margin-top: 90px; background: color-mix(in srgb, var(--signal) 3%, var(--bg)); }
+  .interface { --signal: #ac9bff; border-left: 1px solid var(--line); }
+  .system-id { display: flex; align-items: center; gap: 12px; font: .75rem var(--font-mono); letter-spacing: .12em; color: var(--muted); }
+  .system-id span { font: 600 2rem var(--font-display); letter-spacing: -.05em; color: var(--signal); }
+  .system h3 { font-size: clamp(1.4rem, 2vw, 1.8rem); margin-block: 22px 14px; }
+  .system > p:not(.system-id) { color: var(--muted); font-size: .95rem; min-height: 4.8em; }
+  .steps { list-style: none; padding: 0; margin: 26px 0 30px; }
+  .steps li { display: grid; grid-template-columns: 24px 1fr auto; gap: 12px; align-items: center; border-top: 1px solid var(--line); padding: 16px 0; }
+  .step-number { color: var(--signal); font: .7rem var(--font-mono); }
+  .steps strong { font-size: .9rem; }
+  .steps p { color: var(--muted); font-size: .75rem; margin: 4px 0 0; }
+  .steps code { font-size: .7rem; color: var(--signal); }
+  .ui-systems { margin: 26px 0 30px; }
+  .ui-systems > div { display: grid; grid-template-columns: 112px 1fr; gap: 12px; padding: 13px 0; border-top: 1px solid var(--line); }
+  dt { font: .8rem/1.6 var(--font-mono); color: var(--signal); }
+  dd { margin: 0; color: var(--muted); font-size: .8rem; }
+  .watch { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 14px 0 0; font-size: .8rem; color: var(--muted); }
+  .watch button { padding: 5px 10px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--kit) 55%, transparent); background: none; color: var(--text); font: 600 .72rem/1.2 var(--font-display); cursor: pointer; }
+  .watch button:hover, .watch button:focus-visible { background: var(--kit); color: #0b0c16; }
+  .system-link { display: inline-flex; gap: 24px; align-items: center; color: var(--text); text-decoration: none; font-weight: 600; font-size: .9rem; }
+  .system-link:hover { color: var(--signal); }
+  .links { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .links .muted { font-size: .75rem; }
+  :global([data-theme='light']) .ai { --signal: #126f89; }
+  :global([data-theme='light']) .interface { --signal: #5645d4; }
+  @media (max-width: 800px) {
+    .systems { grid-template-columns: 1fr; }
+    .system { padding: 26px 22px; }
+    .interface { border-left: 0; border-top: 1px solid var(--line); }
+    .system > p:not(.system-id) { min-height: 0; }
+  }
+</style>

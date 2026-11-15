@@ -1,0 +1,41 @@
+# Report a Built with Kition listing: broken link, missing badge, wrong facts or a rule broken.
+name: Report a listing
+description: Something wrong with a product planet on Built with Kition? Tell us.
+title: "[Report] "
+labels: [built-with-kition, report]
+body:
+  - type: input
+    id: listing
+    attributes:
+      label: Listing
+      description: The product planet page on Kition Universe, or the product name.
+      placeholder: /built-with/your-product/
+    validations:
+      required: true
+  - type: dropdown
+    id: reason
+    attributes:
+      label: What is wrong
+      options:
+        - The product does not work or the link is broken
+        - The Built with Kition badge is missing or does not link back
+        - A fact on the listing is wrong
+        - It uses another company's trademark in its name or logo
+        - Paid placement, ads or invented numbers
+        - It is not built on the Kition kits
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What you saw, and where. Links and screenshots help.
+    validations:
+      required: true
+  - type: checkboxes
+    id: owner
+    attributes:
+      label: Are you the product's owner?
+      options:
+        - label: Yes, I make this product (for example, I want it changed or removed)

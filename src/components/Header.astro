@@ -1,0 +1,178 @@
+---
+import { type Lang, href, universe } from '../lib/universe';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang, path } = Astro.props;
+const s = ui(lang);
+const total = universe().planets.length;
+const other: Lang = lang === 'en' ? 'zh' : 'en';
+---
+
+<header class="top">
+  <div class="top-in">
+    <a class="logo" href={href(lang, '/')} aria-label="Kition Universe home">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+        <defs>
+          <radialGradient id="lg" cx="40%" cy="38%" r="65%">
+            <stop offset="0" stop-color="#fff3c4" />
+            <stop offset=".45" stop-color="#ffb347" />
+            <stop offset="1" stop-color="#ff6a3d" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="16" cy="16" rx="14.5" ry="5.6" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.4" transform="rotate(-18 16 16)" />
+        <circle cx="16" cy="16" r="6.4" fill="url(#lg)" />
+        <circle cx="28.4" cy="11.6" r="2.3" fill="#8b7cf0" />
+      </svg>
+      <span>Kition Universe</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href={href(lang, '/')} aria-current={path === '/' ? 'page' : undefined}>{s('nav.map')}</a>
+      <a href={href(lang, '/catalog/')} aria-current={path === '/catalog/' ? 'page' : undefined}>{s('nav.catalog')}</a>
+      <a href={href(lang, '/built-with/')} aria-current={path.startsWith('/built-with/') ? 'page' : undefined}>{s('nav.products')}</a>
+      <a href={href(lang, '/protocol/')} aria-current={path === '/protocol/' ? 'page' : undefined}>{s('nav.protocol')}</a>
+      <a href={href(lang, '/scenarios/')} aria-current={path.startsWith('/scenarios/') ? 'page' : undefined}>{s('nav.scenarios')}</a>
+      <a href={`${href(lang, '/')}#interface`}>UI</a>
+      <a class="ext" href={universe().site.links.main}>{s('nav.main')}</a>
+    </nav>
+    <div class="tools">
+      <button class="icon search-open" type="button" data-search-open aria-label={lang === 'zh' ? '搜索（⌘K）' : 'Search (⌘K)'} title={lang === 'zh' ? '搜索（⌘K）' : 'Search (⌘K)'}>
+        <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+      </button>
+      <a
+        class="progress"
+        id="ku-progress"
+        href={href(lang, '/catalog/')}
+        data-label={s('progress.label', { n: '{n}', total })}
+        aria-label={s('progress.label', { n: 0, total })}
+        title={s('progress.label', { n: 0, total })}
+      >
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2" stroke-opacity=".3" /><circle id="ku-progress-arc" cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="0 44" transform="rotate(-90 10 10)" stroke-linecap="round" /></svg>
+        <span id="ku-progress-n">0</span><span aria-hidden="true">/{total}</span>
+        <span class="more" id="ku-progress-more" data-replays={lang === 'zh' ? '看过 {n} 个回放' : '{n} replays watched'} data-galaxies={lang === 'zh' ? '到过 {n} 个场景星系' : '{n} scenario galaxies visited'} hidden></span>
+      </a>
+      <button class="icon" id="ku-theme" type="button" aria-label={s('theme.toggle')} data-light={s('theme.light')} data-dark={s('theme.dark')}>
+        <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor" /><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" /></g></svg>
+        <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor" /></svg>
+      </button>
+      <a class="lang" href={href(other, path)} hreflang={other === 'zh' ? 'zh-CN' : 'en'} aria-label={`${s('nav.lang')} · ${s('nav.langLabel')}`}>{s('nav.lang')}</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { initChrome } from '../scripts/chrome';
+  initChrome();
+</script>
+
+<style>
+  .top {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px) saturate(1.2);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .top-in {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: min(1400px, 100% - 32px);
+    margin-inline: auto;
+    height: 60px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 700 1.05rem/1 var(--font-display);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  nav {
+    display: flex;
+    gap: 4px;
+    margin-left: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+  nav a {
+    padding: 8px 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--muted);
+    font: 500 0.92rem/1 var(--font-display);
+    white-space: nowrap;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--text);
+    background: var(--surface);
+  }
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .progress,
+  .icon,
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    font: 600 0.85rem/1 var(--font-display);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .progress {
+    color: var(--accent);
+  }
+  .progress .more { font: 600 0.62rem/1 var(--font-mono); color: var(--muted); margin-left: 4px; padding-left: 7px; border-left: 1px solid var(--line); }
+  .progress .more[hidden] { display: none; }
+  .progress span {
+    color: var(--text);
+  }
+  .icon {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .moon {
+    display: none;
+  }
+  :global([data-theme-resolved='dark']) .moon {
+    display: block;
+  }
+  :global([data-theme-resolved='dark']) .sun {
+    display: none;
+  }
+  @media (max-width: 1100px) {
+    .top-in { gap: 12px; }
+    nav { margin-left: 0; }
+    nav a { padding-inline: 8px; }
+    nav .ext {
+      display: none;
+    }
+  }
+  @media (max-width: 860px) {
+    nav {
+      display: none;
+    }
+    .logo span {
+      font-size: 0.98rem;
+    }
+    .top-in {
+      justify-content: space-between;
+    }
+  }
+</style>

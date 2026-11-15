@@ -1,0 +1,42 @@
+# Checks a product planet or scenario galaxy submission against CONTRIBUTING.md and
+# answers on the issue. It only reads the form: a maintainer decides and merges.
+name: Submission check
+on:
+  issues:
+    types: [opened, edited]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  check:
+    if: contains(github.event.issue.labels.*.name, 'built-with-kition') && !contains(github.event.issue.labels.*.name, 'report') || contains(github.event.issue.labels.*.name, 'scenario-galaxy')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The issue text is untrusted: it reaches the script as a file, never as part of a command.
+      - name: Read the form
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          KIND: ${{ contains(github.event.issue.labels.*.name, 'scenario-galaxy') && 'galaxy' || 'product' }}
+        run: |
+          printf '%s' "$ISSUE_BODY" > "$RUNNER_TEMP/issue.md"
+          node scripts/intake.mjs "$KIND" "$RUNNER_TEMP/issue.md" --markdown --fetch > "$RUNNER_TEMP/report.md" && echo "RESULT=passed" >> "$GITHUB_ENV" || echo "RESULT=needs-changes" >> "$GITHUB_ENV"
+      - name: Answer on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/report.md" --edit-last --create-if-none
+          gh label create check-passed --repo "$GITHUB_REPOSITORY" --color 3fd17b --description "The submission form passes the automated check" 2>/dev/null || true
+          gh label create needs-changes --repo "$GITHUB_REPOSITORY" --color ffb347 --description "The submission form has problems to fix" 2>/dev/null || true
+          if [ "$RESULT" = passed ]; then
+            gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label check-passed --remove-label needs-changes
+          else
+            gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label needs-changes --remove-label check-passed
+          fi

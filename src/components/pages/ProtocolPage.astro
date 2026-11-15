@@ -1,0 +1,195 @@
+---
+import Base from '../../layouts/Base.astro';
+import McpSnippet from '../McpSnippet.astro';
+import { type Lang, universe, t, planetHref, href } from '../../lib/universe';
+import { ui } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = ui(lang);
+const u = universe();
+const zh = lang === 'zh';
+
+// The agent-facing calls every kit answers (contracts/kit/mcp-tools.schema.json in KitionAI/kition).
+const calls = [
+  ['inspect', zh ? '查看文件，带回渲染好的预览图' : 'Look at the file, with a rendered preview image'],
+  ['commands', zh ? '列出这个 kit 的全部命令' : 'List every command the kit has'],
+  ['run', zh ? '执行一条命令，带回预览图' : 'Run one command, with a preview image back'],
+  ['query', zh ? '查询文件里的对象' : 'Query objects in the file'],
+  ['batch', zh ? '一次执行多条命令' : 'Run several commands in one go'],
+  ['check', zh ? '检查文件是否有问题' : 'Check the file for problems'],
+  ['draft_ready / draft_reopen', zh ? '把草稿交给人审阅，或重新打开' : 'Hand a draft over for review, or reopen it'],
+];
+const levels = ['basic', 'agent-ready', 'agent-ready-complete'];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Kition Universe', item: new URL(href(lang, '/'), Astro.site!).href },
+      { '@type': 'ListItem', position: 2, name: u.star.name, item: new URL(href(lang, '/protocol/'), Astro.site!).href },
+    ],
+  },
+];
+---
+
+<Base lang={lang} title={s('protocol.title')} description={t(u.star.body, lang)} path="/protocol/" og="protocol" jsonLd={jsonLd}>
+  <div class="hero">
+    <div class="wrap">
+      <div class="sun" aria-hidden="true"></div>
+      <p class="eyebrow">{s('home.starTitle')}</p>
+      <h1>{s('protocol.h1')}</h1>
+      <p class="lines">{u.star.lines.map((l) => <span>{t(l, lang)}</span>)}</p>
+      <a class="btn primary" href={u.star.href}>{s('protocol.cta')}</a>
+    </div>
+  </div>
+  <div class="wrap section two">
+    <div>
+      <p class="lede">{t(u.star.body, lang)}</p>
+      <h2 id="calls">{zh ? '每个 kit 都回应的调用' : 'The calls every kit answers'}</h2>
+      <p class="muted">
+        {zh ? '对 Agent 来说，每个工具都带 kit 前缀，例如 ' : 'An agent sees each one with the kit as a prefix, for example '}
+        <code>sheet_run</code>, <code>photo_inspect</code>.
+      </p>
+      <ul class="calls" role="list">
+        {calls.map(([c, d]) => <li><code>{c}</code><span>{d}</span></li>)}
+      </ul>
+      <h2>{zh ? '三个等级' : 'Three levels'}</h2>
+      <p class="levels">{levels.map((l) => <span class="badge">{l}</span>)}</p>
+    </div>
+    <div>
+      <div class="card" id="mcp">
+        <h2>{s('planet.useAi')}</h2>
+        <McpSnippet lang={lang} />
+      </div>
+      <div class="card orbit">
+        <h2>{zh ? `绕着它转的 ${u.planets.length} 颗星球` : `${u.planets.length} planets in orbit`}</h2>
+        <ul role="list">
+          {
+            u.planets.map((p) => (
+              <li class="kit-light" style={`--kit-l:${p.color.light};--kit-d:${p.color.dark}`}>
+                <a href={planetHref(lang, p.id)}>
+                  <span class="dot" aria-hidden="true" />
+                  {p.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 0 56px;
+    background: var(--space-grad);
+  }
+  .sun {
+    position: absolute;
+    right: 6%;
+    top: 50%;
+    width: 240px;
+    height: 240px;
+    margin-top: -120px;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 36%, #fffbe6 0%, #ffd27a 30%, #ff9a3d 62%, #e8562a 100%);
+    box-shadow:
+      0 0 40px 10px rgba(255, 190, 90, 0.55),
+      0 0 140px 50px rgba(255, 140, 60, 0.3),
+      0 0 320px 120px rgba(160, 110, 255, 0.18);
+  }
+  /* slow corona rays behind the star */
+  .sun::before {
+    content: '';
+    position: absolute;
+    inset: -110px;
+    border-radius: 50%;
+    z-index: -1;
+    background: repeating-conic-gradient(from 0deg, rgba(255, 200, 120, 0.22) 0deg 1.2deg, transparent 1.2deg 7deg);
+    mask: radial-gradient(circle, #000 32%, transparent 70%);
+    animation: spin 90s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (max-width: 760px) {
+    .sun {
+      width: 140px;
+      height: 140px;
+      right: -30px;
+      top: 70px;
+      margin-top: 0;
+      opacity: 0.7;
+    }
+  }
+  .hero .wrap {
+    position: relative;
+  }
+  .lines {
+    display: grid;
+    gap: 4px;
+    font: 600 1.25rem/1.4 var(--font-display);
+    max-width: 40ch;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .two {
+      grid-template-columns: 1fr;
+    }
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .calls {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .calls li {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .calls code {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .levels {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card + .card {
+    margin-top: 16px;
+  }
+  .orbit ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .orbit a {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>

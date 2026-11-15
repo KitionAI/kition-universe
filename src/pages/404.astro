@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui } from '../i18n/ui';
+import { withBase } from '../lib/base';
+const s = ui('en');
+---
+
+<Base lang="en" title={s('notfound.title')} description={s('notfound.body')} path="/404/" og="home">
+  <div class="wrap section" style="min-height:50vh">
+    <h1>{s('notfound.title')}</h1>
+    <p class="lede">{s('notfound.body')}</p>
+    <p style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn primary" href={withBase('/')}>{s('nav.map')}</a>
+      <a class="btn" href={withBase('/catalog/')}>{s('nav.catalog')}</a>
+      <a class="btn" href={withBase('/zh/')}>中文</a>
+    </p>
+  </div>
+</Base>

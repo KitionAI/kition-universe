@@ -1,0 +1,75 @@
+---
+import '@fontsource-variable/space-grotesk';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import AgentReplay from '../components/AgentReplay.astro';
+import Search from '../components/Search.astro';
+import { type Lang, LANGS, prefix } from '../lib/universe';
+import { BASE, withBase } from '../lib/base';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** path without language prefix, e.g. "/planet/sheet/" */
+  path: string;
+  og: string; // OG image name, see src/pages/og/[name].png.ts
+  jsonLd?: object[];
+  bodyClass?: string;
+}
+
+const { lang, title, description, path, og, jsonLd = [], bodyClass } = Astro.props;
+const s = ui(lang);
+const site = Astro.site!;
+const canonical = new URL(`${prefix(lang)}${path}`, site).href;
+const ogUrl = new URL(withBase(`/og/${og}${lang === 'en' ? '' : '-' + lang}.png`), site).href;
+const fullTitle = title.includes('Kition Universe') ? title : `${title} · Kition Universe`;
+---
+
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {LANGS.map((l) => <link rel="alternate" hreflang={l === 'zh' ? 'zh-CN' : 'en'} href={new URL(`${prefix(l)}${path}`, site).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(BASE + path, site).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kition Universe" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#05060f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f1ff" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" href={withBase('/llms.txt')} title="llms.txt" />
+    <script is:inline>
+      // apply the saved theme before first paint; mark that scripts run (JS-only UI shows without a shift)
+      document.documentElement.classList.add('js');
+      try {
+        const t = localStorage.getItem('ku-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip" href="#main">{s('nav.skip')}</a>
+    <Header lang={lang} path={path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <AgentReplay lang={lang} />
+    <Search lang={lang} />
+  </body>
+</html>

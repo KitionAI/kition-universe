@@ -1,0 +1,188 @@
+# Built with Kition: submit a product built on the Kition kits. It becomes a product planet in
+# the Product Galaxy. The fields mirror data/products.yaml; the spec is CONTRIBUTING.md.
+# scripts/intake.mjs reads this form by its labels: change a label here and there together.
+name: Add your product planet (Built with Kition)
+description: List a product you built on the Kition kits. Free, no paid ranking, every product planet the same size.
+title: "[Built with Kition] "
+labels: [built-with-kition]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for building on the kits. Listing is free and always will be: no paid ranking, featured slots, ads or paywalls.
+        To be listed, your product must be **public and working**, and its page must show the **Built with Kition** badge linking back
+        (get it at /built-with/badge/). Fields you leave empty are simply not shown. Please do not include numbers, reviews or user
+        counts: we do not publish them. A listing is not an endorsement.
+  - type: input
+    id: name
+    attributes:
+      label: Product name
+      description: No other company's trademarks (Office, Adobe, Photoshop and so on) in the name.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Product URL
+      description: The public page that shows the badge. https only.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: tagline
+    attributes:
+      label: Tagline (English)
+      description: One sentence, up to 200 characters. What it does, not how good it is.
+    validations:
+      required: true
+  - type: input
+    id: tagline_zh
+    attributes:
+      label: Tagline (Chinese, optional)
+  - type: textarea
+    id: description
+    attributes:
+      label: Description (English)
+      description: A short paragraph on what it does and how it uses the kits.
+    validations:
+      required: true
+  - type: textarea
+    id: description_zh
+    attributes:
+      label: Description (Chinese, optional)
+  - type: checkboxes
+    id: kits
+    attributes:
+      label: Kits it uses
+      description: Tick every kit your product really uses.
+      options:
+        - label: note
+        - label: table
+        - label: board
+        - label: photo
+        - label: film
+        - label: doc
+        - label: sheet
+        - label: slide
+        - label: pdf
+        - label: vector
+        - label: layout
+        - label: motion
+        - label: cad
+        - label: html
+        - label: scene
+        - label: design
+  - type: checkboxes
+    id: delivery
+    attributes:
+      label: How it uses them (Kition SDK delivery)
+      options:
+        - label: embed — a kit's editor mounted in your page (iframe)
+        - label: script — driving a document from code through the kit's object model
+        - label: headless — the kit with no window, on a server or in a pipeline
+        - label: mcp — the kit's tools handed to AI agents over MCP
+  - type: dropdown
+    id: collab
+    attributes:
+      label: Collaboration
+      options:
+        - Not sure / leave out
+        - none (single user)
+        - cloud (real-time collaboration in the cloud)
+        - server (real-time collaboration on your own server)
+      default: 0
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - office
+        - design
+        - video
+        - engineering
+        - education
+        - developer-tools
+        - ai-agent
+        - other
+    validations:
+      required: true
+  - type: input
+    id: author_name
+    attributes:
+      label: Author name
+      description: You, your team or your company.
+    validations:
+      required: true
+  - type: input
+    id: author_url
+    attributes:
+      label: Author URL (optional)
+      placeholder: https://
+  - type: input
+    id: author_github
+    attributes:
+      label: Author GitHub user or organisation (optional)
+      placeholder: octocat
+  - type: input
+    id: open_source
+    attributes:
+      label: Open source repository (optional)
+      placeholder: https://github.com/you/your-product
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot (optional)
+      description: Drop one screenshot, ideally 1600×1000. If you leave it out, a maintainer may take one of the public page.
+  - type: markdown
+    attributes:
+      value: |
+        ### Your planet
+        Your product is drawn as a planet in the Product Galaxy. Choose how it looks; every product planet is the same size.
+        Leave these alone and it gets a look from its name and the colour of the first kit it uses.
+  - type: dropdown
+    id: planet_look
+    attributes:
+      label: Planet look
+      options:
+        - Choose for me
+        - terra (ocean world with clouds)
+        - gas (banded gas giant)
+        - rock (cratered rock)
+        - storm (swirling storm world)
+        - city (city grid with lit streets)
+        - lava (dark crust, glowing cracks)
+        - ice (faceted crystal)
+        - dunes (desert ridges)
+      default: 0
+  - type: input
+    id: planet_color
+    attributes:
+      label: Planet colour (optional)
+      description: One colour as #rrggbb, for example your brand colour.
+      placeholder: "#4fd8c8"
+  - type: dropdown
+    id: planet_ring
+    attributes:
+      label: Planet ring
+      options:
+        - No ring
+        - Ring
+      default: 0
+  - type: dropdown
+    id: planet_moons
+    attributes:
+      label: Planet moons
+      options:
+        - "0"
+        - "1"
+        - "2"
+      default: 0
+  - type: checkboxes
+    id: agree
+    attributes:
+      label: Listing conditions
+      options:
+        - label: The badge is on my product page
+          required: true
+        - label: I agree to the listing rules
+          required: true

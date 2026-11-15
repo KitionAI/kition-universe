@@ -1,0 +1,477 @@
+---
+// Planet hero: static SVG skyline (fallback + LCP), then the 3D city island.
+import { type Lang, type Planet, t, href } from '../lib/universe';
+import { ui } from '../i18n/ui';
+import { replayFor, replayId, replayThumb } from '../lib/replays';
+import type { PlanetSceneData } from '../scripts/scene/types';
+
+interface Props {
+  lang: Lang;
+  planet: Planet;
+}
+const { lang, planet: p } = Astro.props;
+const s = ui(lang);
+const preview = p.status === 'preview';
+
+const capTitle = (id: string) => t(p.capabilities.find((c) => c.id === id)?.title, lang);
+const data: PlanetSceneData = {
+  lang,
+  strings: Object.fromEntries(
+    (['planet.scenario', 'planet.templateTag', 'planet.uses', 'planet.openTemplate', 'planet.allScenarios'] as const).map((k) => [k, s(k)]),
+  ),
+  planet: {
+    id: p.id, name: p.name, nick: t(p.planet, lang), cluster: p.cluster, status: p.status, color: p.color, surface: p.surface,
+    ship: t(p.ship, lang), href: '',
+  },
+  buildings: p.capabilities.map((c) => ({ id: c.id, name: t(c.building, lang), title: t(c.title, lang), body: t(c.body, lang), shape: c.shape })),
+  scenarios: p.scenarios.map((sc) => {
+    const r = replayFor(p.id, sc.id);
+    return { id: sc.id, title: t(sc.title, lang), body: t(sc.body, lang), art: sc.art, uses: sc.uses.map(capTitle), template: sc.template, replay: r ? { id: replayId(p.id, sc.id), thumb: replayThumb(r) } : undefined };
+  }),
+};
+
+const firstReplay = data.scenarios.find((sc) => sc.replay)?.replay?.id;
+
+// skyline poster (LCP + no-WebGL fallback): a night city on the right, clear of the headline
+const W = 1600;
+const H = 700;
+const n = p.capabilities.length;
+const heights: Record<string, number> = { tower: 250, spire: 220, crane: 200, screen: 160, stack: 140, columns: 130, dome: 120, block: 105 };
+const groundY = (x: number) => 470 + Math.pow((x - 1050) / 900, 2) * 260;
+const bld = p.capabilities.map((c, i) => {
+  const x = 700 + (i * 680) / Math.max(1, n - 1);
+  return { c, x, ground: groundY(x), h: heights[c.shape] ?? 120 };
+});
+let seed = p.id.length * 97 + p.order;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const fillers = Array.from({ length: 46 }, (_, i) => {
+  const x = 560 + i * 22 + rnd() * 10;
+  return { x, w: 14 + rnd() * 12, h: 26 + rnd() * 80, g: groundY(x) };
+});
+const win = (x: number, y: number, w: number, h: number) => {
+  const out: { x: number; y: number }[] = [];
+  for (let yy = y + 10; yy < y + h - 8; yy += 14) for (let xx = x + 8; xx < x + w - 8; xx += 12) if (rnd() < 0.45) out.push({ x: xx, y: yy });
+  return out;
+};
+---
+
+<section class="pstage kit-light" data-scene="planet" style={`--kit-l:${p.color.light};--kit-d:${p.color.dark}`} aria-labelledby="planet-h1">
+  <div class="scene-layer">
+    <div class="poster-wrap">
+      <svg class="city-poster" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" role="group" aria-label={s('planet.cityTitle', { planet: t(p.planet, lang) })}>
+        <defs>
+          <radialGradient id="cp-ground" cx="62%" cy="0%" r="90%">
+            <stop offset="0" style="stop-color:var(--kit)" stop-opacity=".95" />
+            <stop offset=".55" style="stop-color:var(--kit)" stop-opacity=".45" />
+            <stop offset="1" stop-color="#05060f" />
+          </radialGradient>
+          <radialGradient id="cp-sun">
+            <stop offset="0" stop-color="#fff2c4" />
+            <stop offset=".35" stop-color="#ffc35c" />
+            <stop offset="1" stop-color="#ff8a3d" stop-opacity="0" />
+          </radialGradient>
+          <filter id="cp-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14" /></filter>
+        </defs>
+        <g class="sky" aria-hidden="true">
+          <circle cx="1460" cy="90" r="120" fill="url(#cp-sun)" class="sun-glow" />
+          <circle cx="1460" cy="90" r="22" class="sun" />
+          {Array.from({ length: 80 }, (_, i) => <circle cx={(i * 263) % W} cy={(i * 97) % 420} r={(i % 3) * 0.6 + 0.6} />)}
+        </g>
+        {p.surface.ring && <path class="ring" d="M-100 380 Q 800 150 1700 330" aria-hidden="true" />}
+        <path d={`M0 ${H} L0 ${groundY(0)} ${Array.from({ length: 33 }, (_, i) => `L${i * 50} ${groundY(i * 50).toFixed(1)}`).join(' ')} L${W} ${H} Z`} fill="url(#cp-ground)" aria-hidden="true" />
+        <path class="horizon" d={Array.from({ length: 33 }, (_, i) => `${i ? 'L' : 'M'}${i * 50} ${groundY(i * 50).toFixed(1)}`).join(' ')} filter="url(#cp-blur)" aria-hidden="true" />
+        <path class="horizon thin" d={Array.from({ length: 33 }, (_, i) => `${i ? 'L' : 'M'}${i * 50} ${groundY(i * 50).toFixed(1)}`).join(' ')} aria-hidden="true" />
+        <g aria-hidden="true">
+          {
+            fillers.map((f) => (
+              <g>
+                <rect x={f.x} y={f.g - f.h} width={f.w} height={f.h + 4} class="fill" />
+                {win(f.x - 4, f.g - f.h, f.w + 8, f.h).map((w) => <rect x={w.x} y={w.y} width="3" height="4" class="win" />)}
+              </g>
+            ))
+          }
+        </g>
+        {
+          bld.map(({ c, x, ground, h }) => {
+            const w = c.shape === 'tower' || c.shape === 'spire' ? 80 : 130;
+            return (
+              <a href={`#cap-${c.id}`} class="b" aria-label={`${t(c.building, lang)}: ${t(c.title, lang)}`}>
+                {c.shape === 'dome' ? (
+                  <path d={`M${x - 65} ${ground} V${ground - 50} A65 65 0 0 1 ${x + 65} ${ground - 50} V${ground} Z`} />
+                ) : c.shape === 'spire' ? (
+                  <path d={`M${x - 40} ${ground} V${ground - h * 0.62} L${x} ${ground - h} L${x + 40} ${ground - h * 0.62} V${ground} Z`} />
+                ) : c.shape === 'crane' ? (
+                  <g>
+                    <rect x={x - 55} y={ground - 70} width="110" height="70" />
+                    <path class="steel" d={`M${x + 45} ${ground - 70} V${ground - h} M${x - 80} ${ground - h + 10} H${x + 95} M${x - 60} ${ground - h + 10} V${ground - h + 60}`} />
+                  </g>
+                ) : c.shape === 'columns' ? (
+                  <path d={`M${x - 75} ${ground} V${ground - h + 34} H${x + 75} V${ground} Z M${x - 85} ${ground - h + 34} L${x} ${ground - h} L${x + 85} ${ground - h + 34} Z`} />
+                ) : (
+                  <rect x={x - w / 2} y={ground - h} width={w} height={h + 4} rx="4" />
+                )}
+                {win(x - w / 2 + 6, ground - h * (c.shape === 'spire' ? 0.6 : 0.92), w - 12, h * (c.shape === 'spire' ? 0.6 : 0.88)).map((wn) => <rect x={wn.x} y={wn.y} width="5" height="6" class="win" />)}
+                {preview && <path class="scaff" d={`M${x - w / 2 - 14} ${ground} V${ground - h - 18} M${x + w / 2 + 14} ${ground} V${ground - h - 18} M${x - w / 2 - 14} ${ground - h / 2} H${x + w / 2 + 14} M${x - w / 2 - 14} ${ground - h - 18} H${x + w / 2 + 14} M${x - w / 2 - 14} ${ground} L${x + w / 2 + 14} ${ground - h / 2}`} />}
+                <text x={x} y={ground - h - 22} text-anchor="middle" class="bn">{t(c.building, lang)}</text>
+              </a>
+            );
+          })
+        }
+      </svg>
+    </div>
+    <div class="scene-labels" role="group" aria-label={s('planet.cityTitle', { planet: t(p.planet, lang) })}></div>
+  </div>
+
+  <div class="hero-copy">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={href(lang, '/')}>Kition Universe</a> <span aria-hidden="true">/</span> <span>{p.name}</span>
+    </nav>
+    <h1 id="planet-h1">
+      <span class="dot big" aria-hidden="true"></span>{p.name}
+      <small>{t(p.planet, lang)}</small>
+    </h1>
+    <p class="tagline">{t(p.tagline, lang)}</p>
+    <p class="meta">
+      <span class:list={['badge', { preview }]}>{s(`planet.status.${p.status}` as any)}</span>
+      {p.version && <span class="badge">{s('planet.version', { v: p.version })}</span>}
+      <span class="badge"><code>{p.ext}</code></span>
+    </p>
+    <p class="cta">
+      <a class="btn primary" href="https://kition.ai">{s('planet.open')}</a>
+      {firstReplay && <button class="btn replay-cta" type="button" data-replay={firstReplay}>▶ {lang === 'zh' ? '看 AI 怎么用它' : 'Watch an agent use it'}</button>}
+      <a class="btn" href="#use-with-ai">{s('planet.useAi')}</a>
+      <button class="btn load3d" type="button" hidden>{s('planet.try3d')}</button>
+    </p>
+  </div>
+
+  <aside class="city-card" hidden role="dialog" aria-modal="false" aria-labelledby="city-card-title">
+    <button class="c-close" type="button" aria-label="×">×</button>
+    <p class="c-name eyebrow"></p>
+    <h2 class="c-title" id="city-card-title" tabindex="-1"></h2>
+    <p class="c-body"></p>
+    <p class="c-uses" hidden></p>
+    <button class="btn primary small c-replay" type="button" hidden>▶ {lang === 'zh' ? '回放 AI 做这件事' : 'Replay an agent doing this'}</button>
+    <a class="c-link" href="#city">{s('planet.cityTitle', { planet: t(p.planet, lang) })} ↓</a>
+  </aside>
+
+  <script type="application/json" id="planet-data" set:html={JSON.stringify(data)} />
+</section>
+
+<script>
+  import { hasWebGL, lowPower, forcedMode, whenIdle } from '../scripts/scene/support';
+  import { markVisited } from '../scripts/chrome';
+
+  const root = document.querySelector<HTMLElement>('[data-scene=planet]')!;
+  const data = JSON.parse(document.getElementById('planet-data')!.textContent || '{}');
+  markVisited(data.planet.id);
+  const start = () =>
+    import('../scripts/scene/planet')
+      .then((m) => m.mountPlanet(root, data))
+      .catch((e) => console.error(e));
+  const forced = forcedMode();
+  if (hasWebGL()) {
+    if (forced === '3d' || (forced !== 'static' && !lowPower())) whenIdle(start);
+    else {
+      // light devices keep the static skyline and can opt in
+      const btn = root.querySelector<HTMLButtonElement>('.load3d')!;
+      btn.hidden = false;
+      btn.addEventListener('click', () => ((btn.hidden = true), start()), { once: true });
+    }
+  }
+</script>
+
+<style>
+  .pstage {
+    position: relative;
+    height: max(520px, calc(88svh - 60px));
+    overflow: hidden;
+    background: var(--space-grad);
+    isolation: isolate;
+  }
+  .scene-layer,
+  .poster-wrap {
+    position: absolute;
+    inset: 0;
+  }
+  .poster-wrap {
+    transition: opacity 0.6s ease;
+  }
+  .city-poster {
+    width: 100%;
+    height: 100%;
+    display: block;
+    font-family: var(--font-display);
+  }
+  .sky circle {
+    fill: var(--text);
+    opacity: 0.45;
+  }
+  .sky .sun-glow {
+    fill: url(#cp-sun);
+    opacity: 0.6;
+  }
+  .sky .sun {
+    fill: #ffe2a0;
+    opacity: 1;
+  }
+  .ring {
+    fill: none;
+    stroke: var(--kit);
+    stroke-width: 30;
+    stroke-opacity: 0.18;
+  }
+  .horizon {
+    fill: none;
+    stroke: var(--kit);
+    stroke-width: 18;
+    opacity: 0.8;
+  }
+  .horizon.thin {
+    stroke-width: 2;
+    stroke: #fff;
+    opacity: 0.55;
+  }
+  .fill {
+    fill: #1b1d38;
+  }
+  .win {
+    fill: #ffd98a;
+  }
+  .b rect,
+  .b path {
+    fill: #23264a;
+    stroke: var(--kit);
+    stroke-width: 2;
+  }
+  .b .steel {
+    fill: none;
+    stroke-width: 8;
+  }
+  .b .win {
+    fill: #ffd98a;
+    stroke: none;
+  }
+  .b .scaff {
+    fill: none;
+    stroke: #ffa53d;
+    stroke-width: 3;
+    stroke-dasharray: 8 6;
+  }
+  .b .bn {
+    fill: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    paint-order: stroke;
+    stroke: rgba(5, 6, 15, 0.7);
+    stroke-width: 5px;
+  }
+  .b:hover rect:not(.win),
+  .b:hover path:not(.scaff),
+  .b:focus-visible rect:not(.win),
+  .b:focus-visible path:not(.scaff) {
+    fill: color-mix(in srgb, var(--kit) 55%, #23264a);
+  }
+  .b:focus-visible {
+    outline: none;
+  }
+  .pstage :global(.scene-canvas) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    touch-action: none;
+  }
+  .pstage:global(.live) :global(.scene-canvas) {
+    opacity: 1;
+  }
+  .pstage:global(.live) .poster-wrap {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .scene-labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .scene-labels :global(.lbl) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+    color: var(--text);
+    font-family: var(--font-display);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s linear, background 0.15s;
+    will-change: transform;
+  }
+  .scene-labels :global(.lbl .n) {
+    font-weight: 700;
+    font-size: 0.86rem;
+  }
+  .scene-labels :global(.lbl .k) {
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  /* names only until a building is pointed at, so the city is not covered in captions */
+  .scene-labels :global(.lbl-building .k) {
+    display: none;
+  }
+  .scene-labels :global(.lbl-building.hot .k),
+  .scene-labels :global(.lbl-building:hover .k),
+  .scene-labels :global(.lbl-building:focus-visible .k) {
+    display: block;
+  }
+  .scene-labels :global(.lbl.hot),
+  .scene-labels :global(.lbl:focus-visible) {
+    background: var(--kit);
+    color: #fff;
+    opacity: 1 !important;
+  }
+  .scene-labels :global(.lbl.hot .k),
+  .scene-labels :global(.lbl:focus-visible .k) {
+    color: #fff;
+  }
+  .hero-copy {
+    position: absolute;
+    left: max(16px, calc((100% - 1400px) / 2 + 16px));
+    top: 24px;
+    max-width: min(500px, calc(100% - 32px));
+    z-index: 2;
+  }
+  .crumbs {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .crumbs a {
+    color: var(--muted);
+  }
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    text-shadow: 0 0 18px var(--bg);
+    margin-bottom: 0.2em;
+  }
+  h1 small {
+    font-size: 0.4em;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .dot.big {
+    width: 22px;
+    height: 22px;
+  }
+  .tagline {
+    font-size: 1.1rem;
+    text-shadow: 0 0 12px var(--bg);
+    max-width: 40ch;
+  }
+  .meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .meta .badge {
+    background: var(--surface);
+  }
+  .cta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .city-card {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    width: min(360px, calc(100% - 32px));
+    z-index: 5;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--kit);
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+  }
+  .c-title {
+    font-size: 1.2rem;
+    outline: none;
+  }
+  .c-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .c-link {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .c-replay { margin: 4px 0 10px; }
+  .c-replay[hidden] { display: none; }
+  .scene-labels :global(.lbl-building.lit .n) { color: var(--star); text-shadow: 0 0 12px var(--star); }
+  .scene-labels :global(.lbl-building.lit)::before { content: '▶ '; color: var(--star); font-size: .6rem; }
+  .c-uses {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  /* scenario holograms: a glassy tag above each screen */
+  .scene-labels :global(.lbl-scenario) {
+    padding: 4px 11px 5px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-solid) 62%, transparent);
+    border: 1px solid color-mix(in srgb, var(--kit) 60%, transparent);
+    backdrop-filter: blur(8px);
+    flex-direction: row;
+    gap: 7px;
+  }
+  .scene-labels :global(.lbl-scenario .n) {
+    font-size: 0.82rem;
+    text-shadow: none;
+  }
+  .scene-labels :global(.lbl-scenario .k) {
+    max-height: none;
+    opacity: 1;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--kit) 30%, transparent);
+    color: var(--text);
+    text-shadow: none;
+  }
+  @media (max-width: 700px) {
+    .pstage {
+      height: max(520px, 80svh);
+    }
+    .tagline {
+      font-size: 0.98rem;
+    }
+    .scene-labels :global(.lbl .k) {
+      display: none;
+    }
+  }
+</style>

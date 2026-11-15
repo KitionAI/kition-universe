@@ -1,0 +1,12 @@
+---
+import BuiltWithDetailPage from '../../components/pages/BuiltWithDetailPage.astro';
+import { products, type Product } from '../../lib/products';
+
+// every product gets a page, paused ones too (marked paused)
+export function getStaticPaths() {
+  return products().map((product) => ({ params: { id: product.id }, props: { product } }));
+}
+const { product } = Astro.props as { product: Product };
+---
+
+<BuiltWithDetailPage lang="en" product={product} />

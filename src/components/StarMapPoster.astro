@@ -1,0 +1,253 @@
+---
+// Static star map. It is the LCP element on the home page, the no-WebGL
+// fallback, and it stays fully clickable: every planet is a real link.
+// Drawn with the same camera the 3D scene opens with (src/lib/layout.ts).
+import { type Lang, stationHref, universe, t, planetHref, href } from '../lib/universe';
+import { layoutPlanets, polar, project, CAMERAS, STAR_RADIUS, PLANET_RADIUS, type Vec3 } from '../lib/layout';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  preset: 'landscape' | 'portrait';
+}
+const { lang, preset } = Astro.props;
+const cam = CAMERAS[preset];
+const s = ui(lang);
+const u = universe();
+const pos = layoutPlanets(u.clusters, u.planets);
+const P = (v: Vec3) => project(v, cam);
+const star = P([0, 0, 0]);
+const f = (n: number) => n.toFixed(1);
+
+// deterministic background stars
+let seed = preset === 'landscape' ? 7 : 11;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const stars = Array.from({ length: 170 }, () => ({ x: rnd() * cam.width, y: rnd() * cam.height, r: rnd() * 1.3 + 0.3, o: rnd() * 0.6 + 0.25 }));
+
+const orbit = (r: number) =>
+  Array.from({ length: 73 }, (_, i) => {
+    const a = (i / 72) * Math.PI * 2;
+    const q = P([Math.cos(a) * r, 0, Math.sin(a) * r]);
+    return `${i ? 'L' : 'M'}${f(q.x)} ${f(q.y)}`;
+  }).join('') + 'Z';
+
+---
+
+<svg
+  class:list={['poster', preset]}
+  viewBox={`0 0 ${cam.width} ${cam.height}`}
+  style={`--fs:${cam.font}`}
+  role="group"
+  aria-label={s('home.static')}
+>
+  <defs>
+    <radialGradient id={`pg-star-${preset}`} cx="45%" cy="40%" r="60%">
+      <stop offset="0" stop-color="#fff8dc" />
+      <stop offset=".4" stop-color="#ffc35c" />
+      <stop offset="1" stop-color="#ff6a3d" />
+    </radialGradient>
+    <radialGradient id={`pg-glow-${preset}`}>
+      <stop offset="0" stop-color="#ffb347" stop-opacity=".55" />
+      <stop offset="1" stop-color="#ffb347" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id={`pg-shade-${preset}`} cx="35%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".5" />
+      <stop offset=".45" stop-color="#fff" stop-opacity="0" />
+      <stop offset="1" stop-color="#000" stop-opacity=".5" />
+    </radialGradient>
+    <radialGradient id={`pg-gal-${preset}`}>
+      <stop offset="0" stop-color="#c9b8ff" stop-opacity=".75" />
+      <stop offset="1" stop-color="#c9b8ff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <g class="bg-stars" aria-hidden="true">
+    {stars.map((d) => <circle cx={f(d.x)} cy={f(d.y)} r={d.r.toFixed(2)} opacity={d.o.toFixed(2)} />)}
+  </g>
+
+  <g class="orbits" aria-hidden="true">
+    {u.planets.map((p) => <path d={orbit(Math.hypot(pos[p.id][0], pos[p.id][2]))} />)}
+  </g>
+
+
+  {
+    u.galaxies.map((g) => {
+      const p = P(g.position);
+      if (p.s <= 0) return null; // behind this camera
+      return (
+        <a href={g.href} class="gal" aria-label={`${t(g.name, lang)}: ${t(g.body, lang)}`}>
+          <ellipse cx={f(p.x)} cy={f(p.y)} rx={f(p.s * 7)} ry={f(p.s * 2.6)} fill={`url(#pg-gal-${preset})`} transform={`rotate(-14 ${f(p.x)} ${f(p.y)})`} />
+          <circle cx={f(p.x)} cy={f(p.y)} r={f(p.s * 0.6)} class="core" />
+          <text x={f(p.x)} y={f(p.y + p.s * 4 + 14)} text-anchor="middle">{t(g.name, lang)}</text>
+        </a>
+      );
+    })
+  }
+
+  <a href={href(lang, '/protocol/')} class="star" aria-label={`${u.star.name}: ${t(u.star.tagline, lang)}`}>
+    <circle cx={f(star.x)} cy={f(star.y)} r={f(STAR_RADIUS * star.s * 2.4)} fill={`url(#pg-glow-${preset})`} />
+    <circle cx={f(star.x)} cy={f(star.y)} r={f(STAR_RADIUS * star.s)} fill={`url(#pg-star-${preset})`} />
+    <text x={f(star.x)} y={f(star.y + STAR_RADIUS * star.s + 26 * cam.font)} text-anchor="middle" class="star-label">{u.star.short}</text>
+  </a>
+
+  {
+    u.stations.map((st) => {
+      const p = P(polar(st.angle, st.distance, st.height));
+      const k = p.s;
+      if (k <= 0) return null;
+      return (
+        <a href={stationHref(lang, st.href)} class="station" aria-label={`${t(st.name, lang)}: ${t(st.title, lang)}`}>
+          {st.kind === 'market' ? (
+            <g>
+              <ellipse cx={f(p.x)} cy={f(p.y)} rx={f(k * 2.6)} ry={f(k * 1)} />
+              <ellipse cx={f(p.x)} cy={f(p.y)} rx={f(k * 1.4)} ry={f(k * 0.5)} class="inner" />
+            </g>
+          ) : (
+            <g>
+              <rect x={f(p.x - k * 1.4)} y={f(p.y - k * 0.6)} width={f(k * 2.8)} height={f(k * 1.2)} rx="4" />
+              <path d={`M${f(p.x - k * 2.6)} ${f(p.y)} H${f(p.x + k * 2.6)} M${f(p.x)} ${f(p.y - k * 1.5)} V${f(p.y + k * 1.5)}`} class="inner" />
+            </g>
+          )}
+          <text x={f(p.x)} y={f(p.y + k * 1.6 + 16 * cam.font)} text-anchor="middle">{t(st.name, lang)}</text>
+        </a>
+      );
+    })
+  }
+
+  {
+    u.planets.map((p) => {
+      const q = P(pos[p.id]);
+      const r = PLANET_RADIUS * q.s;
+      const preview = p.status === 'preview';
+      return (
+        <a
+          href={planetHref(lang, p.id)}
+          class:list={['planet', 'kit-light', { preview }]}
+          style={`--kit-l:${p.color.light};--kit-d:${p.color.dark}`}
+          aria-label={`${p.name} · ${t(p.planet, lang)}${preview ? ' · ' + s('planet.status.preview') : ''}`}
+          data-planet={p.id}
+        >
+          {p.surface.ring && <ellipse cx={f(q.x)} cy={f(q.y)} rx={f(r * 1.95)} ry={f(r * 0.5)} class="ring" />}
+          <circle cx={f(q.x)} cy={f(q.y)} r={f(r)} class="body" />
+          <circle cx={f(q.x)} cy={f(q.y)} r={f(r)} fill={`url(#pg-shade-${preset})`} />
+          {preview && (
+            <path
+              class="scaffold"
+              d={`M${f(q.x - r * 1.15)} ${f(q.y + r)} V${f(q.y - r * 0.9)} M${f(q.x + r * 1.15)} ${f(q.y + r)} V${f(q.y - r * 0.9)} M${f(q.x - r * 1.15)} ${f(q.y - r * 0.2)} H${f(q.x + r * 1.15)} M${f(q.x - r * 1.15)} ${f(q.y + r * 0.6)} H${f(q.x + r * 1.15)} M${f(q.x - r * 1.15)} ${f(q.y - r * 0.2)} L${f(q.x + r * 1.15)} ${f(q.y + r * 0.6)}`}
+            />
+          )}
+          <circle cx={f(q.x + r * 0.9)} cy={f(q.y - r * 0.9)} r={f(4 * cam.font)} class="seen" />
+          <text x={f(q.x)} y={f(q.y + r + 18 * cam.font)} text-anchor="middle" class="name">{p.name}</text>
+          <text x={f(q.x)} y={f(q.y + r + 33 * cam.font)} text-anchor="middle" class="nick">{t(p.planet, lang)}</text>
+        </a>
+      );
+    })
+  }
+
+  {
+    u.clusters.map((c) => {
+      const p = P(c.id === 'design' ? polar(c.angle, c.distance + 11, 0) : polar(c.angle, c.distance, c.id === 'cad' ? 10 : 7));
+      return <text x={f(p.x)} y={f(p.y - (c.id === 'design' ? 44 * cam.font : 0))} text-anchor="middle" class="cluster-label" aria-hidden="true">{t(c.label, lang)}</text>;
+    })
+  }
+</svg>
+
+<style>
+  .poster {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: auto;
+    transform: translateY(-50%);
+    display: block;
+    font-family: var(--font-display);
+  }
+  .bg-stars circle {
+    fill: var(--text);
+  }
+  .orbits path {
+    fill: none;
+    stroke: var(--text);
+    stroke-opacity: 0.09;
+    stroke-width: 1;
+  }
+  .star-label {
+    fill: var(--text);
+    font-weight: 700;
+    font-size: calc(20px * var(--fs));
+    letter-spacing: 0.08em;
+  }
+  .cluster-label {
+    fill: var(--muted);
+    font-size: calc(13px * var(--fs));
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .planet .body {
+    fill: var(--kit);
+  }
+  .planet .ring {
+    fill: none;
+    stroke: var(--kit);
+    stroke-width: 3;
+    stroke-opacity: 0.6;
+  }
+  .planet .name {
+    fill: var(--text);
+    font-size: calc(17px * var(--fs));
+    font-weight: 700;
+  }
+  .planet .nick {
+    fill: var(--muted);
+    font-size: calc(12px * var(--fs));
+  }
+  .planet .seen {
+    fill: #3fd17b;
+    stroke: var(--bg);
+    stroke-width: 2;
+    opacity: 0;
+  }
+  :global(.planet.is-seen) .seen {
+    opacity: 1;
+  }
+  .scaffold {
+    fill: none;
+    stroke: var(--star);
+    stroke-width: 2;
+    stroke-dasharray: 5 4;
+  }
+  .station ellipse,
+  .station rect {
+    fill: var(--surface-solid);
+    stroke: var(--muted);
+    stroke-width: 2;
+  }
+  .station .inner {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+  .gal .core {
+    fill: #e9e1ff;
+  }
+  .station text,
+  .gal text {
+    fill: var(--muted);
+    font-size: calc(12px * var(--fs));
+    font-weight: 600;
+  }
+  a:hover .body,
+  a:focus-visible .body {
+    stroke: var(--text);
+    stroke-width: 3;
+  }
+  a:hover text.name,
+  a:focus-visible text.name {
+    text-decoration: underline;
+  }
+  a:focus-visible {
+    outline: none;
+  }
+</style>

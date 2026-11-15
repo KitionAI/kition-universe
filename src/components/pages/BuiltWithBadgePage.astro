@@ -1,0 +1,209 @@
+---
+// The "Built with Kition" badge: both SVGs (public/badge/), a preview of each
+// and copy-ready HTML and Markdown. The snippets use absolute URLs from SITE_URL.
+import Base from '../../layouts/Base.astro';
+import { type Lang, universe, t, href } from '../../lib/universe';
+import { withBase } from '../../lib/base';
+import { bw } from '../../i18n/builtWith';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const b = bw(lang);
+const u = universe();
+const site = Astro.site!;
+const target = new URL(withBase('/built-with/'), site).href;
+const variants = (['dark', 'light'] as const).map((v) => {
+  const src = new URL(withBase(`/badge/built-with-kition-${v}.svg`), site).href;
+  return {
+    id: v,
+    file: withBase(`/badge/built-with-kition-${v}.svg`),
+    title: b(v === 'dark' ? 'bw.badge.dark' : 'bw.badge.light'),
+    hint: b(v === 'dark' ? 'bw.badge.forDark' : 'bw.badge.forLight'),
+    snippets: [
+      { kind: b('bw.badge.html'), code: `<a href="${target}"><img src="${src}" alt="Built with Kition" width="188" height="44"></a>` },
+      { kind: b('bw.badge.md'), code: `[![Built with Kition](${src})](${target})` },
+    ],
+  };
+});
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Kition Universe', item: new URL(href(lang, '/'), site).href },
+      { '@type': 'ListItem', position: 2, name: 'Built with Kition', item: new URL(href(lang, '/built-with/'), site).href },
+      { '@type': 'ListItem', position: 3, name: b('bw.badge.h1'), item: new URL(href(lang, '/built-with/badge/'), site).href },
+    ],
+  },
+];
+---
+
+<Base lang={lang} title={b('bw.badge.title')} description={b('bw.badge.sub')} path="/built-with/badge/" og="built-with" jsonLd={jsonLd}>
+  <div class="wrap section">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={href(lang, '/built-with/')}>Built with Kition</a> <span aria-hidden="true">/</span> <span aria-current="page">{b('bw.badge.h1')}</span>
+    </nav>
+    <h1>{b('bw.badge.h1')}</h1>
+    <p class="lede">{b('bw.badge.sub')}</p>
+    <p class="cond">{b('bw.badge.condition')}</p>
+
+    <div class="variants">
+      {
+        variants.map((v) => (
+          <section class="card" aria-labelledby={`h-${v.id}`}>
+            <h2 id={`h-${v.id}`}>
+              {v.title} <span>· {v.hint}</span>
+            </h2>
+            {/* each badge is previewed on the kind of page it is meant for */}
+            <div class:list={['stage', v.id === 'dark' ? 'on-dark' : 'on-light']}>
+              <img src={v.file} alt="Built with Kition" width="188" height="44" />
+            </div>
+            {v.snippets.map((s) => (
+              <div class="snip">
+                <p class="kind">{s.kind}</p>
+                <div class="code">
+                  <pre><code>{s.code}</code></pre>
+                  <button class="btn small copy" type="button" data-copy={s.code} data-done={b('bw.copied')} aria-label={`${b('bw.copy')} ${v.title} ${s.kind}`}>
+                    {b('bw.copy')}
+                  </button>
+                </div>
+              </div>
+            ))}
+            <p class="dl">
+              <a href={v.file} download>{b('bw.badge.download')}</a>
+            </p>
+          </section>
+        ))
+      }
+    </div>
+
+    <p class="files">{b('bw.badge.files')}</p>
+    <p class="next">
+      <a class="btn primary" href={href(lang, '/built-with/submit/')}>{t(u.productGalaxy.add.cta, lang)}</a>
+      <span class="muted">{b('bw.badge.next')}</span>
+    </p>
+  </div>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.snip .copy').forEach((b) =>
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy || '');
+        const old = b.textContent;
+        b.textContent = b.dataset.done || 'Copied';
+        setTimeout(() => (b.textContent = old), 1500);
+      } catch {
+        /* clipboard blocked: the snippet is still selectable */
+      }
+    }),
+  );
+</script>
+
+<style>
+  .section {
+    padding-top: 28px;
+  }
+  .crumbs {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .crumbs a {
+    color: var(--muted);
+  }
+  .cond {
+    max-width: 70ch;
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    border-radius: 0 10px 10px 0;
+  }
+  .variants {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .variants > * {
+    min-width: 0;
+  }
+  h2 {
+    font-size: 1.25rem;
+  }
+  h2 span {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.85em;
+  }
+  .stage {
+    display: grid;
+    place-items: center;
+    padding: 36px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    margin-bottom: 16px;
+  }
+  .stage img {
+    display: block;
+  }
+  .on-light {
+    background: #f4f1ff;
+  }
+  .on-dark {
+    background: #05060f;
+  }
+  .kind {
+    font: 600 0.72rem/1 var(--font-display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+  .code {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  pre {
+    margin: 0;
+    padding: 14px 84px 14px 14px;
+    border-radius: 12px;
+    background: #0d0f24;
+    color: #dcdaff;
+    border: 1px solid var(--line);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.8rem;
+  }
+  .copy {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+  }
+  .btn.small {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  .dl {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .files,
+  .muted {
+    color: var(--muted);
+  }
+  .files {
+    margin-top: 28px;
+    font-size: 0.92rem;
+    max-width: 70ch;
+  }
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+</style>

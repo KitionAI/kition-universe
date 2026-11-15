@@ -1,0 +1,40 @@
+---
+import { type Lang, href } from '../lib/universe';
+import { missions, missionCopy } from '../lib/missions';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const zh = lang === 'zh';
+const m = missionCopy(lang);
+---
+<section class="section missions" id="missions" aria-labelledby="missions-title">
+  <div class="wrap">
+    <div class="heading">
+      <div><p class="eyebrow">03 / MISSION GALAXY · {m.demo}</p><h2 id="missions-title">{zh ? '让 AI 带着任务，穿行星球。' : 'Give AI a mission across the stars.'}</h2><p class="lede">{m.description}</p></div>
+      <a class="btn" href={`${href(lang,'/')}?galaxy=missions`}>{zh ? '在星图中探索' : 'Explore on the star map'} ↗</a>
+    </div>
+    <ul class="mission-cards" role="list">
+      {missions.map(mission=><li><a href={`${href(lang,'/missions/')}?mission=${mission.id}`} style={`--signal:${mission.color}`}>
+        <div class="orbit" aria-hidden="true"><span>{mission.number}</span><b class="world"></b><b class="city"></b><i></i><i></i><i></i></div>
+        <h3>{mission.title[lang]}</h3><p>{mission.summary[lang]}</p>
+        <span class="kits">{mission.steps.map(step=>step.kit).join(' → ')}</span>
+        <span class="explore">{m.explore} <span>↗</span></span>
+      </a></li>)}
+    </ul>
+    <p class="note">{zh ? '三条预设示例航线，可以播放、逐步查看并审阅。不会实际运行 AI 或修改文件。' : 'Three preset routes to play, inspect and review. These demos do not run AI or modify files.'}</p>
+  </div>
+</section>
+<style>
+  .missions { background: radial-gradient(ellipse at 80% 20%,#76523614,transparent 70%),var(--bg); border-bottom: 1px solid var(--line); }
+  .heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 28px; }.heading .eyebrow { color: var(--star); }.heading .lede { font-size: .95rem; max-width: 60ch; margin: 0; }.heading .btn { flex-shrink: 0; font-size: .8rem; }
+  .mission-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin: 0; padding: 0; list-style: none; }
+  .mission-cards li { min-width: 0; }.mission-cards a { display: flex; flex-direction: column; height: 100%; padding: 26px; border: 1px solid var(--line); border-radius: 15px; background: var(--bg-2); text-decoration: none; transition: border-color .2s,transform .2s; }.mission-cards a:hover { border-color: var(--signal); transform: translateY(-3px); }.mission-cards h3 { font-size: 1.25rem; margin-top: 14px; }.mission-cards p { color: var(--muted); font-size: .85rem; }
+  .orbit { position:relative; height:150px; display:grid; place-items:center; margin-bottom:10px; background:radial-gradient(ellipse,color-mix(in srgb,var(--signal) 12%,transparent),transparent 65%); }
+  .orbit::before { content:''; position:absolute; z-index:2; width:150px; height:48px; border:1px solid color-mix(in srgb,var(--signal) 60%,transparent); border-radius:50%; transform:rotate(-22deg); }
+  .orbit span { position:absolute; top:0; right:0; color:var(--muted); font:.65rem var(--font-mono); }
+  .world { width:88px; height:88px; border-radius:50%; background:radial-gradient(circle at 27% 25%,#ffffffa8,transparent 35%),repeating-linear-gradient(15deg,transparent 0 9px,#1a15301a 11px 16px),radial-gradient(circle at 30% 30%,var(--signal),#171624 85%); box-shadow:inset -9px -7px 20px #060813a8,inset 2px 1px 3px #fff9,0 0 0 2px color-mix(in srgb,var(--signal) 45%,transparent),0 0 35px color-mix(in srgb,var(--signal) 20%,transparent); }
+  .city { position:absolute; width:5px; height:19px; background:var(--signal); top:23px; box-shadow:8px 4px 0 -1px #e9e5dc,-7px 8px 0 -1px var(--signal); }
+  .orbit i { position:absolute; z-index:3; width:10px; height:10px; border-radius:50%; background:var(--signal); transform:translate(-70px,22px); box-shadow:inset -2px -2px 4px #14132199,0 0 12px color-mix(in srgb,var(--signal) 30%,transparent); }.orbit i:nth-of-type(2) { transform:translate(62px,-30px); width:7px; height:7px; background:#7ce5cd; }.orbit i:nth-of-type(3) { transform:translate(51px,3px); width:5px; height:5px; background:#ffe9a5; }
+  .kits { display:block; font:.65rem/1.8 var(--font-mono); color:var(--muted); margin-top:auto; }.explore { display:flex; justify-content:space-between; font-size:.8rem; border-top:1px solid var(--line); margin-top:20px; padding-top:15px; }.explore > span { color:var(--signal); }.note { color:var(--muted); font-size:.75rem; margin:20px 0 0; }
+  :global([data-theme='light']) .orbit span { color: #805c37; }
+  @media(max-width:800px) { .heading { align-items:start; flex-direction:column; gap:18px; }.mission-cards { grid-template-columns:1fr; gap:14px; }.mission-cards a { padding:22px; }.mission-cards h3 { margin-top:4px; } }
+</style>

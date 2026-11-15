@@ -1,0 +1,241 @@
+---
+// Built with Kition: live and preview settlements as same-size cards. Filters (kit,
+// delivery, category) are URL params read by the script below; without JS the
+// filter bar stays hidden and every card shows.
+import Base from '../../layouts/Base.astro';
+import SettlementCard from '../SettlementCard.astro';
+import { type Lang, universe, t, href } from '../../lib/universe';
+import { listedProducts, productHref, DELIVERIES, CATEGORIES } from '../../lib/products';
+import { bw, categoryName } from '../../i18n/builtWith';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const b = bw(lang);
+const u = universe();
+const g = u.productGalaxy;
+const site = Astro.site!;
+const list = listedProducts();
+// only offer filter values some settlement actually has
+const kits = u.planets.filter((p) => list.some((x) => x.kits.includes(p.id)));
+const deliveries = DELIVERIES.filter((d) => list.some((x) => x.delivery.includes(d)));
+const categories = CATEGORIES.filter((c) => list.some((x) => x.category === c));
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Built with Kition',
+    numberOfItems: list.length,
+    itemListElement: list.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: new URL(productHref(lang, p.id), site).href })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Kition Universe', item: new URL(href(lang, '/'), site).href },
+      { '@type': 'ListItem', position: 2, name: 'Built with Kition', item: new URL(href(lang, '/built-with/'), site).href },
+    ],
+  },
+];
+---
+
+<Base lang={lang} title={b('bw.title')} description={b('bw.description')} path="/built-with/" og="built-with" jsonLd={jsonLd}>
+  <div class="wrap section">
+    <p class="eyebrow">Kition Universe · {t(g.name, lang)}</p>
+    <h1>Built with Kition</h1>
+    <p class="lede">
+      {t(g.blurb, lang)}
+      {' '}
+      <a href={g.sdk.href}>{b('bw.sdkLine', { sdk: g.sdk.name, license: g.sdk.license })}</a>
+    </p>
+    <p class="actions">
+      <a class="btn primary" href={href(lang, '/built-with/submit/')}>{t(g.add.cta, lang)}</a>
+      <a class="btn" href={href(lang, '/built-with/badge/')}>{b('bw.badgeLink')}</a>
+    </p>
+    <p class="rules">{b('bw.rules')}</p>
+
+    <form class="filters" id="bw-filters" aria-label={b('bw.filters')}>
+      <label>
+        <span>{b('bw.filterKit')}</span>
+        <select name="kit">
+          <option value="">{b('bw.any')}</option>
+          {kits.map((p) => <option value={p.id}>{p.name}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>{b('bw.filterDelivery')}</span>
+        <select name="delivery">
+          <option value="">{b('bw.any')}</option>
+          {deliveries.map((d) => <option value={d}>{d}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>{b('bw.filterCategory')}</span>
+        <select name="category">
+          <option value="">{b('bw.any')}</option>
+          {categories.map((c) => <option value={c}>{categoryName(c, lang)}</option>)}
+        </select>
+      </label>
+      <button class="btn small" type="reset">{b('bw.clear')}</button>
+      <p class="count" id="bw-count" aria-live="polite" data-tpl={b('bw.showing', { n: '{n}', total: list.length })}>
+        {b('bw.showing', { n: list.length, total: list.length })}
+      </p>
+    </form>
+
+    <h2 class="sr-only">{t(g.name, lang)}</h2>
+    <ul class="cards" id="bw-cards" role="list">
+      {
+        list.map((p) => (
+          <li>
+            <SettlementCard lang={lang} product={p} />
+          </li>
+        ))
+      }
+    </ul>
+    <p class="empty" id="bw-empty" hidden>{b('bw.empty')} <a href={href(lang, '/built-with/submit/')}>{t(g.add.cta, lang)}</a></p>
+
+    <p class="note">{b('bw.notEndorsement')}</p>
+  </div>
+</Base>
+
+<script>
+  // Filter the server-rendered cards by ?kit=&delivery=&category= and keep the URL shareable.
+  const form = document.getElementById('bw-filters') as HTMLFormElement | null;
+  const cards = [...document.querySelectorAll<HTMLLIElement>('#bw-cards > li')];
+  const count = document.getElementById('bw-count');
+  const empty = document.getElementById('bw-empty');
+  const KEYS = ['kit', 'delivery', 'category'] as const;
+  const field = (k: string) => form?.elements.namedItem(k) as HTMLSelectElement | null;
+
+  function apply(push: boolean) {
+    const want: Record<string, string> = {};
+    for (const k of KEYS) want[k] = field(k)?.value || '';
+    let n = 0;
+    for (const li of cards) {
+      const c = li.firstElementChild as HTMLElement;
+      const ok =
+        (!want.kit || (c.dataset.kits || '').split(' ').includes(want.kit)) &&
+        (!want.delivery || (c.dataset.delivery || '').split(' ').includes(want.delivery)) &&
+        (!want.category || c.dataset.category === want.category);
+      li.hidden = !ok;
+      if (ok) n++;
+    }
+    if (count) count.textContent = (count.dataset.tpl || '').replace('{n}', String(n));
+    if (empty) empty.hidden = n > 0;
+    if (push) {
+      const url = new URL(location.href);
+      for (const k of KEYS) want[k] ? url.searchParams.set(k, want[k]) : url.searchParams.delete(k);
+      history.replaceState(null, '', url);
+    }
+  }
+
+  if (form) {
+    const params = new URLSearchParams(location.search);
+    for (const k of KEYS) {
+      const sel = field(k);
+      const v = params.get(k) || '';
+      // ignore values that are not offered (stale or hand-edited links)
+      if (sel && [...sel.options].some((o) => o.value === v)) sel.value = v;
+    }
+    form.hidden = false;
+    form.addEventListener('change', () => apply(true));
+    form.addEventListener('submit', (e) => e.preventDefault());
+    form.addEventListener('reset', () => setTimeout(() => apply(true)));
+    apply(false);
+  }
+</script>
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 10px;
+  }
+  .rules {
+    color: var(--muted);
+    font-size: 0.92rem;
+    max-width: 70ch;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px 16px;
+    margin: 28px 0 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .filters[hidden],
+  :global(html:not(.js)) .filters {
+    display: none;
+  }
+  label {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+  label span {
+    font: 600 0.72rem/1 var(--font-display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  select {
+    font: inherit;
+    font-size: 0.93rem;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface-solid);
+    color: var(--text);
+    max-width: 100%;
+  }
+  .btn.small {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  .count {
+    margin: 0 0 0 auto;
+    align-self: center;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    /* every settlement the same size, whatever its content */
+    grid-auto-rows: 1fr;
+  }
+  .cards > li {
+    min-width: 0;
+  }
+  .empty {
+    margin-top: 16px;
+    color: var(--muted);
+  }
+  .note {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 560px) {
+    .filters label {
+      flex: 1 1 140px;
+    }
+    .count {
+      margin: 0;
+      flex-basis: 100%;
+    }
+  }
+</style>

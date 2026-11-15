@@ -1,0 +1,11 @@
+---
+import PlanetPage from '../../components/pages/PlanetPage.astro';
+import { universe, type Planet } from '../../lib/universe';
+
+export function getStaticPaths() {
+  return universe().planets.map((planet) => ({ params: { kit: planet.id }, props: { planet } }));
+}
+const { planet } = Astro.props as { planet: Planet };
+---
+
+<PlanetPage lang="en" planet={planet} />
