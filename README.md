@@ -60,6 +60,7 @@ Each kit is one planet. Kits marked Preview are still under construction, and th
 
 | Kit | What it edits | File | Its planet |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | Motion graphics | `.kmotion` | Lava world |
 | [**note**](https://universe.kition.ai/planet/note/) | Markdown notes that link to each other | `.md` | Gas giant |
 | [**table**](https://universe.kition.ai/planet/table/) | Structured tables with typed fields and views | `.ktable` | City world |
 | [**board**](https://universe.kition.ai/planet/board/) | Whiteboards and mind maps | `.kboard` | Ocean world |
@@ -71,7 +72,6 @@ Each kit is one planet. Kits marked Preview are still under construction, and th
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF pages, forms and redaction | `.pdf` | Cratered rock |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Vector illustration | `.kvector` | Crystal world |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Page layout | `.klayout` | Dune world |
-| [**motion**](https://universe.kition.ai/planet/motion/) | Motion graphics | `.kmotion` | Lava world |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D technical drawings | `.dxf` | Cratered rock |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Web pages | `.html` | Storm world |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D scenes | `.kscene` | Ocean world |

@@ -56,6 +56,7 @@ body:
       label: Kits it uses
       description: Tick every kit your product really uses.
       options:
+        - label: motion
         - label: note
         - label: table
         - label: board
@@ -67,7 +68,6 @@ body:
         - label: pdf
         - label: vector
         - label: layout
-        - label: motion
         - label: cad
         - label: html
         - label: scene

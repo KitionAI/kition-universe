@@ -60,6 +60,7 @@ kit 하나가 행성 하나입니다. Preview로 표시된 kit은 아직 만드�
 
 | Kit | 편집 대상 | 파일 | 행성 |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | 모션 그래픽 | `.kmotion` | 용암 행성 |
 | [**note**](https://universe.kition.ai/planet/note/) | 서로 연결되는 Markdown 노트 | `.md` | 가스 행성 |
 | [**table**](https://universe.kition.ai/planet/table/) | 필드 유형과 보기를 갖춘 구조화된 테이블 | `.ktable` | 도시 행성 |
 | [**board**](https://universe.kition.ai/planet/board/) | 화이트보드와 마인드맵 | `.kboard` | 바다 행성 |
@@ -71,7 +72,6 @@ kit 하나가 행성 하나입니다. Preview로 표시된 kit은 아직 만드�
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF 페이지, 양식, 가림 처리 | `.pdf` | 분화구 암석 행성 |
 | [**vector**](https://universe.kition.ai/planet/vector/) | 벡터 일러스트 | `.kvector` | 결정 행성 |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | 페이지 레이아웃 | `.klayout` | 사구 행성 |
-| [**motion**](https://universe.kition.ai/planet/motion/) | 모션 그래픽 | `.kmotion` | 용암 행성 |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D 도면 | `.dxf` | 분화구 암석 행성 |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | 웹 페이지 | `.html` | 폭풍 행성 |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D 장면 | `.kscene` | 바다 행성 |

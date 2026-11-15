@@ -60,6 +60,7 @@ kit ひとつが惑星ひとつです。Preview と書かれた kit はまだ開
 
 | Kit | 編集するもの | ファイル | 惑星 |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | モーショングラフィックス | `.kmotion` | 溶岩の惑星 |
 | [**note**](https://universe.kition.ai/planet/note/) | 互いにリンクする Markdown ノート | `.md` | ガス惑星 |
 | [**table**](https://universe.kition.ai/planet/table/) | 型付きフィールドとビューを持つ構造化テーブル | `.ktable` | 都市の惑星 |
 | [**board**](https://universe.kition.ai/planet/board/) | ホワイトボードとマインドマップ | `.kboard` | 海の惑星 |
@@ -71,7 +72,6 @@ kit ひとつが惑星ひとつです。Preview と書かれた kit はまだ開
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF のページ、フォーム、墨消し | `.pdf` | クレーターの岩石惑星 |
 | [**vector**](https://universe.kition.ai/planet/vector/) | ベクターイラスト | `.kvector` | 結晶の惑星 |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | ページレイアウト | `.klayout` | 砂丘の惑星 |
-| [**motion**](https://universe.kition.ai/planet/motion/) | モーショングラフィックス | `.kmotion` | 溶岩の惑星 |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D 製図 | `.dxf` | クレーターの岩石惑星 |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Web ページ | `.html` | 嵐の惑星 |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D シーン | `.kscene` | 海の惑星 |

@@ -60,6 +60,7 @@ Chaque kit est une planète. Les kits marqués Preview sont encore en constructi
 
 | Kit | Ce qu’il édite | Fichier | Sa planète |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | Animation graphique | `.kmotion` | Monde de lave |
 | [**note**](https://universe.kition.ai/planet/note/) | Notes Markdown reliées entre elles | `.md` | Géante gazeuse |
 | [**table**](https://universe.kition.ai/planet/table/) | Tables structurées avec champs typés et vues | `.ktable` | Monde-ville |
 | [**board**](https://universe.kition.ai/planet/board/) | Tableaux blancs et cartes mentales | `.kboard` | Monde océan |
@@ -71,7 +72,6 @@ Chaque kit est une planète. Les kits marqués Preview sont encore en constructi
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | Pages PDF, formulaires et caviardage | `.pdf` | Roche à cratères |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Illustration vectorielle | `.kvector` | Monde de cristal |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Mise en page | `.klayout` | Monde de dunes |
-| [**motion**](https://universe.kition.ai/planet/motion/) | Animation graphique | `.kmotion` | Monde de lave |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | Dessins techniques 2D | `.dxf` | Roche à cratères |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Pages web | `.html` | Monde de tempêtes |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | Scènes 3D | `.kscene` | Monde océan |

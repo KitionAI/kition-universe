@@ -60,6 +60,7 @@ Jedes Kit ist ein Planet. Kits mit dem Vermerk Preview sind noch im Bau, ihre Pl
 
 | Kit | Was es bearbeitet | Datei | Sein Planet |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | Motion Graphics | `.kmotion` | Lavawelt |
 | [**note**](https://universe.kition.ai/planet/note/) | Markdown-Notizen, die aufeinander verweisen | `.md` | Gasriese |
 | [**table**](https://universe.kition.ai/planet/table/) | Strukturierte Tabellen mit typisierten Feldern und Ansichten | `.ktable` | Stadtwelt |
 | [**board**](https://universe.kition.ai/planet/board/) | Whiteboards und Mindmaps | `.kboard` | Ozeanwelt |
@@ -71,7 +72,6 @@ Jedes Kit ist ein Planet. Kits mit dem Vermerk Preview sind noch im Bau, ihre Pl
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF-Seiten, Formulare und Schwärzung | `.pdf` | Kraterfels |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Vektorillustration | `.kvector` | Kristallwelt |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Seitenlayout | `.klayout` | Dünenwelt |
-| [**motion**](https://universe.kition.ai/planet/motion/) | Motion Graphics | `.kmotion` | Lavawelt |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D-Zeichnungen | `.dxf` | Kraterfels |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Webseiten | `.html` | Sturmwelt |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D-Szenen | `.kscene` | Ozeanwelt |

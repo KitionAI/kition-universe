@@ -60,6 +60,7 @@ Mỗi kit là một hành tinh. Các kit ghi Preview vẫn đang được xây d
 
 | Kit | Chỉnh sửa gì | Tệp | Hành tinh |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | Đồ họa chuyển động | `.kmotion` | Thế giới dung nham |
 | [**note**](https://universe.kition.ai/planet/note/) | Ghi chú Markdown liên kết với nhau | `.md` | Hành tinh khí khổng lồ |
 | [**table**](https://universe.kition.ai/planet/table/) | Bảng có cấu trúc với trường có kiểu và các chế độ xem | `.ktable` | Thế giới thành phố |
 | [**board**](https://universe.kition.ai/planet/board/) | Bảng trắng và sơ đồ tư duy | `.kboard` | Thế giới đại dương |
@@ -71,7 +72,6 @@ Mỗi kit là một hành tinh. Các kit ghi Preview vẫn đang được xây d
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | Trang PDF, biểu mẫu và che nội dung | `.pdf` | Đá nhiều hố va chạm |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Minh họa vector | `.kvector` | Thế giới pha lê |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Dàn trang | `.klayout` | Thế giới cồn cát |
-| [**motion**](https://universe.kition.ai/planet/motion/) | Đồ họa chuyển động | `.kmotion` | Thế giới dung nham |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | Bản vẽ kỹ thuật 2D | `.dxf` | Đá nhiều hố va chạm |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Trang web | `.html` | Thế giới bão |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | Cảnh 3D | `.kscene` | Thế giới đại dương |

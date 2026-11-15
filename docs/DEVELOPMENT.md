@@ -196,8 +196,8 @@ rendered after each group of commands. It is a recording, never a live model, an
 
 ## Rules this repo keeps
 
-- Kit order is fixed: note, table, board, photo, film, doc, sheet, slide, pdf,
-  vector, layout, motion, cad, html, scene, design. `scripts/check-data.mjs` enforces it.
+- Kit order is fixed: motion, note, table, board, photo, film, doc, sheet, slide, pdf,
+  vector, layout, cad, html, scene, design. motion comes first. `scripts/check-data.mjs` enforces it.
 - layout, cad, html and design are Preview and are drawn under construction (scaffolding).
 - Trademarks (Photoshop, AutoCAD, ...) appear only in comparison copy, never in
   planet or building names.

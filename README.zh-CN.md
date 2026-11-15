@@ -60,6 +60,7 @@ Kition Universe 让你一眼看清这一切。它回答三个问题：每个 kit
 
 | Kit | 编辑什么 | 文件 | 它的星球 |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | 动态图形 | `.kmotion` | 熔岩星球 |
 | [**note**](https://universe.kition.ai/planet/note/) | 互相链接的 Markdown 笔记 | `.md` | 气态巨行星 |
 | [**table**](https://universe.kition.ai/planet/table/) | 带字段类型和视图的结构化表格 | `.ktable` | 城市星球 |
 | [**board**](https://universe.kition.ai/planet/board/) | 白板和思维导图 | `.kboard` | 海洋星球 |
@@ -71,7 +72,6 @@ Kition Universe 让你一眼看清这一切。它回答三个问题：每个 kit
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF 页面、表单和涂黑 | `.pdf` | 陨石坑岩石星 |
 | [**vector**](https://universe.kition.ai/planet/vector/) | 矢量插画 | `.kvector` | 晶体星球 |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | 版式排版 | `.klayout` | 沙丘星球 |
-| [**motion**](https://universe.kition.ai/planet/motion/) | 动态图形 | `.kmotion` | 熔岩星球 |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 二维工程制图 | `.dxf` | 陨石坑岩石星 |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | 网页 | `.html` | 风暴星球 |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 三维场景 | `.kscene` | 海洋星球 |

@@ -7,8 +7,8 @@
 # Preview status of layout and cad comes from the product brief.
 # Do not add numbers or capabilities that have no source.
 #
-# Kit order is fixed: note, table, board, photo, film, doc, sheet, slide, pdf,
-# vector, layout, motion, cad, html, scene, design.
+# Kit order is fixed: motion, note, table, board, photo, film, doc, sheet, slide,
+# pdf, vector, layout, cad, html, scene, design (motion first; the `order` field decides).
 # html, scene and design verified against their kit.json and README.md on 2026-10-31.
 
 site:
@@ -115,7 +115,7 @@ clusters:
 planets:
   # ───────────────────────────── Office ─────────────────────────────
   - id: note
-    order: 1
+    order: 2
     name: note
     cluster: office
     kitId: kit.note
@@ -190,7 +190,7 @@ planets:
     tools: []
 
   - id: table
-    order: 2
+    order: 3
     name: table
     cluster: office
     kitId: kit.table
@@ -267,7 +267,7 @@ planets:
     tools: []
 
   - id: board
-    order: 3
+    order: 4
     name: board
     cluster: office
     kitId: kit.board
@@ -343,7 +343,7 @@ planets:
 
   # ───────────────────────────── Design ─────────────────────────────
   - id: photo
-    order: 4
+    order: 5
     name: photo
     cluster: design
     kitId: kit.photo
@@ -421,7 +421,7 @@ planets:
 
   # ───────────────────────────── Video ─────────────────────────────
   - id: film
-    order: 5
+    order: 6
     name: film
     cluster: video
     kitId: kit.film
@@ -498,7 +498,7 @@ planets:
 
   # ───────────────────────────── Office (cont.) ─────────────────────────────
   - id: doc
-    order: 6
+    order: 7
     name: doc
     cluster: office
     kitId: kit.doc
@@ -574,7 +574,7 @@ planets:
     tools: []
 
   - id: sheet
-    order: 7
+    order: 8
     name: sheet
     cluster: office
     kitId: kit.sheet
@@ -651,7 +651,7 @@ planets:
     tools: []
 
   - id: slide
-    order: 8
+    order: 9
     name: slide
     cluster: office
     kitId: kit.slide
@@ -728,7 +728,7 @@ planets:
     tools: []
 
   - id: pdf
-    order: 9
+    order: 10
     name: pdf
     cluster: office
     kitId: kit.pdf
@@ -806,7 +806,7 @@ planets:
 
   # ───────────────────────────── Design (cont.) ─────────────────────────────
   - id: vector
-    order: 10
+    order: 11
     name: vector
     cluster: design
     kitId: kit.vector
@@ -883,7 +883,7 @@ planets:
     tools: []
 
   - id: layout
-    order: 11
+    order: 12
     name: layout
     cluster: design
     kitId: kit.layout
@@ -949,7 +949,7 @@ planets:
 
   # ───────────────────────────── Video (cont.) ─────────────────────────────
   - id: motion
-    order: 12
+    order: 1
     name: motion
     cluster: video
     kitId: kit.motion

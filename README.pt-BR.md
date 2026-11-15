@@ -60,6 +60,7 @@ Cada kit é um planeta. Os kits marcados como Preview ainda estão em construç�
 
 | Kit | O que edita | Arquivo | Seu planeta |
 | --- | --- | --- | --- |
+| [**motion**](https://universe.kition.ai/planet/motion/) | Motion graphics | `.kmotion` | Mundo de lava |
 | [**note**](https://universe.kition.ai/planet/note/) | Notas em Markdown ligadas entre si | `.md` | Gigante gasoso |
 | [**table**](https://universe.kition.ai/planet/table/) | Tabelas estruturadas com campos tipados e visualizações | `.ktable` | Mundo-cidade |
 | [**board**](https://universe.kition.ai/planet/board/) | Quadros brancos e mapas mentais | `.kboard` | Mundo oceânico |
@@ -71,7 +72,6 @@ Cada kit é um planeta. Os kits marcados como Preview ainda estão em construç�
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | Páginas de PDF, formulários e tarjas | `.pdf` | Rocha com crateras |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Ilustração vetorial | `.kvector` | Mundo de cristal |
 | [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Diagramação | `.klayout` | Mundo de dunas |
-| [**motion**](https://universe.kition.ai/planet/motion/) | Motion graphics | `.kmotion` | Mundo de lava |
 | [**cad**](https://universe.kition.ai/planet/cad/) · Preview | Desenho técnico 2D | `.dxf` | Rocha com crateras |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Páginas web | `.html` | Mundo de tempestades |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | Cenas 3D | `.kscene` | Mundo oceânico |
