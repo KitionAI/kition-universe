@@ -529,25 +529,22 @@
 
 - kit: motion
   scenario: title
-  sample: motion/mountain-tea-chinese-title
+  sample: motion/ringed-planet-3d-title
   goal:
-    en: Animate a Chinese event title rising over ink mountains.
-    zh: 做一个中文活动标题动画，标题在水墨山峦上逐字升起。
+    en: Animate a documentary title beside a slowly turning ringed planet.
+    zh: 做一个纪录片标题动画，旁边是一颗缓慢转动的带环行星。
   frames:
-    - upto: 3
-      say: { en: Fill the sky with a gradient, zh: 用渐变铺出天空 }
+    - upto: 4
+      say: { en: Build a deep-space backdrop, zh: 做出深空背景 }
       lights: [layers]
-    - upto: 6
-      say: { en: Add a slowly rising sun, zh: 加上缓缓升起的太阳 }
-      lights: [layers, comps]
-    - upto: 15
-      say: { en: Draw three mountain ranges that drift, zh: 画出三层缓慢移动的山峦 }
-      lights: [layers, comps]
+    - upto: 9
+      say: { en: Add a 3D planet and tilt its ring, zh: 加上三维行星，把星环倾斜 }
+      lights: [layers]
+    - upto: 13
+      say: { en: Spin the planet and light it, zh: 让行星转起来并打光 }
+      lights: [comps]
     - upto: 18
-      say: { en: 'Add the Chinese title, rising by character', zh: 加上中文标题，逐字升起 }
-      lights: [layers]
-    - upto: 20
-      say: { en: Add the subtitle with a tracking animation, zh: 加上副标题，做字距收拢动画 }
+      say: { en: 'Add the title and subtitle, sliding in', zh: 加上标题和副标题，滑入画面 }
       lights: [layers]
 
 # ── cad ──────────────────────────────────────────────────────────────────────
