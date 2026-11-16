@@ -153,7 +153,7 @@ for (const [id, m] of Object.entries(manifest)) {
 const kitsWithReplay = new Set(Object.values(manifest).map((m) => m.kit));
 
 // ---- documentation links: each one goes to the page about that very thing ----
-const DOC_HOSTS = /^https:\/\/(github\.com\/KitionAI\/|kitharness\.org\/|dev\.kition\.ai\/|kition\.ai\/)[^\s]+$/;
+const DOC_HOSTS = /^https:\/\/(github\.com\/KitionAI\/|kitharness\.org\/|developer\.kition\.ai\/|kition\.ai\/)[^\s]+$/;
 const docLinks = [['mcp.docs', u.mcp?.docs], ['productGalaxy.sdk.docs', u.productGalaxy?.sdk?.docs], ...(u.productGalaxy?.delivery ?? []).map((d) => [`delivery ${d.id}.docs`, d.docs])];
 for (const [name, url] of docLinks) {
   if (!url) errors.push(`${name}: missing`);
