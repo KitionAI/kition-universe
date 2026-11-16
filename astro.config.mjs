@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// Production: https://universe.kition.ai, its own site (官网与产品矩阵, D16 as revised 2026-11-03).
+// Production: https://universe.kition.ai, its own site.
 // Set SITE_URL at build time; canonical, sitemap and OG URLs all derive from it. UNIVERSE_BASE can
 // still serve it under a path (e.g. /universe); links and assets go through src/lib/base.ts.
 const SITE_URL = process.env.SITE_URL || 'http://localhost:4330';
