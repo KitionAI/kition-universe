@@ -2,15 +2,15 @@
 
 # Kition Universe
 
-Kition の 3D 星図です。Kition は AI のためのオープンなプロ向けソフトウェア群で、kit ひとつが惑星ひとつ。飛び回り、着陸し、AI エージェントが実際のファイルで作業する様子を見られます。
+Kition Universe：AI のためのオープンなプロ向けソフトウェア群、Kition の 3D 星図です。kit ごとの 16 の惑星、シナリオ銀河、そして AI エージェントが実際のファイルで作業するリプレイがあります。
 
-**[Kition Universe を開く → universe.kition.ai](https://universe.kition.ai)**
+[universe.kition.ai](https://universe.kition.ai) · [Kition](https://kition.ai)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · **日本語** · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi.md)
+[English](../../README.md) · [简体中文](README.zh-CN.md) · **日本語** · [한국어](README.ko-KR.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi-VN.md)
 
 </div>
 
-[![Kition Universe](docs/images/kits.webp)](https://universe.kition.ai)
+[![Kition Universe](../images/kits.webp)](https://universe.kition.ai)
 
 ## これは何か
 
@@ -28,31 +28,31 @@ kit にはそれぞれの世界があります。海の惑星、ガス惑星、�
 
 再生を押すと、エージェントが送るコマンドが 1 つずつ表示され、その横に各ステップのあと kit が描いた画像が並びます。使われている建物が光ります。終わったら、プロンプトと設定を自分の AI 用にコピーできます。これは実際の kit コマンドの記録であり、モデルがその場で動いているわけではありません。
 
-![エージェントの作業を見る](docs/images/replay.webp)
+![エージェントの作業を見る](../images/replay.webp)
 
 ### ひとつの仕事を kit から kit へたどる
 
 12 のシナリオ銀河が kit の組み合わせ方を示します。経営レビューは表計算からレポート、スライド、署名済みの PDF へ進みます。輸送船がファイルを惑星から惑星へ運び、完成したファイルは成果デッキに並びます。
 
-![ひとつの仕事を kit から kit へたどる](docs/images/scenario.webp)
+![ひとつの仕事を kit から kit へたどる](../images/scenario.webp)
 
 ### やりたいことから始める
 
 「四半期レビュー」「ピボット」「.psd」と入力すれば、そこへ直接飛べます。シナリオ、kit、機能、エージェントのコマンド、ファイル形式を検索できます。検索はブラウザ内で行われ、何も送信されません。
 
-![やりたいことから始める](docs/images/search.webp)
+![やりたいことから始める](../images/search.webp)
 
 ### ほかの人が作ったものを見る
 
 kit の上に作られた製品は、プロダクト銀河の惑星になり、使っている kit と光の線でつながります。掲載は無料で、製品の惑星はすべて同じ大きさです。
 
-![ほかの人が作ったものを見る](docs/images/products.webp)
+![ほかの人が作ったものを見る](../images/products.webp)
 
 ### 全体のつながりを見る
 
 全体図でシナリオ銀河を指すと、それを構成する kit の惑星への線が表示されます。60 秒のツアーが、プロトコル、kit ひとつ、シナリオひとつ、製品を順に案内します。
 
-![全体のつながりを見る](docs/images/overview.webp)
+![全体のつながりを見る](../images/overview.webp)
 
 ## 16 の kit
 
@@ -90,9 +90,9 @@ kit を使って何かを作りましたか。プロダクト銀河の惑星と�
 
 - [製品の惑星を追加する](https://github.com/KitionAI/kition-universe/issues/new?template=built-with-kition.yml)
 - [シナリオ銀河を提案する](https://github.com/KitionAI/kition-universe/issues/new?template=scenario-galaxy.yml)
-- [ルールと形式](CONTRIBUTING.md)
+- [ルールと形式](../../.github/CONTRIBUTING.md)
 
-## 開発者向け
+## ビルドとテスト
 
 サイトは静的です。Astro、three.js、データファイル 1 つで構成されています。ローカルで動かすには:
 
@@ -101,12 +101,12 @@ pnpm install
 pnpm dev        # http://localhost:4330
 ```
 
-ビルド、チェック、デプロイの方法: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+ビルド、チェック、デプロイの方法: [docs/DEVELOPMENT.md](../DEVELOPMENT.md)
 
 ## リンク
 
 - [Kition](https://kition.ai) · [GitHub](https://github.com/KitionAI/kition)
-- [Kition SDK](https://github.com/KitionAI/kition-sdk)
+- [Kition SDK](https://github.com/KitionAI/kition-sdk) · [開発者向けドキュメント](https://developer.kition.ai)
 - [Kit Harness Protocol](https://universe.kition.ai/protocol/)
 
 ## ライセンス

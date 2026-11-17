@@ -203,7 +203,7 @@ if (flags.has('--markdown')) {
   if (problems.length) out.push('Problems:', ...problems.map((p) => `- ${p}`), '');
   if (notes.length) out.push('Notes:', ...notes.map((n) => `- ${n}`), '');
   if (ok) out.push(`<details><summary>Entry for a maintainer (${where})</summary>`, '', `\`\`\`${kind === 'product' ? 'yaml' : 'ts'}`, entry.replace(/\n$/, ''), '```', '', '</details>', '');
-  out.push('The rules are in [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md). This check reads the form only; it does not decide whether the submission is listed.');
+  out.push('The rules are in [CONTRIBUTING.md](../blob/main/.github/CONTRIBUTING.md). This check reads the form only; it does not decide whether the submission is listed.');
   console.log(out.join('\n'));
 } else {
   for (const p of problems) console.log(`✗ ${p}`);

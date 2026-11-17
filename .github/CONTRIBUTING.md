@@ -116,7 +116,7 @@ A small dock circles every product planet, lit in the colours of the kits the pr
   company names in its name or text. Your credit is the "Proposed by" line.
 - It has **two to four steps**, each a different kit, in the order the work happens.
 - **Every step is a scenario the kit already lists.** The scenarios are on each kit's planet page
-  under "What you can make", and their ids are in [`data/scenarios.yaml`](data/scenarios.yaml)
+  under "What you can make", and their ids are in [`data/scenarios.yaml`](../data/scenarios.yaml)
   (three per kit). A galaxy arranges what kits can already do; it cannot promise a capability
   that no kit has. If the step you need is missing, propose the galaxy without it, or ask for the
   scenario in an issue first.
@@ -157,7 +157,7 @@ freest spot, at least 100 units from every other galaxy.
   'event-planning': c('Plan and promote an event', '策划并宣传一场活动'),
 ```
 
-A step that has an [agent replay](docs/DEVELOPMENT.md#agent-replays) shows the kit's own render on the
+A step that has an [agent replay](../docs/DEVELOPMENT.md#agent-replays) shows the kit's own render on the
 galaxy's result deck and can be replayed from the galaxy. Replays come from kition-showcase
 samples and are added by maintainers; a galaxy does not need them.
 

@@ -2,15 +2,15 @@
 
 # Kition Universe
 
-Eine 3D-Sternenkarte von Kition, der offenen Profi-Suite für KI. Jedes Kit ist ein Planet: herumfliegen, landen und einem KI-Agenten bei echter Arbeit an einer echten Datei zusehen.
+Kition Universe: eine 3D-Sternenkarte von Kition, der offenen Profi-Suite für KI. 16 Kit-Planeten, Szenario-Galaxien und Aufzeichnungen von KI-Agenten bei echter Arbeit an echten Dateien.
 
-**[Kition Universe öffnen → universe.kition.ai](https://universe.kition.ai)**
+[universe.kition.ai](https://universe.kition.ai) · [Kition](https://kition.ai)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · **Deutsch** · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi.md)
+[English](../../README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja-JP.md) · [한국어](README.ko-KR.md) · **Deutsch** · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi-VN.md)
 
 </div>
 
-[![Kition Universe](docs/images/kits.webp)](https://universe.kition.ai)
+[![Kition Universe](../images/kits.webp)](https://universe.kition.ai)
 
 ## Was es ist
 
@@ -28,31 +28,31 @@ Jedes Kit hat seine eigene Welt: einen Ozeanplaneten, einen Gasriesen, ein Stadt
 
 Drücken Sie auf Abspielen: Die Befehle des Agenten erscheinen einer nach dem anderen, daneben die Bilder, die das Kit nach jedem Schritt gerendert hat. Die benutzten Gebäude leuchten auf. Am Ende kopieren Sie Prompt und Einrichtung für Ihre eigene KI. Das sind Aufzeichnungen echter Kit-Befehle, kein Live-Modell.
 
-![Einem Agenten bei der Arbeit zusehen](docs/images/replay.webp)
+![Einem Agenten bei der Arbeit zusehen](../images/replay.webp)
 
 ### Eine Arbeit über mehrere Kits verfolgen
 
 Zwölf Szenario-Galaxien zeigen, wie Kits zusammenspielen: Ein Geschäftsbericht geht von der Tabelle über den Bericht und die Folien zum unterschriebenen PDF. Ein Kurier trägt die Datei von Planet zu Planet, und die fertigen Dateien landen auf dem Ergebnisdeck.
 
-![Eine Arbeit über mehrere Kits verfolgen](docs/images/scenario.webp)
+![Eine Arbeit über mehrere Kits verfolgen](../images/scenario.webp)
 
 ### Mit dem beginnen, was Sie vorhaben
 
 Tippen Sie „Quartalsbericht“, „Pivot“ oder „.psd“ und fliegen Sie direkt dorthin. Die Suche umfasst Szenarien, Kits, Fähigkeiten, Agentenbefehle und Dateiformate. Sie läuft in Ihrem Browser; nichts wird gesendet.
 
-![Mit dem beginnen, was Sie vorhaben](docs/images/search.webp)
+![Mit dem beginnen, was Sie vorhaben](../images/search.webp)
 
 ### Sehen, was andere gebaut haben
 
 Produkte, die auf den Kits aufbauen, sind Planeten in der Produktgalaxie, durch Licht mit den Kits verbunden, die sie nutzen. Der Eintrag ist kostenlos, und jeder Produktplanet ist gleich groß.
 
-![Sehen, was andere gebaut haben](docs/images/products.webp)
+![Sehen, was andere gebaut haben](../images/products.webp)
 
 ### Sehen, wie alles zusammenhängt
 
 Zeigen Sie in der Übersicht auf eine Szenario-Galaxie, und Linien führen zu den Kit-Planeten, aus denen sie besteht. Eine 60-Sekunden-Tour führt durch das Protokoll, ein Kit, ein Szenario und die Produkte.
 
-![Sehen, wie alles zusammenhängt](docs/images/overview.webp)
+![Sehen, wie alles zusammenhängt](../images/overview.webp)
 
 ## Die 16 Kits
 
@@ -90,9 +90,9 @@ Sie haben etwas auf den Kits gebaut? Es kann ein Planet in der Produktgalaxie we
 
 - [Ihren Produktplaneten hinzufügen](https://github.com/KitionAI/kition-universe/issues/new?template=built-with-kition.yml)
 - [Eine Szenario-Galaxie vorschlagen](https://github.com/KitionAI/kition-universe/issues/new?template=scenario-galaxy.yml)
-- [Regeln und Format](CONTRIBUTING.md)
+- [Regeln und Format](../../.github/CONTRIBUTING.md)
 
-## Für Entwickler
+## Bauen und testen
 
 Die Website ist statisch: Astro, three.js und eine Datendatei. So starten Sie sie lokal:
 
@@ -101,12 +101,12 @@ pnpm install
 pnpm dev        # http://localhost:4330
 ```
 
-Wie sie gebaut, geprüft und veröffentlicht wird: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+Wie sie gebaut, geprüft und veröffentlicht wird: [docs/DEVELOPMENT.md](../DEVELOPMENT.md)
 
 ## Links
 
 - [Kition](https://kition.ai) · [GitHub](https://github.com/KitionAI/kition)
-- [Kition SDK](https://github.com/KitionAI/kition-sdk)
+- [Kition SDK](https://github.com/KitionAI/kition-sdk) · [Entwicklerdokumentation](https://developer.kition.ai)
 - [Kit Harness Protocol](https://universe.kition.ai/protocol/)
 
 ## Lizenz

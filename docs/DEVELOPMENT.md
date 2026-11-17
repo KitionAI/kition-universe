@@ -1,7 +1,7 @@
 # Developing Kition Universe
 
 How the site is built, run, checked and deployed. For what the site is, see the
-[README](../README.md); for adding a product or a galaxy, see [CONTRIBUTING.md](../CONTRIBUTING.md).
+[README](../README.md); for adding a product or a galaxy, see [CONTRIBUTING.md](../.github/CONTRIBUTING.md).
 
 ## Run
 
@@ -240,7 +240,7 @@ are product planets (产品星球): in the Product Galaxy on the star map, on
   under `/zh/` too. Strings are in `src/i18n/builtWith.ts`. The star catalog
   lists each planet's product planets; `src/components/Settlements.astro` (the component keeps its old name) is the
   per-planet list.
-- **Submissions.** [CONTRIBUTING.md](../CONTRIBUTING.md) is the spec for what others can add: a
+- **Submissions.** [CONTRIBUTING.md](../.github/CONTRIBUTING.md) is the spec for what others can add: a
   product planet (`.github/ISSUE_TEMPLATE/built-with-kition.yml`) or a scenario galaxy
   (`scenario-galaxy.yml`); `report-listing.yml` reports a problem. `scripts/intake.mjs`
   (`pnpm intake product|galaxy issue.md`) checks a submission against the spec and prints the

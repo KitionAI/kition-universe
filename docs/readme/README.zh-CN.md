@@ -2,15 +2,15 @@
 
 # Kition Universe
 
-Kition 的 3D 星图。Kition 是为 AI 准备的开源专业软件套件，每个 kit 是一颗星球：飞过去、降落，看 AI Agent 在真实文件上干活。
+Kition Universe：Kition 的 3D 星图，Kition 是为 AI 准备的开源专业软件套件。16 颗 kit 星球、场景星系，以及 AI Agent 在真实文件上干活的录制回放。
 
-**[打开 Kition Universe → universe.kition.ai](https://universe.kition.ai)**
+[universe.kition.ai](https://universe.kition.ai) · [Kition](https://kition.ai)
 
-[English](README.md) · **简体中文** · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi.md)
+[English](../../README.md) · **简体中文** · [日本語](README.ja-JP.md) · [한국어](README.ko-KR.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi-VN.md)
 
 </div>
 
-[![Kition Universe](docs/images/kits.webp)](https://universe.kition.ai)
+[![Kition Universe](../images/kits.webp)](https://universe.kition.ai)
 
 ## 这是什么
 
@@ -28,31 +28,31 @@ Kition Universe 让你一眼看清这一切。它回答三个问题：每个 kit
 
 按下播放，Agent 发出的命令一条条出现，旁边是 kit 在每一步之后渲染出来的图，用到的建筑会亮起来。播完可以把提示词和接入配置复制给你自己的 AI。这些是真实 kit 命令的录制回放，不是实时的模型。
 
-![看 AI Agent 干活](docs/images/replay.webp)
+![看 AI Agent 干活](../images/replay.webp)
 
 ### 跟着一份工作穿过几个 kit
 
 12 个场景星系展示 kit 怎么配合：一份经营汇报从表格到报告，再到幻灯片，最后是签好的 PDF。货船把文件从一颗星球运到下一颗，成品落在成品台上。
 
-![跟着一份工作穿过几个 kit](docs/images/scenario.webp)
+![跟着一份工作穿过几个 kit](../images/scenario.webp)
 
 ### 从你想做的事出发
 
 输入“季度汇报”“数据透视”或“.psd”，直接飞过去。可以搜场景、kit、能力、Agent 命令和文件格式。搜索在浏览器里完成，不会把任何内容发出去。
 
-![从你想做的事出发](docs/images/search.webp)
+![从你想做的事出发](../images/search.webp)
 
 ### 看别人做了什么
 
 用 kit 做出来的产品是产品星系里的星球，用光缆连到它用到的 kit。收录免费，所有产品星球一样大。
 
-![看别人做了什么](docs/images/products.webp)
+![看别人做了什么](../images/products.webp)
 
 ### 看清它们之间的关系
 
 在总览里指向一个场景星系，会画出它和所用 kit 星球之间的连线。60 秒导览带你看一遍协议、一个 kit、一个场景和产品。
 
-![看清它们之间的关系](docs/images/overview.webp)
+![看清它们之间的关系](../images/overview.webp)
 
 ## 16 个 kit
 
@@ -90,9 +90,9 @@ Kition Universe 让你一眼看清这一切。它回答三个问题：每个 kit
 
 - [登记你的产品星球](https://github.com/KitionAI/kition-universe/issues/new?template=built-with-kition.yml)
 - [提议一个场景星系](https://github.com/KitionAI/kition-universe/issues/new?template=scenario-galaxy.yml)
-- [规则和格式](CONTRIBUTING.md)
+- [规则和格式](../../.github/CONTRIBUTING.md)
 
-## 给开发者
+## 构建和测试
 
 站点是静态的：Astro、three.js 和一个数据文件。本地运行：
 
@@ -101,12 +101,12 @@ pnpm install
 pnpm dev        # http://localhost:4330
 ```
 
-怎么构建、检查和发布： [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+怎么构建、检查和发布： [docs/DEVELOPMENT.md](../DEVELOPMENT.md)
 
 ## 链接
 
 - [Kition](https://kition.ai) · [GitHub](https://github.com/KitionAI/kition)
-- [Kition SDK](https://github.com/KitionAI/kition-sdk)
+- [Kition SDK](https://github.com/KitionAI/kition-sdk) · [开发者文档](https://developer.kition.ai)
 - [Kit Harness Protocol](https://universe.kition.ai/protocol/)
 
 ## 许可证

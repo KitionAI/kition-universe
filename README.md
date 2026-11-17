@@ -2,11 +2,11 @@
 
 # Kition Universe
 
-A 3D star map of Kition, the open pro suite for AI. Every kit is a planet: fly around, land on one, and watch an AI agent do real work on a real file.
+Kition Universe: a 3D star map of Kition, the open pro suite for AI. 16 kit planets, scenario galaxies, and replays of AI agents doing real work on real files.
 
-**[Open Kition Universe → universe.kition.ai](https://universe.kition.ai)**
+[universe.kition.ai](https://universe.kition.ai) · [Kition](https://kition.ai)
 
-**English** · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Tiếng Việt](README.vi.md)
+**English** · [简体中文](docs/readme/README.zh-CN.md) · [日本語](docs/readme/README.ja-JP.md) · [한국어](docs/readme/README.ko-KR.md) · [Deutsch](docs/readme/README.de-DE.md) · [Français](docs/readme/README.fr-FR.md) · [Español](docs/readme/README.es-ES.md) · [Português](docs/readme/README.pt-BR.md) · [Tiếng Việt](docs/readme/README.vi-VN.md)
 
 </div>
 
@@ -90,9 +90,9 @@ Built something on the kits? It can become a planet in the Product Galaxy. Have 
 
 - [Add your product planet](https://github.com/KitionAI/kition-universe/issues/new?template=built-with-kition.yml)
 - [Propose a scenario galaxy](https://github.com/KitionAI/kition-universe/issues/new?template=scenario-galaxy.yml)
-- [The rules and the format](CONTRIBUTING.md)
+- [The rules and the format](.github/CONTRIBUTING.md)
 
-## For developers
+## Build and test
 
 The site is static: Astro, three.js and one data file. To run it locally:
 
@@ -106,7 +106,7 @@ How it is built, checked and deployed: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md
 ## Links
 
 - [Kition](https://kition.ai) · [GitHub](https://github.com/KitionAI/kition)
-- [Kition SDK](https://github.com/KitionAI/kition-sdk)
+- [Kition SDK](https://github.com/KitionAI/kition-sdk) · [Developer docs](https://developer.kition.ai)
 - [Kit Harness Protocol](https://universe.kition.ai/protocol/)
 
 ## License

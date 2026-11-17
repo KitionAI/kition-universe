@@ -2,15 +2,15 @@
 
 # Kition Universe
 
-Bản đồ sao 3D của Kition, bộ phần mềm chuyên nghiệp mở dành cho AI. Mỗi kit là một hành tinh: bay quanh, hạ cánh và xem một tác tử AI làm việc thật trên một tệp thật.
+Kition Universe: bản đồ sao 3D của Kition, bộ phần mềm chuyên nghiệp mở dành cho AI. 16 hành tinh, mỗi kit một hành tinh, các thiên hà kịch bản và bản phát lại cảnh tác tử AI làm việc thật trên tệp thật.
 
-**[Mở Kition Universe → universe.kition.ai](https://universe.kition.ai)**
+[universe.kition.ai](https://universe.kition.ai) · [Kition](https://kition.ai)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · **Tiếng Việt**
+[English](../../README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja-JP.md) · [한국어](README.ko-KR.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Português](README.pt-BR.md) · **Tiếng Việt**
 
 </div>
 
-[![Kition Universe](docs/images/kits.webp)](https://universe.kition.ai)
+[![Kition Universe](../images/kits.webp)](https://universe.kition.ai)
 
 ## Đây là gì
 
@@ -28,31 +28,31 @@ Mỗi kit có một thế giới riêng: hành tinh đại dương, hành tinh k
 
 Nhấn phát và xem từng lệnh mà tác tử gửi đi, bên cạnh là hình ảnh kit kết xuất sau mỗi bước. Những tòa nhà đang được dùng sẽ sáng lên. Khi kết thúc, hãy sao chép câu lệnh và phần cấu hình cho AI của bạn. Đây là bản ghi các lệnh thật của kit, không phải một mô hình đang chạy trực tiếp.
 
-![Xem tác tử làm việc](docs/images/replay.webp)
+![Xem tác tử làm việc](../images/replay.webp)
 
 ### Theo một công việc đi qua nhiều kit
 
 Mười hai thiên hà kịch bản cho thấy các kit kết hợp với nhau thế nào: một báo cáo kinh doanh đi từ bảng tính sang báo cáo, sang trang chiếu rồi đến tệp PDF đã ký. Một tàu vận chuyển mang tệp từ hành tinh này sang hành tinh khác, và các tệp hoàn chỉnh được đặt lên bệ kết quả.
 
-![Theo một công việc đi qua nhiều kit](docs/images/scenario.webp)
+![Theo một công việc đi qua nhiều kit](../images/scenario.webp)
 
 ### Bắt đầu từ việc bạn muốn làm
 
 Gõ “báo cáo quý”, “pivot” hoặc “.psd” rồi bay thẳng đến đó. Có thể tìm kịch bản, kit, khả năng, lệnh của tác tử và định dạng tệp. Việc tìm kiếm chạy trong trình duyệt của bạn; không có gì được gửi đi.
 
-![Bắt đầu từ việc bạn muốn làm](docs/images/search.webp)
+![Bắt đầu từ việc bạn muốn làm](../images/search.webp)
 
 ### Xem người khác đã làm ra gì
 
 Các sản phẩm xây trên kit là những hành tinh trong Thiên hà sản phẩm, nối bằng ánh sáng tới các kit mà chúng dùng. Việc đăng là miễn phí, và mọi hành tinh sản phẩm đều có cùng kích thước.
 
-![Xem người khác đã làm ra gì](docs/images/products.webp)
+![Xem người khác đã làm ra gì](../images/products.webp)
 
 ### Xem mọi thứ liên kết với nhau thế nào
 
 Ở chế độ tổng quan, trỏ vào một thiên hà kịch bản để thấy các đường nối tới những hành tinh kit tạo nên nó. Chuyến tham quan 60 giây sẽ dẫn bạn qua giao thức, một kit, một kịch bản và các sản phẩm.
 
-![Xem mọi thứ liên kết với nhau thế nào](docs/images/overview.webp)
+![Xem mọi thứ liên kết với nhau thế nào](../images/overview.webp)
 
 ## 16 kit
 
@@ -90,9 +90,9 @@ Bạn đã xây thứ gì đó trên các kit? Nó có thể trở thành một 
 
 - [Thêm hành tinh sản phẩm của bạn](https://github.com/KitionAI/kition-universe/issues/new?template=built-with-kition.yml)
 - [Đề xuất một thiên hà kịch bản](https://github.com/KitionAI/kition-universe/issues/new?template=scenario-galaxy.yml)
-- [Quy tắc và định dạng](CONTRIBUTING.md)
+- [Quy tắc và định dạng](../../.github/CONTRIBUTING.md)
 
-## Dành cho nhà phát triển
+## Xây dựng và kiểm thử
 
 Trang web là trang tĩnh: Astro, three.js và một tệp dữ liệu. Để chạy trên máy:
 
@@ -101,12 +101,12 @@ pnpm install
 pnpm dev        # http://localhost:4330
 ```
 
-Cách xây dựng, kiểm tra và phát hành: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+Cách xây dựng, kiểm tra và phát hành: [docs/DEVELOPMENT.md](../DEVELOPMENT.md)
 
 ## Liên kết
 
 - [Kition](https://kition.ai) · [GitHub](https://github.com/KitionAI/kition)
-- [Kition SDK](https://github.com/KitionAI/kition-sdk)
+- [Kition SDK](https://github.com/KitionAI/kition-sdk) · [Tài liệu cho nhà phát triển](https://developer.kition.ai)
 - [Kit Harness Protocol](https://universe.kition.ai/protocol/)
 
 ## Giấy phép
