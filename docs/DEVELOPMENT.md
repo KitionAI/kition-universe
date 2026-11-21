@@ -198,9 +198,12 @@ rendered after each group of commands. It is a recording, never a live model, an
 
 - Kit order is fixed: motion, note, table, board, photo, film, doc, sheet, slide, pdf,
   vector, layout, cad, html, scene, design. motion comes first. `scripts/check-data.mjs` enforces it.
-- layout, cad, html and design are Preview and are drawn under construction (scaffolding).
-- Trademarks (Photoshop, AutoCAD, ...) appear only in comparison copy, never in
-  planet or building names.
+- Exactly three kits are Preview: html, design and scene. They are drawn under construction
+  (scaffolding). The other kits have no `status` and no maturity label; never label a kit Beta.
+- Trademarks (Photoshop, AutoCAD, ...) never appear in planet or building names, and other
+  companies' product names are not used as selling copy ("a free X alternative"). File format
+  names (`.psd`, `.docx`, `.ai`) are fine.
+- Taglines and summaries claim only what the kit's own `features.yaml` marks `has`.
 - No invented numbers, no subscriptions, ads or paywalls, no third-party KHP
   implementations that do not exist.
 - No in-browser tools yet: each planet has an empty `tools: []` for the next phase.

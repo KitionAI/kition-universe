@@ -71,8 +71,8 @@ Jedes Kit ist ein Planet. Kits mit dem Vermerk Preview sind noch im Bau, ihre Pl
 | [**slide**](https://universe.kition.ai/planet/slide/) | Präsentationen | `.kslide` | Gasriese |
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF-Seiten, Formulare und Schwärzung | `.pdf` | Kraterfels |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Vektorillustration | `.kvector` | Kristallwelt |
-| [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Seitenlayout | `.klayout` | Dünenwelt |
-| [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D-Zeichnungen | `.dxf` | Kraterfels |
+| [**layout**](https://universe.kition.ai/planet/layout/) | Seitenlayout | `.klayout` | Dünenwelt |
+| [**cad**](https://universe.kition.ai/planet/cad/) | 2D-Zeichnungen | `.dxf` | Kraterfels |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Webseiten | `.html` | Sturmwelt |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D-Szenen | `.kscene` | Ozeanwelt |
 | [**design**](https://universe.kition.ai/planet/design/) · Preview | Interface-Design | `.kdesign` | Kristallwelt |

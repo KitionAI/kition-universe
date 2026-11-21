@@ -71,8 +71,8 @@ Kition Universe 让你一眼看清这一切。它回答三个问题：每个 kit
 | [**slide**](https://universe.kition.ai/planet/slide/) | 演示文稿 | `.kslide` | 气态巨行星 |
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF 页面、表单和涂黑 | `.pdf` | 陨石坑岩石星 |
 | [**vector**](https://universe.kition.ai/planet/vector/) | 矢量插画 | `.kvector` | 晶体星球 |
-| [**layout**](https://universe.kition.ai/planet/layout/) · Preview | 版式排版 | `.klayout` | 沙丘星球 |
-| [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 二维工程制图 | `.dxf` | 陨石坑岩石星 |
+| [**layout**](https://universe.kition.ai/planet/layout/) | 版式排版 | `.klayout` | 沙丘星球 |
+| [**cad**](https://universe.kition.ai/planet/cad/) | 二维工程制图 | `.dxf` | 陨石坑岩石星 |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | 网页 | `.html` | 风暴星球 |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 三维场景 | `.kscene` | 海洋星球 |
 | [**design**](https://universe.kition.ai/planet/design/) · Preview | 界面设计 | `.kdesign` | 晶体星球 |

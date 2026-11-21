@@ -71,8 +71,8 @@ kit 하나가 행성 하나입니다. Preview로 표시된 kit은 아직 만드�
 | [**slide**](https://universe.kition.ai/planet/slide/) | 프레젠테이션 | `.kslide` | 가스 행성 |
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF 페이지, 양식, 가림 처리 | `.pdf` | 분화구 암석 행성 |
 | [**vector**](https://universe.kition.ai/planet/vector/) | 벡터 일러스트 | `.kvector` | 결정 행성 |
-| [**layout**](https://universe.kition.ai/planet/layout/) · Preview | 페이지 레이아웃 | `.klayout` | 사구 행성 |
-| [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D 도면 | `.dxf` | 분화구 암석 행성 |
+| [**layout**](https://universe.kition.ai/planet/layout/) | 페이지 레이아웃 | `.klayout` | 사구 행성 |
+| [**cad**](https://universe.kition.ai/planet/cad/) | 2D 도면 | `.dxf` | 분화구 암석 행성 |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | 웹 페이지 | `.html` | 폭풍 행성 |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D 장면 | `.kscene` | 바다 행성 |
 | [**design**](https://universe.kition.ai/planet/design/) · Preview | 인터페이스 디자인 | `.kdesign` | 결정 행성 |

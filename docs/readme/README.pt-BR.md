@@ -71,8 +71,8 @@ Cada kit é um planeta. Os kits marcados como Preview ainda estão em construç�
 | [**slide**](https://universe.kition.ai/planet/slide/) | Apresentações | `.kslide` | Gigante gasoso |
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | Páginas de PDF, formulários e tarjas | `.pdf` | Rocha com crateras |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Ilustração vetorial | `.kvector` | Mundo de cristal |
-| [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Diagramação | `.klayout` | Mundo de dunas |
-| [**cad**](https://universe.kition.ai/planet/cad/) · Preview | Desenho técnico 2D | `.dxf` | Rocha com crateras |
+| [**layout**](https://universe.kition.ai/planet/layout/) | Diagramação | `.klayout` | Mundo de dunas |
+| [**cad**](https://universe.kition.ai/planet/cad/) | Desenho técnico 2D | `.dxf` | Rocha com crateras |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Páginas web | `.html` | Mundo de tempestades |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | Cenas 3D | `.kscene` | Mundo oceânico |
 | [**design**](https://universe.kition.ai/planet/design/) · Preview | Design de interface | `.kdesign` | Mundo de cristal |

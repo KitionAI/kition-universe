@@ -71,8 +71,8 @@ Each kit is one planet. Kits marked Preview are still under construction, and th
 | [**slide**](https://universe.kition.ai/planet/slide/) | Presentations | `.kslide` | Gas giant |
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | PDF pages, forms and redaction | `.pdf` | Cratered rock |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Vector illustration | `.kvector` | Crystal world |
-| [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Page layout | `.klayout` | Dune world |
-| [**cad**](https://universe.kition.ai/planet/cad/) · Preview | 2D technical drawings | `.dxf` | Cratered rock |
+| [**layout**](https://universe.kition.ai/planet/layout/) | Page layout | `.klayout` | Dune world |
+| [**cad**](https://universe.kition.ai/planet/cad/) | 2D technical drawings | `.dxf` | Cratered rock |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Web pages | `.html` | Storm world |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | 3D scenes | `.kscene` | Ocean world |
 | [**design**](https://universe.kition.ai/planet/design/) · Preview | Interface design | `.kdesign` | Crystal world |

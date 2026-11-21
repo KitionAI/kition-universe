@@ -9,7 +9,8 @@ export type Lang = 'en' | 'zh';
 export const LANGS: Lang[] = ['en', 'zh'];
 export type L = { en: string; zh: string };
 
-export type Status = 'alpha' | 'beta' | 'stable' | 'preview';
+/** Exactly three kits are Preview (html, design, scene); the others carry no maturity label. */
+export type Status = 'preview';
 export type BuildingShape = 'tower' | 'dome' | 'block' | 'columns' | 'crane' | 'screen' | 'stack' | 'spire';
 
 export interface Capability {
@@ -38,7 +39,7 @@ export interface Planet {
   kitId: string; // engine id in the Kition repo
   planet: L; // "Library Planet"
   ext: string; // native file extension, '' when none
-  status: Status;
+  status?: Status;
   version?: string;
   color: { light: string; dark: string };
   surface: {

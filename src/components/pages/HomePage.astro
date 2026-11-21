@@ -26,7 +26,7 @@ const jsonLd = [
     url: new URL(href(lang, '/'), site).href,
     inLanguage: lang === 'zh' ? 'zh-CN' : 'en',
     description: s('site.description'),
-    publisher: { '@type': 'Organization', name: 'Kition', url: u.site.links.main, sameAs: [u.site.links.github] },
+    publisher: { '@type': 'Organization', name: 'Kition', url: u.site.links.main, sameAs: [u.site.links.github, 'https://github.com/KitionAI', 'https://x.com/KitionAI', 'https://www.reddit.com/r/Kition', 'https://discord.gg/bFSjRDjVY'] },
   },
   {
     '@context': 'https://schema.org',
@@ -87,7 +87,7 @@ const jsonLd = [
       <div class="doors">
         <div class="card way">
           <p class="eyebrow">{lang === 'zh' ? '自己用' : 'USE IT'}</p>
-          <h3>{lang === 'zh' ? '下载 Kition，打开你的文件' : 'Download Kition and open your files'}</h3>
+          <h3>{lang === 'zh' ? '下载 Kition Desktop，打开你的文件' : 'Download Kition Desktop and open your files'}</h3>
           <p>{lang === 'zh' ? `一个桌面应用里装着这 ${u.planets.length} 个 kit。文件留在你的电脑上，AI 改动由你审阅。` : `One desktop app holds these ${u.planets.length} kits. Files stay on your computer, and you review what the AI changes.`}</p>
           <p class="row"><a class="btn primary" href={u.site.links.download}>{s('planet.open')}</a></p>
         </div>

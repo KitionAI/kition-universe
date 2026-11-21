@@ -20,7 +20,7 @@ const data: PlanetSceneData = {
     (['planet.scenario', 'planet.templateTag', 'planet.uses', 'planet.openTemplate', 'planet.allScenarios'] as const).map((k) => [k, s(k)]),
   ),
   planet: {
-    id: p.id, name: p.name, nick: t(p.planet, lang), cluster: p.cluster, status: p.status, color: p.color, surface: p.surface,
+    id: p.id, name: p.name, nick: t(p.planet, lang), cluster: p.cluster, status: p.status ?? '', color: p.color, surface: p.surface,
     ship: t(p.ship, lang), href: '',
   },
   buildings: p.capabilities.map((c) => ({ id: c.id, name: t(c.building, lang), title: t(c.title, lang), body: t(c.body, lang), shape: c.shape })),
@@ -132,7 +132,7 @@ const win = (x: number, y: number, w: number, h: number) => {
     </h1>
     <p class="tagline">{t(p.tagline, lang)}</p>
     <p class="meta">
-      <span class:list={['badge', { preview }]}>{s(`planet.status.${p.status}` as any)}</span>
+      {preview && <span class="badge preview">{s('planet.status.preview')}</span>}
       {p.version && <span class="badge">{s('planet.version', { v: p.version })}</span>}
       <span class="badge"><code>{p.ext}</code></span>
     </p>

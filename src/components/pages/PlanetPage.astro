@@ -20,7 +20,6 @@ const nb = neighbours(p.id);
 const site = Astro.site!;
 const preview = p.status === 'preview';
 const kitName = `Kition ${p.name}`;
-const statusName = s(`planet.status.${p.status}` as any);
 const kitReplays = replaysOf(p.id);
 
 const opens = p.formats.opens.length ? s('faq.files.opens', { list: p.formats.opens.join(', ') }) : '';
@@ -31,7 +30,7 @@ const faqs = [
   preview
     ? { q: s('faq.preview.q', { kit: kitName }), a: s('faq.preview.a', { kit: kitName }) }
     : p.version
-      ? { q: s('faq.status.q', { kit: kitName }), a: s('faq.status.a', { kit: kitName, status: statusName, v: p.version }) }
+      ? { q: s('faq.version.q', { kit: kitName }), a: s('faq.version.a', { kit: kitName, v: p.version }) }
       : null,
 ].filter(Boolean) as { q: string; a: string }[];
 
@@ -50,7 +49,7 @@ const jsonLd = [
     description: t(p.summary, lang),
     url,
     ...(p.version ? { softwareVersion: p.version } : {}),
-    isPartOf: { '@type': 'SoftwareApplication', name: 'Kition', url: u.site.links.main },
+    isPartOf: { '@type': 'SoftwareApplication', name: 'Kition Desktop', url: u.site.links.main },
   },
   {
     '@context': 'https://schema.org',

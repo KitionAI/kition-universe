@@ -13,7 +13,7 @@ export const GET: APIRoute = ({ site }) => {
   out.push('# Kition Universe');
   out.push('');
   out.push(
-    `> A star map of Kition, the open pro suite for AI. The kits, SDK and Tessera UI are Apache-2.0; products built on them have their own licenses. ${u.planets.length} kits, each a planet, all built on the Kit Harness Protocol (KHP). This file lists every planet, what it really does, the files it works with, and how an AI agent uses it.`,
+    `> A star map of Kition, the open pro suite for AI. The kits, the Kition SDK and Kition Tessera are Apache-2.0; products built on them have their own licenses. ${u.planets.length} kits, each a planet, all built on the Kit Harness Protocol (KHP). This file lists every planet, what it really does, the files it works with, and how an AI agent uses it.`,
   );
   out.push('');
   out.push(u.star.lines.map((l) => l.en).join(' '));
@@ -47,7 +47,7 @@ export const GET: APIRoute = ({ site }) => {
       out.push(`- ${p.summary.en}`);
       out.push(`- On the star map: ${worldFacts(p.surface, 'en').join(', ')}. ${p.world.en}`);
       out.push(`- Native files: ${p.formats.native.join(', ')}${p.formats.opens.length ? `; also opens ${p.formats.opens.join(', ')}` : ''}`);
-      out.push(`- Status: ${p.status}${p.version ? `, kit version ${p.version}` : ''}`);
+      if (p.status === 'preview' || p.version) out.push(`- ${[p.status === 'preview' ? 'Status: Preview' : '', p.version ? `Kit version ${p.version}` : ''].filter(Boolean).join(', ')}`);
       out.push(`- Capabilities: ${p.capabilities.map((x) => `${x.title.en} (${x.body.en.replace(/\.$/, '')})`).join('; ')}`);
       out.push(`- Example commands: ${p.commands.map((x) => `${x.name} (${x.what.en.toLowerCase()})`).join(', ')}`);
       out.push(`- What you can make: ${p.scenarios.map((x) => `${x.title.en}${x.template ? ` ([template](${x.template}))` : ''}`).join('; ')}`);

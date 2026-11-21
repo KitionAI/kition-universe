@@ -21,19 +21,19 @@
 
 products:
   - id: kition
-    name: Kition
+    name: Kition Desktop
     planet: { look: terra, color: '#8b7cf0', moons: 1 }
     url: https://kition.ai
     by_kition: true
     tagline: Desktop AI workspace for connected documents, structured tables, editable designs, whiteboards, visual workflows and reviewable AI agents.
     tagline_zh: 桌面 AI 工作台：互相关联的文档、结构化表格、可编辑的设计、白板、可视化工作流，以及可审阅的 AI Agent。
     description: >-
-      Kition is the first product built on the kits. It opens each kit's own editor inside the app, so one
+      Kition Desktop is the first product built on the kits. It opens each kit's own editor inside the app, so one
       workspace edits Markdown notes, tables, whiteboards, PSDs, videos, DOCX, XLSX, PPTX, PDFs, vector art,
-      page layouts, motion graphics DXF drawings, HTML, 3D scenes and interface designs. When no editor is open, its agent drives the same kits
+      page layouts, motion graphics, DXF drawings, HTML, 3D scenes and interface designs. When no editor is open, its agent drives the same kits
       headless, and the kit tools are also served to other AI harnesses over MCP.
     description_zh: >-
-      Kition 是第一个用这些 kit 搭起来的产品。它在应用里直接打开每个 kit 自己的编辑器，一个工作台就能编辑
+      Kition Desktop 是第一个用这些 kit 搭起来的产品。它在应用里直接打开每个 kit 自己的编辑器，一个工作台就能编辑
       Markdown 笔记、表格、白板、PSD、视频、DOCX、XLSX、PPTX、PDF、矢量图、版式、动态图形、DXF 图纸、HTML、三维场景和界面设计。
       没有打开编辑器时，Agent 以无界面方式驱动同样的 kit；这些 kit 工具也通过 MCP 提供给其他 AI 工具。
     kits: [motion, note, table, board, photo, film, doc, sheet, slide, pdf, vector, layout, cad, html, scene, design]

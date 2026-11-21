@@ -71,8 +71,8 @@ Mỗi kit là một hành tinh. Các kit ghi Preview vẫn đang được xây d
 | [**slide**](https://universe.kition.ai/planet/slide/) | Bài trình chiếu | `.kslide` | Hành tinh khí khổng lồ |
 | [**pdf**](https://universe.kition.ai/planet/pdf/) | Trang PDF, biểu mẫu và che nội dung | `.pdf` | Đá nhiều hố va chạm |
 | [**vector**](https://universe.kition.ai/planet/vector/) | Minh họa vector | `.kvector` | Thế giới pha lê |
-| [**layout**](https://universe.kition.ai/planet/layout/) · Preview | Dàn trang | `.klayout` | Thế giới cồn cát |
-| [**cad**](https://universe.kition.ai/planet/cad/) · Preview | Bản vẽ kỹ thuật 2D | `.dxf` | Đá nhiều hố va chạm |
+| [**layout**](https://universe.kition.ai/planet/layout/) | Dàn trang | `.klayout` | Thế giới cồn cát |
+| [**cad**](https://universe.kition.ai/planet/cad/) | Bản vẽ kỹ thuật 2D | `.dxf` | Đá nhiều hố va chạm |
 | [**html**](https://universe.kition.ai/planet/html/) · Preview | Trang web | `.html` | Thế giới bão |
 | [**scene**](https://universe.kition.ai/planet/scene/) · Preview | Cảnh 3D | `.kscene` | Thế giới đại dương |
 | [**design**](https://universe.kition.ai/planet/design/) · Preview | Thiết kế giao diện | `.kdesign` | Thế giới pha lê |

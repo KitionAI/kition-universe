@@ -13,7 +13,8 @@ const LINES = {
   cad: ['cad', 'scene'],
 };
 const LOOKS = ['terra', 'gas', 'rock', 'storm', 'city', 'lava', 'ice', 'dunes'];
-const PREVIEW = ['layout', 'cad', 'html', 'design', 'scene'];
+// exactly these kits are Preview; the others carry no maturity label (never "Beta")
+const PREVIEW = ['html', 'design', 'scene'];
 const BANNED = [/revolutionary/i, /game[- ]changing/i, /\bsubscribe\b/i, /Word kit/i, /Markdown kit/i];
 // trademark names may only appear in comparison copy, never as planet or building names
 const MARKS = /Office|Adobe|Photoshop|Illustrator|After Effects|AutoCAD|Excel|PowerPoint|InDesign/;
@@ -27,6 +28,7 @@ for (const [line, kits] of Object.entries(LINES)) {
   if (got.sort().join() !== [...kits].sort().join()) errors.push(`cluster ${line} must hold ${kits.join(', ')}; got ${got.join(', ')}`);
 }
 for (const p of u.planets) {
+  if (p.status !== undefined && p.status !== 'preview') errors.push(`${p.id}: status may only be preview (or left out)`);
   if ((p.status === 'preview') !== PREVIEW.includes(p.id)) errors.push(`${p.id}: preview status mismatch`);
   if (PREVIEW.includes(p.id) && !p.surface?.scaffold) errors.push(`${p.id}: preview planets need scaffolding`);
   for (const k of ['planet', 'world', 'tagline', 'summary', 'ship']) if (!p[k]?.en || !p[k]?.zh) errors.push(`${p.id}: missing ${k} en/zh`);

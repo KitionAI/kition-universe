@@ -67,7 +67,7 @@ const jsonLd = [
                       ))}
                     </td>
                     <td>
-                      <span class:list={['badge', { preview: p.status === 'preview' }]}>{s(`planet.status.${p.status}` as any)}</span>
+                      {p.status === 'preview' ? <span class="badge preview">{s('planet.status.preview')}</span> : p.version && <span class="badge">{s('planet.version', { v: p.version })}</span>}
                     </td>
                     <td>
                       <p>{t(p.tagline, lang)}</p>

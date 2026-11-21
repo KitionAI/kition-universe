@@ -23,7 +23,7 @@ const preview = p.status === 'preview';
     {!compact && <span class="tag">{t(p.tagline, lang)}</span>}
     <span class="meta">
       <code>{p.ext}</code>
-      <span class:list={['badge', { preview }]}>{s(`planet.status.${p.status}` as any)}</span>
+      {preview && <span class="badge preview">{s('planet.status.preview')}</span>}
     </span>
   </span>
 </a>

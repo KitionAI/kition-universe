@@ -44,7 +44,7 @@ const data: UniverseSceneData = {
   lang,
   strings: Object.fromEntries(keys.map((k) => [k, s(k as any, { name: '{name}' })])),
   planets: u.planets.map((p) => ({
-    id: p.id, name: p.name, nick: t(p.planet, lang), cluster: p.cluster, status: p.status, color: p.color, surface: p.surface,
+    id: p.id, name: p.name, nick: t(p.planet, lang), cluster: p.cluster, status: p.status ?? '', color: p.color, surface: p.surface,
     ship: t(p.ship, lang), href: planetHref(lang, p.id), tagline: t(p.tagline, lang), world: t(p.world, lang), facts: worldFacts(p.surface, lang),
     replay: (r => r ? { id: replayId(r.kit, r.scenario), thumb: replayThumb(r), goal: t(r.goal, lang), frames: r.frames.length } : undefined)(replaysOf(p.id)[0]),
     usedIn: scenarioGalaxies.filter(g => g.kits.some(k => k.kit === p.id)).map(g => ({ id: g.id, name: g.name[lang], color: g.color })),
@@ -86,7 +86,7 @@ const data: UniverseSceneData = {
     kits:g.kits.map(entry=>{
       const p=u.planets.find(p=>p.id===entry.kit)!;const sc=p.scenarios.find(sc=>sc.id===entry.scenario)!;
       const r=replayFor(p.id,sc.id);
-      return {id:p.id,title:t(sc.title,lang),body:t(sc.body,lang),href:`${planetHref(lang,p.id)}#scenario-${sc.id}`,status:p.status,ext:p.ext||p.formats.native[0]||'',
+      return {id:p.id,title:t(sc.title,lang),body:t(sc.body,lang),href:`${planetHref(lang,p.id)}#scenario-${sc.id}`,status:p.status??'',ext:p.ext||p.formats.native[0]||'',
         replay:r?{id:replayId(p.id,sc.id),thumb:replayThumb(r),goal:t(r.goal,lang),frames:r.frames.length}:undefined};
     }),
   })),

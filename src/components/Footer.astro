@@ -15,12 +15,19 @@ const u = universe();
 // The same "Kition" column as the main sites' footers: the three front doors and the ecosystem
 // (D31; labels and links from kition-console web/portal app/data/site-nav.ts FRONT_DOORS).
 const kition = [
-  { label: 'Kition — desktop', href: 'https://kition.ai/' },
+  { label: 'Kition Desktop', href: 'https://kition.ai/' },
   { label: 'Kition One — teams', href: 'https://one.kition.ai/' },
   { label: 'Kition for Developers', href: 'https://developer.kition.ai/' },
   { label: 'Kition Universe', href: 'https://universe.kition.ai/' },
   { label: 'Kition Tessera', href: 'https://tessera.kition.ai/' },
   { label: 'Kit Harness Protocol', href: 'https://kitharness.org' },
+];
+// Where people talk about Kition (brand names, the same in every language).
+const community = [
+  { label: 'Discord', href: 'https://discord.gg/bFSjRDjVY' },
+  { label: 'Reddit', href: 'https://www.reddit.com/r/Kition' },
+  { label: 'X', href: 'https://x.com/KitionAI' },
+  { label: 'GitHub', href: 'https://github.com/KitionAI' },
 ];
 ---
 
@@ -52,9 +59,14 @@ const kition = [
         <li><a href={href(lang, '/scenarios/')}>{s('nav.scenarios')}</a></li>
         <li><a href={withBase('/llms.txt')}>{s('footer.llms')}</a></li>
         <li><a href={withBase('/sitemap.xml')}>{s('footer.sitemap')}</a></li>
-        <li><a href={u.site.links.github}>GitHub</a></li>
       </ul>
     </div>
+    <nav aria-label={s('footer.community')}>
+      <p class="h">{s('footer.community')}</p>
+      <ul>
+        {community.map((d) => <li><a href={d.href}>{d.label}</a></li>)}
+      </ul>
+    </nav>
   </div>
 </footer>
 
@@ -68,7 +80,7 @@ const kition = [
   .cols {
     display: grid;
     gap: 32px;
-    grid-template-columns: 1.4fr 1.2fr 1fr 1fr;
+    grid-template-columns: 1.4fr 1.2fr 1fr 1fr 0.8fr;
   }
   .brand {
     font: 700 1.1rem/1 var(--font-display);
