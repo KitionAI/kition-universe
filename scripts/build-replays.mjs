@@ -81,7 +81,7 @@ function render(sample, kit, upto, file, work) {
   const requestFile = path.join(work, `request-${upto}.json`);
   fs.writeFileSync(requestFile, JSON.stringify(request));
   const epoch = String(Math.floor(Date.parse(`${sample.since}T00:00:00Z`) / 1000));
-  const run = spawnSync(path.join(KITION_ROOT, cfg.repo, 'target/release/examples/showcase'), [requestFile], { encoding: 'utf8', env: { ...process.env, SOURCE_DATE_EPOCH: epoch, ...cfg.env } });
+  const run = spawnSync(path.join(KITION_ROOT, cfg.repo, 'target/release/examples/showcase'), [requestFile], { encoding: 'utf8', env: { ...process.env, SOURCE_DATE_EPOCH: epoch, KITION_REPRODUCIBLE_IDS: epoch, ...cfg.env } });
   let report;
   try {
     report = JSON.parse(run.stdout.trim().split('\n').at(-1));
